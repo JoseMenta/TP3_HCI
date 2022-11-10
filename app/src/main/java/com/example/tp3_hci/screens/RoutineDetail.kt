@@ -89,7 +89,12 @@ fun RoutineTags(
 ){
     LazyRow(modifier = modifier){
         items(tags){tag->
-            RoutineTag(tag = tag)
+            RoutineTag(
+                text = tag,
+                modifier = Modifier
+                    .padding(3.dp)
+                    .clip(Shapes.medium)
+            )
         }
     }
 }
