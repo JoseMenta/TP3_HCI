@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TP3_HCITheme {
-                // A surface container using the 'background' color from the theme
+//                 A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -28,11 +28,13 @@ class MainActivity : ComponentActivity() {
                         .width(400.dp)
                         .height(330.dp), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ExerciseCard()
+                        Spacer(modifier = Modifier.height(20.dp))
+                        RoutineDetail(Routine("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))
+                        /*ExerciseCard()
                         Spacer(modifier = Modifier.height(20.dp))
                         ExerciseCard()
                         Spacer(modifier = Modifier.height(20.dp))
-                        ExerciseCard()
+                        ExerciseCard()*/
                     }
                     //Greeting("Android")
                 }

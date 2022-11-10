@@ -46,7 +46,7 @@ fun ExerciseCard(
             shape = shape,
             elevation = elevation,
             border = border,
-            modifier = Modifier.combinedClickable (onLongClick = {expandedState=!expandedState}, onClick = {} )
+            modifier = modifier.combinedClickable (onLongClick = {expandedState=!expandedState}, onClick = {} )
 
         ) {
             Row() {

@@ -13,6 +13,7 @@ private val DarkColorPalette = darkColors(
     secondary = FitiGrey,
     background = Color.White,
     surface = FitiGreyImage,
+    onPrimary = FitiGreenButton
 )
 
 private val LightColorPalette = lightColors(
@@ -21,7 +22,7 @@ private val LightColorPalette = lightColors(
     secondary = FitiGrey,
     background = Color.White,
     surface = FitiGreyImage,
-
+    onPrimary = FitiGreenButton
 
     /* Other default colors to override
     background = Color.White,
