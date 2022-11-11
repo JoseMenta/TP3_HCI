@@ -7,7 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -34,12 +34,13 @@ fun RoutineCard(
     routine : RoutineInfo,
     modifier: Modifier = Modifier
 ){
+    var favoriteState by remember { mutableStateOf(routine.isFavourite) }
+
     Card(
         elevation = 10.dp,
         shape = Shapes.medium,
         modifier = modifier
             .height(IntrinsicSize.Min)
-            .padding(horizontal = 20.dp)
             .heightIn(max = 180.dp)
     ) {
         Column(
@@ -97,11 +98,12 @@ fun RoutineCard(
                     )
 
                     IconButton(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier.
-                                size(20.dp)
+                        onClick = {
+                            favoriteState = !favoriteState
+                        },
+                        modifier = Modifier.size(20.dp)
                     ) {
-                        if(routine.isFavourite){
+                        if(favoriteState){
                             Icon(
                                 imageVector = Icons.Outlined.Favorite,
                                 contentDescription = stringResource(id = R.string.routine_is_favorite),
@@ -164,7 +166,7 @@ fun RoutineCard(
 @Composable
 fun DefaultPreview() {
     TP3_HCITheme {
-        Column(modifier = Modifier.padding(vertical = 20.dp)) {
+        Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 0.dp)) {
             RoutineCard(
                 RoutineInfo(name = "Futbol", tags = listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
                 // RoutineInfo(name = "Futbol", listOf("Abdominales", "Piernas Fuertes", "Gemelos"))

@@ -25,6 +25,7 @@ data class DropDownItem(
 val roundBorderValue = 4.dp
 
 // ------------------------------------------------------------------------------------
+// modifier: Estilo a aplicar al componente
 // items: Lista de items a utilizar en el dropdown
 // default: Valor inicial a elegir en el dropdown
 // onItemChange: Funcion a ejecutar al cambiar el estado del dropdown (recibe el nuevo item seleccionado)
@@ -33,13 +34,15 @@ val roundBorderValue = 4.dp
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RoutineOrderDropDown(
+    modifier: Modifier = Modifier,
     items: List<DropDownItem>,
     default: Int = 0,
     onItemChange: ((DropDownItem) -> Unit)? = null,
     onOrderTypeChange: ((DropDownItem) -> Unit)? = null
 ) {
     Row(
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
+        modifier = modifier
     ) {
         var expanded by remember { mutableStateOf(false) }
         var selectedOptionText by remember { mutableStateOf(items[default]) }

@@ -19,4 +19,8 @@
     <string name="order_by">Ordenar por</string>
     <string name="descending">DES</string>
     <string name="ascending">ASC</string>
+    <string name="search">Buscar</string>
+    <string name="last_routine_done">Mi última rutina realizada</string>
+    <string name="created_routined">Rutinas creadas</string>
+    <string name="favorites">Favoritos</string>
 </resources>
