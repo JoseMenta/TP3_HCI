@@ -11,6 +11,13 @@ import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 
+
+// -------------------------------------------------------------------------
+// leftIcon: Componente que se desea colocar a la izquierda del TopBar (generalmente, es un IconButton)
+// centerComponent: Componente que se desea insertar entre los componentes de la izquierda y la derecha (generalmente, es un Text o un TextField)
+// secondRightIcon: Componente que se desea colocar a la derecha del TopBar pero no es el ultimo (generalmente, es un IconButton)
+// rightIcon: Componente que se desea colocar a la derecha del TopBar (generalmente, es un IconButton)
+// -------------------------------------------------------------------------
 @Composable
 fun TopNavigationBar(
     leftIcon: (@Composable () -> Unit?)? = null,

@@ -24,6 +24,10 @@ data class BottomNavItem(
     val icon: ImageVector
 )
 
+// -------------------------------------------------------------------------
+// Componente para la navegacion entre las pantallas principales
+// TODO: Implementar navegacion
+// -------------------------------------------------------------------------
 @Composable
 fun BottomNavigationBar(
     items : List<BottomNavItem>,
