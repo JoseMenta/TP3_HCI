@@ -12,4 +12,11 @@
     <string name="routine_image">Imagen de la rutina</string>
     <string name="routine_is_favorite">Es favorita</string>
     <string name="routine_is_not_favorite">No es favorita</string>
+    <string name="name">Nombre</string>
+    <string name="creation_date">Fecha de creación</string>
+    <string name="rating">Puntuación</string>
+    <string name="category">Categoría</string>
+    <string name="order_by">Ordenar por</string>
+    <string name="descending">DES</string>
+    <string name="ascending">ASC</string>
 </resources>

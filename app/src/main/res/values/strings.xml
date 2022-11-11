@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">TP3_HCI</string>
+    <string name="name">Name</string>
+    <string name="creation_date">Creation date</string>
+    <string name="rating">Rating</string>
     <string name="difficulty">Difficulty</string>
+    <string name="category">Category</string>
+    <string name="order_by">Order by</string>
+    <string name="descending">DES</string>
+    <string name="ascending">ASC</string>
+
     <string name="created_by">Created by</string>
     <string name="start">Start</string>
 
