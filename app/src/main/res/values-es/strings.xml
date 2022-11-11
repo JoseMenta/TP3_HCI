@@ -8,4 +8,8 @@
     <string name="bottom_nav_home">Inicio</string>
     <string name="bottom_nav_favorites">Favoritos</string>
     <string name="bottom_nav_profile">Perfil</string>
+    <string name="routine_no_image">No hay imagen</string>
+    <string name="routine_image">Imagen de la rutina</string>
+    <string name="routine_is_favorite">Es favorita</string>
+    <string name="routine_is_not_favorite">No es favorita</string>
 </resources>

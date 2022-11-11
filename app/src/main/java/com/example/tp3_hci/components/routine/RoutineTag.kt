@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.ui.theme.*
 
 @Composable
@@ -24,7 +25,10 @@ fun RoutineTag(
     ){
         Text(
             text = text,
-            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.h5.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+            ),
             color = FitiBlueText,
             modifier = Modifier.
                 padding(horizontal = 4.dp, vertical = 2.dp),

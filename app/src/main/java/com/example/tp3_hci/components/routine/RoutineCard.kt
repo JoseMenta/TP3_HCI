@@ -1,5 +1,6 @@
 package com.example.tp3_hci.components.routine
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,41 +11,65 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
+import com.example.tp3_hci.R
 
 data class RoutineInfo(
     val name: String,
     val isFavourite: Boolean = false,
     val score: Int = 0,
-    val tags: List<String>? = null
+    val tags: List<String>? = null,
+    val imageUrl: String? = null
 )
 
 @Composable
 fun RoutineCard(
-    routine : RoutineInfo
+    routine : RoutineInfo,
+    modifier: Modifier = Modifier
 ){
     Card(
         elevation = 10.dp,
         shape = Shapes.medium,
-        modifier = Modifier
+        modifier = modifier
             .height(IntrinsicSize.Min)
-            .padding(horizontal = 15.dp)
+            .padding(horizontal = 20.dp)
+            .heightIn(max = 180.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            AsyncImage(
-                model = "https://pbs.twimg.com/media/E5_Q6jQWUAEZKa4.jpg:large",
-                contentDescription = "Messi",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .weight(0.6f)
-                    .background(FitiGreyImage.copy(alpha = 0.2f))
-            )
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.weight(0.6f),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                if(routine.imageUrl == null){
+                    Image(
+                        painter = painterResource(id = R.drawable.image_placeholder),
+                        contentDescription = stringResource(id = R.string.routine_no_image),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(FitiGreyImage.copy(alpha = 0.2f))
+                    )
+                } else {
+                    AsyncImage(
+                        model = routine.imageUrl,
+                        contentDescription = stringResource(id = R.string.routine_image),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(FitiGreyImage.copy(alpha = 0.2f))
+                    )
+                }
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -60,7 +85,10 @@ fun RoutineCard(
                 ) {
                     Text(
                         text = routine.name,
-                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.h3.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        ),
                         color = FitiBlueText
                     )
 
@@ -68,19 +96,26 @@ fun RoutineCard(
                         modifier = Modifier.weight(1f)
                     )
 
-                    if(routine.isFavourite){
-                        Icon(
-                            imageVector = Icons.Outlined.Favorite,
-                            contentDescription = "Es favorita",
-                            tint = FitiBlueFill,
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
-                            contentDescription = "No es favorita",
-                            tint = FitiBlueFill,
-                        )
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.
+                                size(20.dp)
+                    ) {
+                        if(routine.isFavourite){
+                            Icon(
+                                imageVector = Icons.Outlined.Favorite,
+                                contentDescription = stringResource(id = R.string.routine_is_favorite),
+                                tint = FitiBlueFill,
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = stringResource(id = R.string.routine_is_not_favorite),
+                                tint = FitiBlueFill,
+                            )
+                        }
                     }
+
                 }
                 Row(
                     modifier = Modifier.
@@ -115,7 +150,10 @@ fun RoutineCard(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    RatingStars(rating = routine.score)
+                    RatingStars(
+                        rating = routine.score,
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
             }
         }
