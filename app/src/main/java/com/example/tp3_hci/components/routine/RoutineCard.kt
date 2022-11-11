@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 
-data class RoutineCard(
+data class RoutineInfo(
     val name: String,
     val isFavourite: Boolean = false,
     val score: Int = 0,
@@ -25,7 +25,7 @@ data class RoutineCard(
 
 @Composable
 fun RoutineCard(
-    routine : RoutineCard
+    routine : RoutineInfo
 ){
     Card(
         elevation = 10.dp,
@@ -128,9 +128,8 @@ fun DefaultPreview() {
     TP3_HCITheme {
         Column(modifier = Modifier.padding(vertical = 20.dp)) {
             RoutineCard(
-                name = "Futbol",
-                // tags = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l")
-                tags = listOf("Abdominales", "Piernas Fuertes", "Gemelos")
+                RoutineInfo(name = "Futbol", tags = listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
+                // RoutineInfo(name = "Futbol", listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
             )
         }
 

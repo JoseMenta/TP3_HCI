@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">TP3_HCI</string>
-    <string name="difficulty">Dificultad</string>
-    <string name="created_by">Creado por</string>
-    <string name="start">Empezar</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="created_by">Created by</string>
+    <string name="start">Start</string>
+
+    <string name="bottom_nav_home">Home</string>
+    <string name="bottom_nav_favorites">Favorites</string>
+    <string name="bottom_nav_profile">Profile</string>
 </resources>

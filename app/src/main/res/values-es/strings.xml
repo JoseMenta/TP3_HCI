@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TP3_HCI</string>
+    <string name="difficulty">Dificultad</string>
+    <string name="created_by">Creado por</string>
+    <string name="start">Empezar</string>
+
+    <string name="bottom_nav_home">Inicio</string>
+    <string name="bottom_nav_favorites">Favoritos</string>
+    <string name="bottom_nav_profile">Perfil</string>
+</resources>
