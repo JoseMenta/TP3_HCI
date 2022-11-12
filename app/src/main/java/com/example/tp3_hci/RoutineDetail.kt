@@ -30,7 +30,8 @@ data class CycleExercise(
     val name:String,
     val image:String,
     val time:Int,
-    val repetitions: Int
+    val repetitions: Int,
+    val selected: Boolean = false
 )
 data class RoutineCycle(
     val name:String,
@@ -83,8 +84,9 @@ fun RoutineData(
     difficulty: Int,
     creator: String,
     rating: Int,
-    votes: Int){
-    val thousand_votes = votes/1000.0
+    votes: Int
+    ){
+        val thousand_votes = votes/1000.0
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ){
@@ -135,7 +137,8 @@ fun RoutineImage(
 }
 @Composable
 fun RoutineCycle(
-    cycle: RoutineCycle
+    cycle: RoutineCycle,
+    status: ExerciseCardStatus = ExerciseCardStatus.VIEW_ONLY
 ){
     Card(
         modifier = Modifier.padding(8.dp),
@@ -161,11 +164,13 @@ fun RoutineCycle(
                     Text(text = cycle.repetitions.toString(), style = MaterialTheme.typography.h3)
                 }
             }
-            cycle.exercises.forEach{ _ ->
+            cycle.exercises.forEach{ exercise ->
                 ExerciseCard(
                     modifier = Modifier.padding(8.dp,0.dp),
                     elevation = 4.dp,
-                    background = MaterialTheme.colors.background
+                    background = MaterialTheme.colors.background,
+                    status = status,
+                    exercise = exercise
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))

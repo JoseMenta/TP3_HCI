@@ -22,6 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+
+enum class ExerciseCardStatus{
+    EDITABLE,
+    SELECTABLE,
+    VIEW_ONLY
+}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseCard(
@@ -30,23 +36,28 @@ fun ExerciseCard(
     border: BorderStroke? = null,
     background: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(background),
-    shape: Shape = RoundedCornerShape(12.dp)
+    shape: Shape = RoundedCornerShape(12.dp),
+    exercise: CycleExercise,
+    status: ExerciseCardStatus = ExerciseCardStatus.VIEW_ONLY
 ) {
     var checkedState by remember { mutableStateOf(true) }
     var expandedState by remember { mutableStateOf(false) }
     var time by remember { mutableStateOf("") }
+    var selected = false
     var repeat by remember { mutableStateOf("") }
     CompositionLocalProvider(
         LocalContentAlpha provides
                 if (checkedState) ContentAlpha.high else ContentAlpha.medium
     ) {
         Card(
-            backgroundColor = background,
+            backgroundColor = if(!selected){MaterialTheme.colors.background}else{MaterialTheme.colors.onPrimary},
             contentColor = contentColor,
             shape = shape,
             elevation = elevation,
             border = border,
-            modifier = modifier.combinedClickable (onLongClick = {expandedState=!expandedState}, onClick = {} )
+            modifier = modifier.combinedClickable (
+                onLongClick = {if(status == ExerciseCardStatus.EDITABLE && checkedState){expandedState=!expandedState}},
+                onClick = {if (status==ExerciseCardStatus.SELECTABLE){selected = true}} )
 
         ) {
             Row() {
@@ -58,19 +69,20 @@ fun ExerciseCard(
                 ) {
                     LabelledSwitch(
                         checked = checkedState,
-                        label = "Abdominales",
+                        label = "Change status",
                         onCheckedChange = { checkedState = it }
                     )
                     if(!expandedState)
                         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                            IconInfoExercise(icon = painterResource(id = R.drawable.ic_baseline_alarm_24), info = "0:11")
-                            IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Refresh), info = "0:11")
+                            IconInfoExercise(icon = painterResource(id = R.drawable.ic_baseline_alarm_24), info = exercise.time.toString())
+                            IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Refresh), info = exercise.repetitions.toString())
                         } else{
 
                         Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                             TextField(  label = { Text(text = "Tiempo") } ,
-                                value =time,
-                                onValueChange = {time=it},
+                                value =exercise.repetitions.toString(),
+                                onValueChange = {time =  it //TODO: que cambie al repositorio
+                                                },
                                 leadingIcon = { Icon(  painter = painterResource(id = R.drawable.ic_baseline_alarm_24) ,
                                     contentDescription = "icon_time")
                                 })
