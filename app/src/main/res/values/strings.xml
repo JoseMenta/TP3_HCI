@@ -1,6 +1,30 @@
 <resources>
     <string name="app_name">TP3_HCI</string>
-    <string name="difficulty">Dificultad</string>
-    <string name="created_by">Creado por</string>
-    <string name="start">Empezar</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">FITI Logo</string>
+
+    <string name="name">Name</string>
+    <string name="creation_date">Creation date</string>
+    <string name="rating">Rating</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="category">Category</string>
+    <string name="order_by">Order by</string>
+    <string name="descending">DES</string>
+    <string name="ascending">ASC</string>
+
+    <string name="created_by">Created by</string>
+    <string name="start">Start</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+
+    <string name="bottom_nav_home">Home</string>
+    <string name="bottom_nav_favorites">Favorites</string>
+    <string name="bottom_nav_profile">Profile</string>
+    <string name="last_routine_done">My last routine done</string>
+    <string name="created_routined">Created routines</string>
+
+    <string name="routine_no_image">There is no image</string>
+    <string name="routine_image">Routine image</string>
+    <string name="routine_is_favorite">Is favorite</string>
+    <string name="routine_is_not_favorite">Is not favorite</string>
 </resources>

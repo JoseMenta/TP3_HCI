@@ -267,8 +267,6 @@ fun ExecuteRoutine(
 @Composable
 fun ExecuteRoutineGlobalPreview() {
     TP3_HCITheme {
-//        ExecuteRoutineGlobal(Routine("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
-//        ExecuteRoutineExerciseDetail(exercise = exercises[0])
         ExecuteRoutine(routine = Routine("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
     }
 }

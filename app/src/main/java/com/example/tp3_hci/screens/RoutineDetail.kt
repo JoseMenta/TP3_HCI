@@ -1,6 +1,5 @@
 package com.example.tp3_hci
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,15 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.example.tp3_hci.components.routine.DifficultyIcons
+import com.example.tp3_hci.components.routine.RatingStars
+import com.example.tp3_hci.components.routine.RoutineImage
+import com.example.tp3_hci.components.routine.RoutineTag
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
-import java.net.URI
 
 val names = listOf("Futbol","Scaloneta")
 
@@ -59,25 +58,7 @@ val cycles = listOf(
     RoutineCycle("Ciclo 2",3, exercises),
     RoutineCycle("Enfriamiento",3, exercises)
 )
-@Composable
-fun RatingStars(
-    rating: Int,
-){
-    for(i in 1..rating){
-        Icon(Icons.Outlined.Star, contentDescription = "Rating" )
-    }
-    for(i in rating+1 .. 5){
-        Icon(Icons.Outlined.StarOutline, contentDescription = "Rating" )
-    }
-}
-@Composable
-fun DifficultyIcons(
-    difficulty: Int
-){
-    for(i in 1..difficulty){
-        Icon(Icons.Outlined.Bolt, contentDescription = "Rating" )
-    }
-}
+
 @Composable
 fun RoutineData(
     name:String,
@@ -110,31 +91,17 @@ fun RoutineTags(
 ){
     LazyRow(modifier = modifier){
         items(tags){tag->
-            Card(
+            RoutineTag(
+                text = tag,
                 modifier = Modifier
                     .padding(3.dp)
-                    .clip(Shapes.medium),
-                backgroundColor = MaterialTheme.colors.secondary,
-                ) {
-                Text(text = tag, modifier = Modifier.padding(6.dp), style = MaterialTheme.typography.h4)
-            }
+                    .clip(Shapes.medium)
+            )
         }
     }
 }
-@Composable
-fun RoutineImage(
-    source:String
-){
-    AsyncImage(
-        model = source,
-        contentDescription = "Routine Image",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .clip(Shapes.medium)
-            .size(140.dp)
-            .aspectRatio(1f / 1f)
-    )
-}
+
+
 @Composable
 fun RoutineCycle(
     cycle: RoutineCycle,
@@ -206,7 +173,14 @@ fun RoutineDetail(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     RoutineData(name = routine.name, difficulty = routine.difficulty ,creator = routine.creator, rating = routine.rating , votes = routine.votes )
-                    RoutineImage(source = "https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1")
+                    RoutineImage(
+                        source = "https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",
+                        contentDescription = "Routine Image",
+                        modifier = Modifier
+                            .clip(Shapes.medium)
+                            .size(140.dp)
+                            .aspectRatio(1f / 1f)
+                    )
                 }
             }
             item {

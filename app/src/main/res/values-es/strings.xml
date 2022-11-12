@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TP3_HCI</string>
+    <string name="difficulty">Dificultad</string>
+    <string name="created_by">Creado por</string>
+    <string name="start">Empezar</string>
+
+    <string name="bottom_nav_home">Inicio</string>
+    <string name="bottom_nav_favorites">Favoritos</string>
+    <string name="bottom_nav_profile">Perfil</string>
+    <string name="routine_no_image">No hay imagen</string>
+    <string name="routine_image">Imagen de la rutina</string>
+    <string name="routine_is_favorite">Es favorita</string>
+    <string name="routine_is_not_favorite">No es favorita</string>
+    <string name="name">Nombre</string>
+    <string name="creation_date">Fecha de creación</string>
+    <string name="rating">Puntuación</string>
+    <string name="category">Categoría</string>
+    <string name="order_by">Ordenar por</string>
+    <string name="descending">DES</string>
+    <string name="ascending">ASC</string>
+    <string name="search">Buscar</string>
+    <string name="last_routine_done">Mi última rutina realizada</string>
+    <string name="created_routined">Rutinas creadas</string>
+    <string name="favorites">Favoritos</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">Logo FITI</string>
+</resources>
