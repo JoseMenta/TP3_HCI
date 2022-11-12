@@ -3,6 +3,7 @@ package com.example.tp3_hci.components.routine
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,6 +11,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
+
+private const val ITEMS_PER_GRID = 2
 
 
 // -----------------------------------------------------------------------------------
@@ -19,33 +24,102 @@ import com.example.tp3_hci.R
 // footer: Componentes a mostrar por debajo de la lista
 // -----------------------------------------------------------------------------------
 @Composable
-fun RoutineCardList(
+fun RoutineCardDisplay(
     modifier: Modifier = Modifier,
     routines: List<RoutineInfo>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null
 ){
-    val orderByItems : List<DropDownItem> = listOf(
-        DropDownItem(stringResource(id = R.string.name)),
-        DropDownItem(stringResource(id = R.string.creation_date)),
-        DropDownItem(stringResource(id = R.string.rating)),
-        DropDownItem(stringResource(id = R.string.difficulty)),
-        DropDownItem(stringResource(id = R.string.category))
-    )
+    val windowInfo = rememberWindowInfo()
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
+        RoutineCardLazyList(
+            modifier = modifier,
+            routines = routines,
+            header = header,
+            footer = footer
+        )
+    }
+    else {
+        RoutineCardLazyGrid(
+            modifier = modifier,
+            routines = routines,
+            header = header,
+            footer = footer
+        )
+    }
+}
 
+@Composable
+fun RoutineCardLazyGrid(
+    modifier: Modifier = Modifier,
+    routines: List<RoutineInfo>? = null,
+    header: (@Composable ()->Unit)? = null,
+    footer: (@Composable ()->Unit)? = null
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(ITEMS_PER_GRID),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        if(header != null){
+            item(
+                span = { GridItemSpan(ITEMS_PER_GRID) }
+            ) {
+                header()
+            }
+        }
+
+        item (
+            span = { GridItemSpan(ITEMS_PER_GRID) }
+        ) {
+            RoutineOrderDropDown(
+                items = orderByItems(),
+                modifier = Modifier.padding(bottom = 10.dp)
+            )
+        }
+
+        // RoutineCardGrid
+        if(routines != null){
+            items(routines) { routine ->
+                RoutineCard(
+                    routine = routine,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
+            }
+        }
+
+        if(footer != null){
+            item(
+                span = { GridItemSpan(ITEMS_PER_GRID) }
+            ) {
+                footer()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun RoutineCardLazyList(
+    modifier: Modifier = Modifier,
+    routines: List<RoutineInfo>? = null,
+    header: (@Composable ()->Unit)? = null,
+    footer: (@Composable ()->Unit)? = null
+) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
-        item {
-            if(header != null){
+        if(header != null){
+            item {
                 header()
             }
         }
 
         item {
             RoutineOrderDropDown(
-                items = orderByItems,
+                items = orderByItems(),
                 modifier = Modifier.padding(bottom = 10.dp)
             )
         }
@@ -60,17 +134,30 @@ fun RoutineCardList(
             }
         }
 
-        item {
-            if(footer != null){
+        if(footer != null){
+            item {
                 footer()
             }
         }
     }
 }
 
+
+@Composable
+private fun orderByItems(): List<DropDownItem>{
+    return listOf(
+        DropDownItem(stringResource(id = R.string.name)),
+        DropDownItem(stringResource(id = R.string.creation_date)),
+        DropDownItem(stringResource(id = R.string.rating)),
+        DropDownItem(stringResource(id = R.string.difficulty)),
+        DropDownItem(stringResource(id = R.string.category))
+    )
+}
+
+
 @Preview(showBackground = true)
 @Composable
-fun RoutineCardListPreview(
+fun RoutineCardDisplayPreview(
 
 ) {
     val routines = listOf(
@@ -80,5 +167,5 @@ fun RoutineCardListPreview(
         RoutineInfo("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
         RoutineInfo("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
     )
-    RoutineCardList(routines = routines)
+    RoutineCardDisplay(routines = routines)
 }

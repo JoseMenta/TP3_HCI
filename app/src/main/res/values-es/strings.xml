@@ -23,4 +23,6 @@
     <string name="last_routine_done">Mi última rutina realizada</string>
     <string name="created_routined">Rutinas creadas</string>
     <string name="favorites">Favoritos</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">Logo FITI</string>
 </resources>

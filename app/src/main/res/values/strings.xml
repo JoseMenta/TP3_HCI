@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">TP3_HCI</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">FITI Logo</string>
+
     <string name="name">Name</string>
     <string name="creation_date">Creation date</string>
     <string name="rating">Rating</string>

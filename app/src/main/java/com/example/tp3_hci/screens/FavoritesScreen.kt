@@ -10,8 +10,12 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,10 +30,12 @@ import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(
     createdRoutines : List<RoutineInfo>? = null
 ){
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val bottomNavItems : List<BottomNavItem> = listOf(
         BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "/favorites", Icons.Filled.Favorite),
@@ -38,11 +44,13 @@ fun FavoritesScreen(
     )
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
             BottomNavigationBar(items = bottomNavItems)
         },
         topBar = {
             TopNavigationBar(
+                scrollBehavior = scrollBehavior,
                 rightIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
@@ -55,7 +63,7 @@ fun FavoritesScreen(
                 },
                 centerComponent = {
                     Text(
-                        text = "FITI",
+                        text = stringResource(id = R.string.fiti),
                         style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
                         color = FitiWhiteText
                     )
@@ -63,7 +71,7 @@ fun FavoritesScreen(
             )
         }
     ){
-        RoutineCardList(
+        RoutineCardDisplay(
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 20.dp),
