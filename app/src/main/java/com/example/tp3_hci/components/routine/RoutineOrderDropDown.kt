@@ -21,12 +21,12 @@ data class DropDownItem(
     val value: String
 )
 
-private val roundBorderValue = 4.dp
-
 data class DropDownWeight(
     val orderByWeight: Float,
     val orderTypeWeight: Float
 )
+
+private val roundBorderValue = 4.dp
 
 // ------------------------------------------------------------------------------------
 // modifier: Estilo a aplicar al componente
@@ -134,14 +134,11 @@ fun RoutineOrderDropDown(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun OrderTypeDropDown(
+private fun OrderTypeDropDown(
     modifier: Modifier = Modifier,
     onOrderTypeChange: ((DropDownItem) -> Unit)? = null,
 ){
-    val items = listOf(
-        DropDownItem(stringResource(id = R.string.descending)),
-        DropDownItem(stringResource(id = R.string.ascending))
-    )
+    val items = getOrderTypeStrings()
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(items[0]) }
@@ -210,8 +207,27 @@ fun OrderTypeDropDown(
     }
 }
 
+
 @Composable
-fun getDropDownWeight(): DropDownWeight{
+private fun getOrderTypeStrings(): List<DropDownItem>{
+    val windowInfo = rememberWindowInfo()
+
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
+        return listOf(
+            DropDownItem(stringResource(id = R.string.descending_abrev)),
+            DropDownItem(stringResource(id = R.string.ascending_abrev))
+        )
+    }
+
+    return listOf(
+        DropDownItem(stringResource(id = R.string.descending)),
+        DropDownItem(stringResource(id = R.string.ascending))
+    )
+}
+
+
+@Composable
+private fun getDropDownWeight(): DropDownWeight{
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
         return DropDownWeight(0.6f, 0.4f)

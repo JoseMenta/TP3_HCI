@@ -76,6 +76,8 @@ fun BottomAndTopNavigationBarPreview() {
                     }
                 )
             }
-        ){}
+        ){
+
+        }
     }
 }
