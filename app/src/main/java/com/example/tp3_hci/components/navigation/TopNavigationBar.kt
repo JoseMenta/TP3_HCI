@@ -31,7 +31,8 @@ fun TopNavigationBar(
     leftIcon: (@Composable () -> Unit?)? = null,
     centerComponent: (@Composable () -> Unit)? = null,
     secondRightIcon: (@Composable () -> Unit)? = null,
-    rightIcon: (@Composable () -> Unit)? = null
+    rightIcon: (@Composable () -> Unit)? = null,
+    defaulNav: () ->Unit
 ) {
     TopAppBar(
         backgroundColor = FitiBlue,
@@ -40,15 +41,19 @@ fun TopNavigationBar(
             if (leftIcon != null) {
                 leftIcon()
             } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Image(
-                        painter = painterResource(id = R.drawable.fiti),
-                        contentDescription = "Logo FITI",
-                        modifier = Modifier.size(40.dp)
-                    )
+                Button(onClick = {
+                    defaulNav()
+                }) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Image(
+                            painter = painterResource(id = R.drawable.fiti),
+                            contentDescription = "Logo FITI",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
                 }
             }
         },
@@ -69,6 +74,7 @@ fun TopNavigationBar(
     )
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun TopNavigationBarPreview(){
@@ -114,3 +120,5 @@ fun TopNavigationBarPreview(){
         ){}
     }
 }
+
+*/

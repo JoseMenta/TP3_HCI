@@ -31,6 +31,7 @@ data class RoutineInfo(
 
 @Composable
 fun RoutineCard(
+    onNavigateToRutineDetailScreen: ()->Unit,
     routine : RoutineInfo,
     modifier: Modifier = Modifier
 ){
@@ -47,7 +48,7 @@ fun RoutineCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onNavigateToRutineDetailScreen() },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -162,6 +163,7 @@ fun RoutineCard(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
@@ -175,3 +177,4 @@ fun DefaultPreview() {
 
     }
 }
+ */

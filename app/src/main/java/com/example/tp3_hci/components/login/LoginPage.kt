@@ -22,7 +22,9 @@ import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 
 @Composable
-fun LoginView(){
+fun LoginView(
+    onNavigateToMainScreen: () -> Unit
+){
     Column(
         //modifier = Modifier.verticalScroll().fillMaxHeight(),
         modifier = Modifier.fillMaxHeight(),
@@ -36,7 +38,7 @@ fun LoginView(){
                 .fillMaxWidth()
                 .padding(top = 10.dp, start = 40.dp, end = 40.dp)
         )
-        BLockLogin()
+        BLockLogin(onNavigateToMainScreen)
         BLockRegister()
     }
 
@@ -75,7 +77,9 @@ fun BLockRegister() {
 
 /* Intentar "Composearlo" mas con la API */
 @Composable
-fun BLockLogin() {
+fun BLockLogin(
+    onNavigateToMainScreen: () -> Unit
+) {
     Card(
         border = BorderStroke(2.dp, FitiBlack),
         modifier = Modifier.padding(20.dp),
@@ -173,7 +177,7 @@ fun BLockLogin() {
                     backgroundColor = FitiGreenButton,
                 ),
                 onClick = { required.value = true;
-                    if(password.value.text == "fiti" && username.value.text == "fiti") textError.value = "ok" else textError.value = "Usuario y contraseña invalidos"},
+                    if(password.value.text == "fiti" && username.value.text == "fiti") onNavigateToMainScreen() else textError.value = "Usuario y contraseña invalidos"},
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()

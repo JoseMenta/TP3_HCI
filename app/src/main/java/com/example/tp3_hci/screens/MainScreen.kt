@@ -23,17 +23,21 @@ import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import androidx.compose.ui.text.font.FontWeight
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 
-
 @Composable
 fun MainScreen(
+    onNavigateToFavoritesScreen : () -> Unit,
+    onNavigateToHomeScreen : () -> Unit,
+    onNavigateToProfileScreen : () -> Unit,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen: () ->Unit,
     lastRoutineDone : List<RoutineInfo>? = null,
     createdRoutines : List<RoutineInfo>? = null
 ){
 
     val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "/favorites", Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), "/home", Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), "/profile", Icons.Filled.Person)
+        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
     )
 
     Scaffold(
@@ -43,7 +47,7 @@ fun MainScreen(
         topBar = {
             TopNavigationBar(
                 rightIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onNavigateToResetHomeScreen() }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search),
@@ -58,11 +62,13 @@ fun MainScreen(
                         style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
                         color = FitiWhiteText
                     )
-                }
+                },
+                defaulNav = onNavigateToResetHomeScreen
             )
         }
     ){
         RoutineCardList(
+            onNavigateToRutineDetailScreen,
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 20.dp),
@@ -80,6 +86,7 @@ fun MainScreen(
                         )
 
                         RoutineCard(
+                            onNavigateToRutineDetailScreen,
                             routine = lastRoutineDone[0],
                             modifier = Modifier.padding(bottom = 20.dp)
                         )
@@ -97,7 +104,7 @@ fun MainScreen(
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview(){
@@ -116,3 +123,4 @@ fun MainScreenPreview(){
         )
     }
 }
+*/

@@ -16,7 +16,7 @@ import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun BottomAndTopNavigationBarPreview() {
@@ -75,3 +75,4 @@ fun BottomAndTopNavigationBarPreview() {
         ){}
     }
 }
+*/

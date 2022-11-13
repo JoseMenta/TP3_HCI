@@ -20,10 +20,11 @@ import com.example.tp3_hci.R
 // -----------------------------------------------------------------------------------
 @Composable
 fun RoutineCardList(
+    onNavigateToRutineDetailScreen: ()-> Unit,
     modifier: Modifier = Modifier,
     routines: List<RoutineInfo>? = null,
     header: (@Composable ()->Unit)? = null,
-    footer: (@Composable ()->Unit)? = null
+    footer: (@Composable ()->Unit)? = null,
 ){
     val orderByItems : List<DropDownItem> = listOf(
         DropDownItem(stringResource(id = R.string.name)),
@@ -54,8 +55,9 @@ fun RoutineCardList(
         if(routines != null){
             items(routines){ routine ->
                 RoutineCard(
+                    onNavigateToRutineDetailScreen,
                     routine = routine,
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier.padding(vertical = 10.dp),
                 )
             }
         }
@@ -68,6 +70,7 @@ fun RoutineCardList(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun RoutineCardListPreview(
@@ -82,3 +85,5 @@ fun RoutineCardListPreview(
     )
     RoutineCardList(routines = routines)
 }
+
+ */
