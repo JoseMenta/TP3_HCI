@@ -11,7 +11,8 @@
     <string name="order_by">Order by</string>
     <string name="descending">DES</string>
     <string name="ascending">ASC</string>
-
+    <string name="time">Time</string>
+    <string name="repetitions">Repetitions</string>
     <string name="created_by">Created by</string>
     <string name="start">Start</string>
     <string name="search">Search</string>

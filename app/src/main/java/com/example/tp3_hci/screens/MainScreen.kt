@@ -23,6 +23,7 @@ import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import androidx.compose.ui.text.font.FontWeight
+import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
@@ -33,8 +34,8 @@ private const val ITEMS_IN_ROW = 2
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    lastRoutineDone : List<RoutineInfo>? = null,
-    createdRoutines : List<RoutineInfo>? = null
+    lastRoutineDone : List<RoutineCardUiState>? = null,
+    createdRoutines : List<RoutineCardUiState>? = null
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -100,7 +101,7 @@ fun MainScreen(
 
 @Composable
 fun LastRoutineDoneDisplay(
-    lastRoutineDone : List<RoutineInfo>,
+    lastRoutineDone : List<RoutineCardUiState>,
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -140,15 +141,15 @@ fun MainScreenPreview(){
     TP3_HCITheme {
         MainScreen(
             lastRoutineDone = listOf(
-                RoutineInfo("Futbol", true, 4, listOf("Abdominales", "Piernas", "Gemelos", "Cabeza", "Pelota"), "https://phantom-marca.unidadeditorial.es/4a48d118c4427fc01575ac7e16d4b4a0/crop/0x70/1022x644/resize/1320/f/jpg/assets/multimedia/imagenes/2021/07/11/16259717481572.jpg"),
-                RoutineInfo("Prensa", false, 1, null, "https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/04/09/16495114782056.jpg"),
+                RoutineCardUiState("Futbol", true, 4, listOf("Abdominales", "Piernas", "Gemelos", "Cabeza", "Pelota"), "https://phantom-marca.unidadeditorial.es/4a48d118c4427fc01575ac7e16d4b4a0/crop/0x70/1022x644/resize/1320/f/jpg/assets/multimedia/imagenes/2021/07/11/16259717481572.jpg"),
+                RoutineCardUiState("Prensa", false, 1, null, "https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/04/09/16495114782056.jpg"),
             ),
             createdRoutines = listOf(
-                    RoutineInfo("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
-                    RoutineInfo("Yoga", false, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
-                    RoutineInfo("Abdominales", false, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
-                    RoutineInfo("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
-                    RoutineInfo("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
+                    RoutineCardUiState("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
+                    RoutineCardUiState("Yoga", false, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
+                    RoutineCardUiState("Abdominales", false, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
+                    RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
+                    RoutineCardUiState("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
             )
         )
     }

@@ -22,6 +22,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tp3_hci.data.ExerciseCardUiSate
+import com.example.tp3_hci.data.RoutineCycleUiState
+import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import kotlinx.coroutines.delay
@@ -35,10 +38,12 @@ fun CountdownTimer(
     paused : Boolean
 ){
     var paused_curr = paused
-    var time_text by remember { mutableStateOf(if(time>60){"${time/60}: ${time%60}"}else{"$time"}) }
     var value by remember { mutableStateOf(1f) }
     var currentTime by remember { mutableStateOf(time) }
     val animateFloat = remember { Animatable(1f) }
+    var minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
+    var seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
+    var display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
     LaunchedEffect(value) {
         animateFloat.animateTo(
             targetValue = value,
@@ -50,7 +55,9 @@ fun CountdownTimer(
             delay(1000L)
             currentTime-=1
             value = currentTime/time.toFloat()
-            time_text =  if(currentTime>60){"${currentTime/60} : ${currentTime%60}"}else{"$currentTime"}
+            minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
+            seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
+            display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
             if(currentTime==0L){
                 //TODO: cambiar e ir a la siguiente
             }
@@ -79,7 +86,7 @@ fun CountdownTimer(
                 useCenter = true
             )
         }
-        Text(text = time_text, color = Color.White, style = MaterialTheme.typography.h2)
+        Text(text = display_time, color = Color.White, style = MaterialTheme.typography.h2)
     }
 }
 
@@ -162,7 +169,7 @@ fun ExecutionControls(
 }
 @Composable
 fun ExecuteRoutineExerciseDetail(
-    exercise: CycleExercise,
+    exercise: ExerciseCardUiSate,
     expanded: Boolean = true
 ){
     Column (
@@ -191,10 +198,10 @@ fun ExecuteRoutineExerciseDetail(
 }
 @Composable
 fun ExecuteRoutineGlobal(
-    routine: Routine,
+    routine: RoutineDetailUiState,
     modifier: Modifier = Modifier
 ){
-    val selectedExercise: CycleExercise = routine.cycles[0].exercises[0]
+    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[0]
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ){
@@ -208,9 +215,9 @@ fun ExecuteRoutineGlobal(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExecuteRoutine(
-    routine: Routine
+    routine: RoutineDetailUiState
 ){
-    val selectedExercise: CycleExercise = routine.cycles[0].exercises[1]
+    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[1]
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -267,6 +274,6 @@ fun ExecuteRoutine(
 @Composable
 fun ExecuteRoutineGlobalPreview() {
     TP3_HCITheme {
-        ExecuteRoutine(routine = Routine("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
+        ExecuteRoutine(routine = RoutineDetailUiState("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
     }
 }

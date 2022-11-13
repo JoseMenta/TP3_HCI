@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.tp3_hci.Routine
+import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 
 @Composable
 fun ratingView(
-    routine: Routine,
+    routine:RoutineDetailUiState,
     srcImg : String
 ){
     Column(
@@ -36,7 +36,7 @@ fun ratingView(
 
 @Composable
 fun Congratulations(
-    routine: Routine,
+    routine: RoutineDetailUiState,
     srcImg : String
 ){
     Column(
