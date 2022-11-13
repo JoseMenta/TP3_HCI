@@ -53,7 +53,6 @@ fun TopNavigationBar(
                     contentDescription = stringResource(id = R.string.fiti_logo),
                     modifier = Modifier
                         .size(50.dp)
-                        .padding(start = 10.dp)
                 )
             }
         },
