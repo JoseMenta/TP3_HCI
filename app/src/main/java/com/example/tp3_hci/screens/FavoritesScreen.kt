@@ -38,6 +38,11 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 
 @Composable
 fun FavoritesScreen(
+    onNavigateToFavoritesScreen: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit,
+    onNavigateToProfileScreen : () -> Unit,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen : () -> Unit,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
     val windowInfo = rememberWindowInfo()
@@ -45,11 +50,18 @@ fun FavoritesScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         FavoritesScreenMobile(
-            createdRoutines = createdRoutines
+            onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
+            onNavigateToHomeScreen = onNavigateToHomeScreen,
+            onNavigateToProfileScreen = onNavigateToProfileScreen,
+            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            createdRoutines = createdRoutines,
         )
     } else {
         FavoritesScreenTablet(
-            createdRoutines = createdRoutines
+            createdRoutines = createdRoutines,
+            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
         )
     }
 }
@@ -58,7 +70,9 @@ fun FavoritesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenTablet(
-    createdRoutines : List<RoutineCardUiState>? = null
+    createdRoutines : List<RoutineCardUiState>? = null,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen : () -> Unit
 ){
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -85,7 +99,8 @@ private fun FavoritesScreenTablet(
                                 style = MaterialTheme.typography.h2,
                                 color = FitiWhiteText
                             )
-                        }
+                        },
+                        defaulNav = onNavigateToResetHomeScreen
                     )
                 }
             ){
@@ -105,7 +120,8 @@ private fun FavoritesScreenTablet(
                                 modifier = Modifier.padding(vertical = 10.dp)
                             )
                         }
-                    }
+                    },
+                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
                 )
             }
         }
@@ -117,14 +133,19 @@ private fun FavoritesScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenMobile(
+    onNavigateToFavoritesScreen: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit,
+    onNavigateToProfileScreen : () -> Unit,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen : () -> Unit,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "/favorites", Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), "/home", Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), "/profile", Icons.Filled.Person)
+        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
     )
 
     Scaffold(
@@ -136,7 +157,7 @@ private fun FavoritesScreenMobile(
             TopNavigationBar(
                 scrollBehavior = scrollBehavior,
                 rightIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onNavigateToResetHomeScreen()}) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search),
@@ -151,11 +172,13 @@ private fun FavoritesScreenMobile(
                         style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
                         color = FitiWhiteText
                     )
-                }
+                },
+                defaulNav = onNavigateToResetHomeScreen
             )
         }
     ){
         RoutineCardDisplay(
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 20.dp),
@@ -176,6 +199,7 @@ private fun FavoritesScreenMobile(
     }
 }
 
+/*
 
 @Preview(showBackground = true)
 @Composable
@@ -192,3 +216,5 @@ fun FavoritesScreenPreview(){
         )
     }
 }
+
+*/

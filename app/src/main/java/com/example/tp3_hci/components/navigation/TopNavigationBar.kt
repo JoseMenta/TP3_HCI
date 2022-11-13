@@ -38,7 +38,8 @@ fun TopNavigationBar(
     leftIcon: (@Composable () -> Unit?)? = null,
     centerComponent: (@Composable () -> Unit)? = null,
     secondRightIcon: (@Composable () -> Unit)? = null,
-    rightIcon: (@Composable () -> Unit)? = null
+    rightIcon: (@Composable () -> Unit)? = null,
+    defaulNav: () ->Unit
 ) {
     val windowInfo = rememberWindowInfo()
 
@@ -79,6 +80,7 @@ fun TopNavigationBar(
     )
 }
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
@@ -123,3 +125,5 @@ fun TopNavigationBarPreview(){
         ){}
     }
 }
+
+*/

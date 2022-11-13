@@ -26,7 +26,8 @@ import com.example.tp3_hci.data.RoutineCardUiState
 @Composable
 fun RoutineCard(
     routine : RoutineCardUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToRutineDetailScreen: ()->Unit,
 ){
     var favoriteState by remember { mutableStateOf(routine.isFavourite) }
 
@@ -41,7 +42,7 @@ fun RoutineCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onNavigateToRutineDetailScreen() },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -156,6 +157,7 @@ fun RoutineCard(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
@@ -169,3 +171,4 @@ fun DefaultPreview() {
 
     }
 }
+ */

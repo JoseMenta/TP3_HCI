@@ -20,7 +20,7 @@ import com.example.tp3_hci.ui.theme.TP3_HCITheme
 
 data class BottomNavItem(
     val name: String,
-    val route: String,
+    val nav: () -> Unit,
     val icon: ImageVector
 )
 
@@ -53,15 +53,17 @@ fun BottomNavigationBar(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.name
-                        )
-                        Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.caption,
-                            textAlign = TextAlign.Center
-                        )
+                        IconButton(onClick = { item.nav()}){
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.name,
+                            )
+                            Text(
+                                text = item.name,
+                                style = MaterialTheme.typography.caption,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             )
@@ -69,21 +71,23 @@ fun BottomNavigationBar(
     }
 }
 
-
-@Preview(showBackground = true)
+/*
 @Composable
-fun BottomNavigationBarPreview() {
+fun BottomNavigationBarPreview(
+    onNavigateToFavScreen: (String) -> Unit,
+) {
     val items : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "/favorites", Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), "/home", Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), "/profile", Icons.Filled.Person)
+        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "Fav", Icons.Filled.Favorite),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_home), "home", Icons.Filled.Home),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), "profile", Icons.Filled.Person)
     )
     
     TP3_HCITheme {
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(items = items)
+                BottomNavigationBar(onNavigateToFavScreen, items = items)
             }
         ){}
     }
 }
+*/

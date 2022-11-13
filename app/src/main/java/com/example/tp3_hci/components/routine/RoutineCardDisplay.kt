@@ -27,7 +27,8 @@ fun RoutineCardDisplay(
     modifier: Modifier = Modifier,
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
-    footer: (@Composable ()->Unit)? = null
+    footer: (@Composable ()->Unit)? = null,
+    onNavigateToRutineDetailScreen : () -> Unit
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -35,7 +36,8 @@ fun RoutineCardDisplay(
             modifier = modifier,
             routines = routines,
             header = header,
-            footer = footer
+            footer = footer,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
         )
     }
     else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
@@ -45,7 +47,8 @@ fun RoutineCardDisplay(
             modifier = modifier,
             routines = routines,
             header = header,
-            footer = footer
+            footer = footer,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
         )
     } else {
         RoutineCardLazyGrid(
@@ -53,7 +56,8 @@ fun RoutineCardDisplay(
             modifier = modifier,
             routines = routines,
             header = header,
-            footer = footer
+            footer = footer,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
         )
     }
 }
@@ -64,7 +68,8 @@ private fun RoutineCardLazyGrid(
     modifier: Modifier = Modifier,
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
-    footer: (@Composable ()->Unit)? = null
+    footer: (@Composable ()->Unit)? = null,
+    onNavigateToRutineDetailScreen : () -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -94,7 +99,8 @@ private fun RoutineCardLazyGrid(
             items(routines) { routine ->
                 RoutineCard(
                     routine = routine,
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
                 )
             }
         }
@@ -115,7 +121,8 @@ private fun RoutineCardLazyList(
     modifier: Modifier = Modifier,
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
-    footer: (@Composable ()->Unit)? = null
+    footer: (@Composable ()->Unit)? = null,
+    onNavigateToRutineDetailScreen : () -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
@@ -139,7 +146,8 @@ private fun RoutineCardLazyList(
             items(routines){ routine ->
                 RoutineCard(
                     routine = routine,
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
                 )
             }
         }
@@ -164,7 +172,7 @@ private fun orderByItems(): List<DropDownItem>{
     )
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun RoutineCardDisplayPreview(
@@ -179,3 +187,4 @@ fun RoutineCardDisplayPreview(
     )
     RoutineCardDisplay(routines = routines)
 }
+ */

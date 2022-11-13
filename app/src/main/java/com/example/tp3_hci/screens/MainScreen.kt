@@ -30,9 +30,13 @@ import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 import kotlin.math.min
 
-
 @Composable
 fun MainScreen(
+    onNavigateToFavoritesScreen : () -> Unit,
+    onNavigateToHomeScreen : () -> Unit,
+    onNavigateToProfileScreen : () -> Unit,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen: () ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
@@ -41,13 +45,20 @@ fun MainScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
+            onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
+            onNavigateToHomeScreen = onNavigateToHomeScreen,
+            onNavigateToProfileScreen = onNavigateToProfileScreen,
+            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines
         )
     } else {
         MainScreenTablet(
             lastRoutineDone = lastRoutineDone,
-            createdRoutines = createdRoutines
+            createdRoutines = createdRoutines,
+            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
         )
     }
 }
@@ -57,7 +68,9 @@ fun MainScreen(
 @Composable
 private fun MainScreenTablet(
     lastRoutineDone : List<RoutineCardUiState>? = null,
-    createdRoutines : List<RoutineCardUiState>? = null
+    createdRoutines : List<RoutineCardUiState>? = null,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen: () ->Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -84,7 +97,8 @@ private fun MainScreenTablet(
                                 style = MaterialTheme.typography.h2,
                                 color = FitiWhiteText
                             )
-                        }
+                        },
+                        defaulNav = onNavigateToResetHomeScreen
                     )
                 }
             ){
@@ -98,7 +112,7 @@ private fun MainScreenTablet(
                             verticalArrangement = Arrangement.Center
                         ) {
                             if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                                LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone)
+                                LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen)
                             }
 
                             Text(
@@ -108,7 +122,8 @@ private fun MainScreenTablet(
                                 modifier = Modifier.padding(vertical = 10.dp)
                             )
                         }
-                    }
+                    },
+                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
                 )
             }
         }
@@ -119,15 +134,20 @@ private fun MainScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenMobile(
+    onNavigateToFavoritesScreen : () -> Unit,
+    onNavigateToHomeScreen : () -> Unit,
+    onNavigateToProfileScreen : () -> Unit,
+    onNavigateToResetHomeScreen : () -> Unit,
+    onNavigateToRutineDetailScreen: () ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), "/favorites", Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), "/home", Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), "/profile", Icons.Filled.Person)
+        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
+        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
     )
 
     Scaffold(
@@ -139,7 +159,7 @@ private fun MainScreenMobile(
             TopNavigationBar(
                 scrollBehavior = scrollBehavior,
                 rightIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onNavigateToResetHomeScreen() }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search),
@@ -154,11 +174,13 @@ private fun MainScreenMobile(
                         style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
                         color = FitiWhiteText
                     )
-                }
+                },
+                defaulNav = onNavigateToResetHomeScreen
             )
         }
     ){
         RoutineCardDisplay(
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             modifier = Modifier
                 .padding(it)
                 .padding(horizontal = 20.dp),
@@ -168,7 +190,7 @@ private fun MainScreenMobile(
                     verticalArrangement = Arrangement.Center
                 ) {
                     if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                        LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone)
+                        LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,)
                     }
 
                     Text(
@@ -187,6 +209,7 @@ private fun MainScreenMobile(
 @Composable
 private fun LastRoutineDoneDisplay(
     lastRoutineDone : List<RoutineCardUiState>,
+    onNavigateToRutineDetailScreen : () -> Unit
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -200,7 +223,8 @@ private fun LastRoutineDoneDisplay(
 
         RoutineCard(
             routine = lastRoutineDone[0],
-            modifier = Modifier.padding(bottom = 20.dp)
+            modifier = Modifier.padding(bottom = 20.dp),
+            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
         )
     } else {
         Text(
@@ -219,7 +243,8 @@ private fun LastRoutineDoneDisplay(
                 RoutineCard(
                     routine = lastRoutineDone[i-1],
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(1f),
+                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
                 )
             }
         }
@@ -238,7 +263,7 @@ private fun getItemsInRow(
     return 2
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview(){
@@ -259,3 +284,4 @@ fun MainScreenPreview(){
         )
     }
 }
+*/
