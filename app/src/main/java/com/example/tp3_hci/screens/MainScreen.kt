@@ -203,7 +203,7 @@ private fun LastRoutineDoneDisplay(
         )
     } else {
         Text(
-            text = stringResource(id = R.string.last_routine_done),
+            text = stringResource(id = R.string.last_routines_done),
             style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
             color = FitiBlueText,
             modifier = Modifier.padding(vertical = 10.dp)

@@ -20,7 +20,7 @@
     <string name="descending">Descendente</string>
     <string name="ascending">Ascendente</string>
     <string name="search">Buscar</string>
-    <string name="last_routine_done">Mi última rutina realizada</string>
+    <string name="last_routine_done">Última rutina realizada</string>
     <string name="created_routined">Rutinas creadas</string>
     <string name="favorites">Favoritos</string>
     <string name="fiti">FITI</string>
@@ -37,4 +37,5 @@
     <string name="nav_drawer_signout_cd">Cerrar sesión</string>
     <string name="descending_abrev">DES</string>
     <string name="ascending_abrev">ASC</string>
+    <string name="last_routines_done">Últimas rutinas realizadas</string>
 </resources>

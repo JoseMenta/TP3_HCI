@@ -35,7 +35,8 @@
     <string name="nav_drawer_signout">Sign out</string>
     <string name="nav_drawer_signout_cd">Sign out</string>
 
-    <string name="last_routine_done">My last routine done</string>
+    <string name="last_routine_done">Last routine done</string>
+    <string name="last_routines_done">Last routines done</string>
     <string name="created_routined">Created routines</string>
 
     <string name="routine_no_image">There is no image</string>
