@@ -37,9 +37,10 @@ fun RoutineCardDisplay(
             footer = footer
         )
     }
-    else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium) {
+    else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
+            windowInfo.screenHeightInfo !is WindowInfo.WindowType.Expanded) {
         RoutineCardLazyGrid(
-            itemsPerGrid = 2,
+            itemsPerGrid = 3,
             modifier = modifier,
             routines = routines,
             header = header,
@@ -47,7 +48,7 @@ fun RoutineCardDisplay(
         )
     } else {
         RoutineCardLazyGrid(
-            itemsPerGrid = 3,
+            itemsPerGrid = 2,
             modifier = modifier,
             routines = routines,
             header = header,

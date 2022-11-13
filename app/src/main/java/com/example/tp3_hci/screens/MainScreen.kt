@@ -230,10 +230,11 @@ private fun LastRoutineDoneDisplay(
 private fun getItemsInRow(
     windowInfo: WindowInfo
 ): Int {
-    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium){
-        return 2
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
+        windowInfo.screenHeightInfo !is WindowInfo.WindowType.Expanded){
+        return 3
     }
-    return 3
+    return 2
 }
 
 
