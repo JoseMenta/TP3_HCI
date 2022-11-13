@@ -46,7 +46,7 @@ fun BottomNavigationBar(
             val selected = (item.name == "Inicio")
             BottomNavigationItem(
                 selected = selected,
-                onClick = {},
+                onClick = { /*TODO*/ },
                 selectedContentColor = FitiGreenButton,
                 unselectedContentColor = FitiWhiteText,
                 icon = {

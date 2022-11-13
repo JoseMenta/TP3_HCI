@@ -21,6 +21,8 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
 
 
 // -------------------------------------------------------------------------
@@ -38,12 +40,14 @@ fun TopNavigationBar(
     secondRightIcon: (@Composable () -> Unit)? = null,
     rightIcon: (@Composable () -> Unit)? = null
 ) {
+    val windowInfo = rememberWindowInfo()
+
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (leftIcon != null) {
                 leftIcon()
-            } else {
+            } else if (windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded) {
                 Image(
                     painter = painterResource(id = R.drawable.fiti),
                     contentDescription = stringResource(id = R.string.fiti_logo),

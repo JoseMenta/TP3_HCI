@@ -14,8 +14,6 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 
-private const val ITEMS_PER_GRID = 2
-
 
 // -----------------------------------------------------------------------------------
 // modifier: Estilo a aplicar sobre el lazyColumn
@@ -39,8 +37,17 @@ fun RoutineCardDisplay(
             footer = footer
         )
     }
-    else {
+    else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Medium) {
         RoutineCardLazyGrid(
+            itemsPerGrid = 2,
+            modifier = modifier,
+            routines = routines,
+            header = header,
+            footer = footer
+        )
+    } else {
+        RoutineCardLazyGrid(
+            itemsPerGrid = 3,
             modifier = modifier,
             routines = routines,
             header = header,
@@ -50,28 +57,29 @@ fun RoutineCardDisplay(
 }
 
 @Composable
-fun RoutineCardLazyGrid(
+private fun RoutineCardLazyGrid(
+    itemsPerGrid: Int,
     modifier: Modifier = Modifier,
     routines: List<RoutineInfo>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(ITEMS_PER_GRID),
+        columns = GridCells.Fixed(itemsPerGrid),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
         if(header != null){
             item(
-                span = { GridItemSpan(ITEMS_PER_GRID) }
+                span = { GridItemSpan(itemsPerGrid) }
             ) {
                 header()
             }
         }
 
         item (
-            span = { GridItemSpan(ITEMS_PER_GRID) }
+            span = { GridItemSpan(itemsPerGrid) }
         ) {
             RoutineOrderDropDown(
                 items = orderByItems(),
@@ -91,7 +99,7 @@ fun RoutineCardLazyGrid(
 
         if(footer != null){
             item(
-                span = { GridItemSpan(ITEMS_PER_GRID) }
+                span = { GridItemSpan(itemsPerGrid) }
             ) {
                 footer()
             }
@@ -101,7 +109,7 @@ fun RoutineCardLazyGrid(
 
 
 @Composable
-fun RoutineCardLazyList(
+private fun RoutineCardLazyList(
     modifier: Modifier = Modifier,
     routines: List<RoutineInfo>? = null,
     header: (@Composable ()->Unit)? = null,

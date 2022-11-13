@@ -24,15 +24,98 @@ import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
+import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
+
+
+
+@Composable
+fun FavoritesScreen(
+    createdRoutines : List<RoutineInfo>? = null
+){
+    val windowInfo = rememberWindowInfo()
+
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
+        windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
+        FavoritesScreenMobile(
+            createdRoutines = createdRoutines
+        )
+    } else {
+        FavoritesScreenTablet(
+            createdRoutines = createdRoutines
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen(
+private fun FavoritesScreenTablet(
+    createdRoutines : List<RoutineInfo>? = null
+){
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+
+    NavigationDrawer(
+        content = {
+            Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = {
+                    TopNavigationBar(
+                        scrollBehavior = scrollBehavior,
+                        rightIcon = {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = stringResource(id = R.string.search),
+                                    tint = FitiWhiteText,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        },
+                        centerComponent = {
+                            Text(
+                                text = stringResource(id = R.string.fiti),
+                                style = MaterialTheme.typography.h2,
+                                color = FitiWhiteText
+                            )
+                        }
+                    )
+                }
+            ){
+                RoutineCardDisplay(
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(horizontal = 20.dp),
+                    routines = createdRoutines,
+                    header = {
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.favorites),
+                                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
+                                color = FitiBlueText,
+                                modifier = Modifier.padding(vertical = 10.dp)
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    )
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FavoritesScreenMobile(
     createdRoutines : List<RoutineInfo>? = null
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
