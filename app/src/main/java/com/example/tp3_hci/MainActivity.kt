@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.components.review.ratingView
+import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.utilities.MyNavHost
 
@@ -32,12 +33,11 @@ class MainActivity : ComponentActivity() {
                     ) {
                         MyNavHost()
                         /*
-                        LoginView()
-                        RoutineDetail(Routine("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))
+                        RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))
                         ratingView(Routine("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles),
                             "https://www.aquasportclubs.com/wp-content/uploads/2018/12/clase-dirigida-skillmill.jpg")
                         ExerciseCard()
-
+                        LoginView()
                         Spacer(modifier = Modifier.height(20.dp))
                         ExerciseCard()
                         Spacer(modifier = Modifier.height(20.dp))

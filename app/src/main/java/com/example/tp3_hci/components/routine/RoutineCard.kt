@@ -20,20 +20,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 import com.example.tp3_hci.R
+import com.example.tp3_hci.data.RoutineCardUiState
 
-data class RoutineInfo(
-    val name: String,
-    val isFavourite: Boolean = false,
-    val score: Int = 0,
-    val tags: List<String>? = null,
-    val imageUrl: String? = null
-)
 
 @Composable
 fun RoutineCard(
+    routine : RoutineCardUiState,
+    modifier: Modifier = Modifier,
     onNavigateToRutineDetailScreen: ()->Unit,
-    routine : RoutineInfo,
-    modifier: Modifier = Modifier
 ){
     var favoriteState by remember { mutableStateOf(routine.isFavourite) }
 
@@ -170,7 +164,7 @@ fun DefaultPreview() {
     TP3_HCITheme {
         Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 0.dp)) {
             RoutineCard(
-                RoutineInfo(name = "Futbol", tags = listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
+                RoutineCardUiState(name = "Futbol", tags = listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
                 // RoutineInfo(name = "Futbol", listOf("Abdominales", "Piernas Fuertes", "Gemelos"))
             )
         }

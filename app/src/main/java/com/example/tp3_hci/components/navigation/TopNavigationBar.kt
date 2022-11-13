@@ -1,16 +1,19 @@
 package com.example.tp3_hci.components.navigation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,6 +21,8 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
 
 
 // -------------------------------------------------------------------------
@@ -26,35 +31,30 @@ import com.example.tp3_hci.ui.theme.TP3_HCITheme
 // secondRightIcon: Componente que se desea colocar a la derecha del TopBar pero no es el ultimo (generalmente, es un IconButton)
 // rightIcon: Componente que se desea colocar a la derecha del TopBar (generalmente, es un IconButton)
 // -------------------------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopNavigationBar(
+    scrollBehavior: TopAppBarScrollBehavior,
     leftIcon: (@Composable () -> Unit?)? = null,
     centerComponent: (@Composable () -> Unit)? = null,
     secondRightIcon: (@Composable () -> Unit)? = null,
     rightIcon: (@Composable () -> Unit)? = null,
     defaulNav: () ->Unit
 ) {
-    TopAppBar(
-        backgroundColor = FitiBlue,
-        contentColor = FitiWhiteText,
+    val windowInfo = rememberWindowInfo()
+
+    CenterAlignedTopAppBar(
+        scrollBehavior = scrollBehavior,
         navigationIcon = {
             if (leftIcon != null) {
                 leftIcon()
-            } else {
-                Button(onClick = {
-                    defaulNav()
-                }) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Image(
-                            painter = painterResource(id = R.drawable.fiti),
-                            contentDescription = "Logo FITI",
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-                }
+            } else if (windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded) {
+                Image(
+                    painter = painterResource(id = R.drawable.fiti),
+                    contentDescription = stringResource(id = R.string.fiti_logo),
+                    modifier = Modifier
+                        .size(50.dp)
+                )
             }
         },
         title = {
@@ -62,7 +62,6 @@ fun TopNavigationBar(
                 centerComponent()
             }
         },
-        elevation = 10.dp,
         actions = {
             if (secondRightIcon != null) {
                 secondRightIcon()
@@ -70,11 +69,19 @@ fun TopNavigationBar(
             if (rightIcon != null) {
                 rightIcon()
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = FitiBlue,
+            scrolledContainerColor = FitiBlue,
+            navigationIconContentColor = FitiWhiteText,
+            titleContentColor = FitiWhiteText,
+            actionIconContentColor = FitiWhiteText
+        )
     )
 }
 
 /*
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun TopNavigationBarPreview(){
@@ -82,12 +89,12 @@ fun TopNavigationBarPreview(){
         Scaffold(
             topBar = {
                 TopNavigationBar(
+                    scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                     leftIcon = {
                         IconButton(onClick = { /*TODO*/ }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Menu",
-                                tint = FitiWhiteText
+                                contentDescription = "Menu"
                             )
                         }
                     },
@@ -95,8 +102,7 @@ fun TopNavigationBarPreview(){
                         IconButton(onClick = { /*TODO*/ }) {
                             Icon(
                                 imageVector = Icons.Default.Share,
-                                contentDescription = "Menu",
-                                tint = FitiWhiteText
+                                contentDescription = "Menu"
                             )
                         }
                     },
@@ -104,15 +110,14 @@ fun TopNavigationBarPreview(){
                         IconButton(onClick = { /*TODO*/ }) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
-                                contentDescription = "Menu",
-                                tint = FitiWhiteText
+                                contentDescription = "Menu"
                             )
                         }
                     },
                     centerComponent = {
                         Text(
                             text = "FITI",
-                            style = MaterialTheme.typography.h3.copy(fontSize = 22.sp, color = FitiWhiteText)
+                            style = MaterialTheme.typography.h3.copy(fontSize = 22.sp)
                         )
                     }
                 )

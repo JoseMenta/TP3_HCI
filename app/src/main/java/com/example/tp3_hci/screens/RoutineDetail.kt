@@ -19,43 +19,27 @@ import com.example.tp3_hci.components.routine.DifficultyIcons
 import com.example.tp3_hci.components.routine.RatingStars
 import com.example.tp3_hci.components.routine.RoutineImage
 import com.example.tp3_hci.components.routine.RoutineTag
+import com.example.tp3_hci.data.ExerciseCardUiSate
+import com.example.tp3_hci.data.RoutineDetailUiState
+import com.example.tp3_hci.data.RoutineCycleUiState
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 
 val names = listOf("Futbol","Scaloneta")
 
 
-data class CycleExercise(
-    val name:String,
-    val image:String,
-    val time:Int,
-    val repetitions: Int
-)
-data class RoutineCycle(
-    val name:String,
-    val repetitions:Int,
-    val exercises: List<CycleExercise>
-)
-data class Routine(
-    val name:String,
-    val difficulty: Int,
-    val creator:String,
-    val rating:Int,
-    val votes:Int,
-    val tags: List<String>,
-    val cycles: List<RoutineCycle>
-)
+
 val exercises = listOf(
-    CycleExercise("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
-    CycleExercise("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
-    CycleExercise("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
-    CycleExercise("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
+    ExerciseCardUiSate("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
+    ExerciseCardUiSate("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
+    ExerciseCardUiSate("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
+    ExerciseCardUiSate("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
 )
 val cycles = listOf(
-    RoutineCycle("Calentamiento",2, exercises),
-    RoutineCycle("Ciclo 1",4, exercises),
-    RoutineCycle("Ciclo 2",3, exercises),
-    RoutineCycle("Enfriamiento",3, exercises)
+    RoutineCycleUiState("Calentamiento",2, exercises),
+    RoutineCycleUiState("Ciclo 1",4, exercises),
+    RoutineCycleUiState("Ciclo 2",3, exercises),
+    RoutineCycleUiState("Enfriamiento",3, exercises)
 )
 
 @Composable
@@ -64,8 +48,9 @@ fun RoutineData(
     difficulty: Int,
     creator: String,
     rating: Int,
-    votes: Int){
-    val thousand_votes = votes/1000.0
+    votes: Int
+    ){
+        val thousand_votes = votes/1000.0
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ){
@@ -102,7 +87,8 @@ fun RoutineTags(
 
 @Composable
 fun RoutineCycle(
-    cycle: RoutineCycle
+    cycle: RoutineCycleUiState,
+    status: ExerciseCardStatus = ExerciseCardStatus.VIEW_ONLY
 ){
     Card(
         modifier = Modifier.padding(8.dp),
@@ -128,11 +114,13 @@ fun RoutineCycle(
                     Text(text = cycle.repetitions.toString(), style = MaterialTheme.typography.h3)
                 }
             }
-            cycle.exercises.forEach{ _ ->
+            cycle.exercises.forEach{ exercise ->
                 ExerciseCard(
                     modifier = Modifier.padding(8.dp,0.dp),
                     elevation = 4.dp,
-                    background = MaterialTheme.colors.background
+                    background = MaterialTheme.colors.background,
+                    status = status,
+                    exercise = exercise
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -141,7 +129,7 @@ fun RoutineCycle(
 }
 @Composable
 fun RoutineDetail(
-    routine: Routine
+    routine: RoutineDetailUiState
 ){
     Scaffold(
         floatingActionButton = {
@@ -158,7 +146,8 @@ fun RoutineDetail(
     ){
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = it
         ){
             item{
                 Row(
@@ -182,7 +171,7 @@ fun RoutineDetail(
                 RoutineTags(tags = routine.tags, modifier = Modifier.padding(8.dp,0.dp))
             }
             items(routine.cycles){
-                RoutineCycle(it)
+                RoutineCycle(it, status = ExerciseCardStatus.EDITABLE)
             }
         }
     }
@@ -192,6 +181,6 @@ fun RoutineDetail(
 @Composable
 fun RoutineDetailPreview() {
     TP3_HCITheme {
-        RoutineDetail(Routine("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
+        RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
     }
 }

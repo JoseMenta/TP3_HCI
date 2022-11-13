@@ -4,7 +4,8 @@
     <string name="difficulty">Dificultad</string>
     <string name="created_by">Creado por</string>
     <string name="start">Empezar</string>
-
+    <string name="time">Tiempo</string>
+    <string name="repetitions">Repetitions</string>
     <string name="bottom_nav_home">Inicio</string>
     <string name="bottom_nav_favorites">Favoritos</string>
     <string name="bottom_nav_profile">Perfil</string>
@@ -17,10 +18,25 @@
     <string name="rating">Puntuación</string>
     <string name="category">Categoría</string>
     <string name="order_by">Ordenar por</string>
-    <string name="descending">DES</string>
-    <string name="ascending">ASC</string>
+    <string name="descending">Descendente</string>
+    <string name="ascending">Ascendente</string>
     <string name="search">Buscar</string>
-    <string name="last_routine_done">Mi última rutina realizada</string>
+    <string name="last_routine_done">Última rutina realizada</string>
     <string name="created_routined">Rutinas creadas</string>
     <string name="favorites">Favoritos</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">Logo FITI</string>
+    <string name="nav_drawer_home">Inicio</string>
+    <string name="nav_drawer_home_cd">Ir a la página de inicio</string>
+    <string name="nav_drawer_favorites">Favoritos</string>
+    <string name="nav_drawer_favorites_cd">Ir a la página de favoritos</string>
+    <string name="nav_drawer_profile">Mi perfil</string>
+    <string name="nav_drawer_profile_cd">Ir a mi perfil</string>
+    <string name="nav_drawer_settings">Configuración</string>
+    <string name="nav_drawer_settings_cd">Ir a la configuración</string>
+    <string name="nav_drawer_signout">Cerrar sesión</string>
+    <string name="nav_drawer_signout_cd">Cerrar sesión</string>
+    <string name="descending_abrev">DES</string>
+    <string name="ascending_abrev">ASC</string>
+    <string name="last_routines_done">Últimas rutinas realizadas</string>
 </resources>

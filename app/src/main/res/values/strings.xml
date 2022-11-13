@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">TP3_HCI</string>
+    <string name="fiti">FITI</string>
+    <string name="fiti_logo">FITI Logo</string>
+
     <string name="name">Name</string>
     <string name="creation_date">Creation date</string>
     <string name="rating">Rating</string>
@@ -8,6 +11,11 @@
     <string name="order_by">Order by</string>
     <string name="descending">DES</string>
     <string name="ascending">ASC</string>
+    <string name="time">Time</string>
+    <string name="repetitions">Repetitions</string>
+
+    <string name="descending_abrev">DES</string>
+    <string name="ascending_abrev">ASC</string>
 
     <string name="created_by">Created by</string>
     <string name="start">Start</string>
@@ -17,7 +25,20 @@
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_favorites">Favorites</string>
     <string name="bottom_nav_profile">Profile</string>
-    <string name="last_routine_done">My last routine done</string>
+
+    <string name="nav_drawer_home">Home</string>
+    <string name="nav_drawer_home_cd">Go to home screen</string>
+    <string name="nav_drawer_favorites">Favorites</string>
+    <string name="nav_drawer_favorites_cd">Go to favorites screen</string>
+    <string name="nav_drawer_profile">My profile</string>
+    <string name="nav_drawer_profile_cd">Go to my profile screen</string>
+    <string name="nav_drawer_settings">Settings</string>
+    <string name="nav_drawer_settings_cd">Go to settings screen</string>
+    <string name="nav_drawer_signout">Sign out</string>
+    <string name="nav_drawer_signout_cd">Sign out</string>
+
+    <string name="last_routine_done">Last routine done</string>
+    <string name="last_routines_done">Last routines done</string>
     <string name="created_routined">Created routines</string>
 
     <string name="routine_no_image">There is no image</string>

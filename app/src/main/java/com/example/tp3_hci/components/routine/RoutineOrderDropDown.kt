@@ -1,9 +1,6 @@
 package com.example.tp3_hci.components.routine
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -17,12 +14,19 @@ import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiBlueText
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
 
 data class DropDownItem(
     val value: String
 )
 
-val roundBorderValue = 4.dp
+data class DropDownWeight(
+    val orderByWeight: Float,
+    val orderTypeWeight: Float
+)
+
+private val roundBorderValue = 4.dp
 
 // ------------------------------------------------------------------------------------
 // modifier: Estilo a aplicar al componente
@@ -42,6 +46,7 @@ fun RoutineOrderDropDown(
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.Start,
         modifier = modifier
     ) {
         var expanded by remember { mutableStateOf(false) }
@@ -53,7 +58,7 @@ fun RoutineOrderDropDown(
                 expanded = !expanded
             },
             modifier = Modifier.
-                weight(0.6f)
+                weight(getDropDownWeight().orderByWeight)
         ) {
             OutlinedTextField(
                 singleLine = true,
@@ -76,6 +81,7 @@ fun RoutineOrderDropDown(
                 },
                 textStyle = MaterialTheme.typography.body1.copy(fontSize = 14.sp),
                 shape = RoundedCornerShape(topStart = roundBorderValue, bottomStart = roundBorderValue),
+                modifier = Modifier.fillMaxWidth(),
                 colors = ExposedDropdownMenuDefaults.textFieldColors(
                     textColor = FitiBlueText,
                     disabledTextColor = FitiBlueText,
@@ -119,7 +125,7 @@ fun RoutineOrderDropDown(
 
         OrderTypeDropDown(
             onOrderTypeChange = onOrderTypeChange,
-            modifier = Modifier.weight(0.3f)
+            modifier = Modifier.weight(getDropDownWeight().orderTypeWeight)
         )
     }
 
@@ -128,14 +134,11 @@ fun RoutineOrderDropDown(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun OrderTypeDropDown(
+private fun OrderTypeDropDown(
     modifier: Modifier = Modifier,
     onOrderTypeChange: ((DropDownItem) -> Unit)? = null,
 ){
-    val items = listOf(
-        DropDownItem(stringResource(id = R.string.descending)),
-        DropDownItem(stringResource(id = R.string.ascending))
-    )
+    val items = getOrderTypeStrings()
 
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(items[0]) }
@@ -161,6 +164,7 @@ fun OrderTypeDropDown(
             },
             textStyle = MaterialTheme.typography.body1.copy(fontSize = 14.sp),
             shape = RoundedCornerShape(topEnd = roundBorderValue, bottomEnd = roundBorderValue),
+            modifier = Modifier.fillMaxWidth(),
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 textColor = FitiBlueText,
                 disabledTextColor = FitiBlueText,
@@ -201,6 +205,34 @@ fun OrderTypeDropDown(
         }
 
     }
+}
+
+
+@Composable
+private fun getOrderTypeStrings(): List<DropDownItem>{
+    val windowInfo = rememberWindowInfo()
+
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
+        return listOf(
+            DropDownItem(stringResource(id = R.string.descending_abrev)),
+            DropDownItem(stringResource(id = R.string.ascending_abrev))
+        )
+    }
+
+    return listOf(
+        DropDownItem(stringResource(id = R.string.descending)),
+        DropDownItem(stringResource(id = R.string.ascending))
+    )
+}
+
+
+@Composable
+private fun getDropDownWeight(): DropDownWeight{
+    val windowInfo = rememberWindowInfo()
+    if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
+        return DropDownWeight(0.6f, 0.4f)
+    }
+    return DropDownWeight(0.5f, 0.5f)
 }
 
 
