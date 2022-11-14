@@ -12,14 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.R
+import com.example.tp3_hci.data.OrderByItem
+import com.example.tp3_hci.data.OrderTypeItem
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
-
-data class DropDownItem(
-    val value: String
-)
 
 data class DropDownWeight(
     val orderByWeight: Float,
@@ -30,19 +28,15 @@ private val roundBorderValue = 4.dp
 
 // ------------------------------------------------------------------------------------
 // modifier: Estilo a aplicar al componente
-// items: Lista de items a utilizar en el dropdown
-// default: Valor inicial a elegir en el dropdown
-// onItemChange: Funcion a ejecutar al cambiar el estado del dropdown (recibe el nuevo item seleccionado)
+// onOrderByChange: Funcion a ejecutar al cambiar el estado del dropdown (recibe el nuevo item seleccionado)
 // onOrderTypeChange: Funcion a ejecutar al cambiar el tipo de orden
 // ------------------------------------------------------------------------------------
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RoutineOrderDropDown(
     modifier: Modifier = Modifier,
-    items: List<DropDownItem>,
-    default: Int = 0,
-    onItemChange: ((DropDownItem) -> Unit)? = null,
-    onOrderTypeChange: ((DropDownItem) -> Unit)? = null
+    onOrderByChange: ((OrderByItem) -> Unit)? = null,
+    onOrderTypeChange: ((OrderTypeItem) -> Unit)? = null
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
@@ -50,7 +44,9 @@ fun RoutineOrderDropDown(
         modifier = modifier
     ) {
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(items[default]) }
+        var selectedOptionText by remember {
+            mutableStateOf(OrderByItem.Name as OrderByItem)
+        }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -63,10 +59,10 @@ fun RoutineOrderDropDown(
             OutlinedTextField(
                 singleLine = true,
                 readOnly = true,
-                value = selectedOptionText.value,
+                value = stringResource(id = selectedOptionText.stringId),
                 onValueChange = {
-                    if(onItemChange != null){
-                        onItemChange(selectedOptionText)
+                    if(onOrderByChange != null){
+                        onOrderByChange(selectedOptionText)
                     }
                 },
                 label = {
@@ -105,15 +101,15 @@ fun RoutineOrderDropDown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                items.forEach { selectedOption ->
+                OrderByItem::class.sealedSubclasses.forEach { selectedOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectedOption
+                            selectedOptionText = selectedOption.objectInstance as OrderByItem
                             expanded = false
                         }
                     ) {
                         Text(
-                            text = selectedOption.value,
+                            text = stringResource(id = (selectedOption.objectInstance as OrderByItem).stringId),
                             style = MaterialTheme.typography.body1,
                             color = FitiBlueText
                         )
@@ -136,12 +132,13 @@ fun RoutineOrderDropDown(
 @Composable
 private fun OrderTypeDropDown(
     modifier: Modifier = Modifier,
-    onOrderTypeChange: ((DropDownItem) -> Unit)? = null,
+    onOrderTypeChange: ((OrderTypeItem) -> Unit)? = null,
 ){
-    val items = getOrderTypeStrings()
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(items[0]) }
+    var selectedOptionText by remember {
+        mutableStateOf(OrderTypeItem.Descending as OrderTypeItem)
+    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -153,7 +150,7 @@ private fun OrderTypeDropDown(
         OutlinedTextField(
             singleLine = true,
             readOnly = true,
-            value = selectedOptionText.value,
+            value = getOrderTypeString(orderType = selectedOptionText),
             onValueChange = {
                 if(onOrderTypeChange != null){
                     onOrderTypeChange(selectedOptionText)
@@ -188,15 +185,15 @@ private fun OrderTypeDropDown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            items.forEach { selectedOption ->
+            OrderTypeItem::class.sealedSubclasses.forEach { selectedOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectedOption
+                        selectedOptionText = selectedOption.objectInstance as OrderTypeItem
                         expanded = false
                     }
                 ) {
                     Text(
-                        text = selectedOption.value,
+                        text = getOrderTypeString(orderType = (selectedOption.objectInstance as OrderTypeItem)),
                         style = MaterialTheme.typography.body1,
                         color = FitiBlueText
                     )
@@ -209,20 +206,22 @@ private fun OrderTypeDropDown(
 
 
 @Composable
-private fun getOrderTypeStrings(): List<DropDownItem>{
+private fun getOrderTypeString(
+    orderType: OrderTypeItem
+): String{
     val windowInfo = rememberWindowInfo()
 
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
-        return listOf(
-            DropDownItem(stringResource(id = R.string.descending_abrev)),
-            DropDownItem(stringResource(id = R.string.ascending_abrev))
-        )
+        return when(orderType){
+            is OrderTypeItem.Descending -> stringResource(id = R.string.descending_abrev)
+            else -> stringResource(id = R.string.ascending_abrev)
+        }
     }
 
-    return listOf(
-        DropDownItem(stringResource(id = R.string.descending)),
-        DropDownItem(stringResource(id = R.string.ascending))
-    )
+    return when(orderType){
+        is OrderTypeItem.Descending -> stringResource(id = R.string.descending)
+        else -> stringResource(id = R.string.ascending)
+    }
 }
 
 
@@ -240,18 +239,11 @@ private fun getDropDownWeight(): DropDownWeight{
 @Preview(showBackground = true)
 @Composable
 fun DropDownPreview(){
-    val items = listOf(
-        DropDownItem(stringResource(id = R.string.name)),
-        DropDownItem(stringResource(id = R.string.creation_date)),
-        DropDownItem(stringResource(id = R.string.rating)),
-        DropDownItem(stringResource(id = R.string.difficulty)),
-        DropDownItem(stringResource(id = R.string.category))
-    )
     Column(
         modifier = Modifier.
                 padding(horizontal = 20.dp)
     ){
-        RoutineOrderDropDown(items = items)
+        RoutineOrderDropDown()
     }
 
 }

@@ -1,40 +1,32 @@
 package com.example.tp3_hci.screens
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.R
-import com.example.tp3_hci.components.navigation.BottomNavItem
-import com.example.tp3_hci.components.navigation.BottomNavigationBar
-import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import androidx.compose.ui.text.font.FontWeight
-import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.data.RoutineCardUiState
-import com.example.tp3_hci.ui.theme.FitiWhiteText
-import com.example.tp3_hci.utilities.WindowInfo
-import com.example.tp3_hci.utilities.rememberWindowInfo
+import com.example.tp3_hci.utilities.*
 import kotlin.math.min
+
+
+
 
 @Composable
 fun MainScreen(
-    onNavigateToFavoritesScreen : () -> Unit,
-    onNavigateToHomeScreen : () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
     onNavigateToResetHomeScreen : () -> Unit,
     onNavigateToRutineDetailScreen: () ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
@@ -45,13 +37,10 @@ fun MainScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
-            onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
-            onNavigateToHomeScreen = onNavigateToHomeScreen,
-            onNavigateToProfileScreen = onNavigateToProfileScreen,
             onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
             onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             lastRoutineDone = lastRoutineDone,
-            createdRoutines = createdRoutines
+            createdRoutines = createdRoutines,
         )
     } else {
         MainScreenTablet(
@@ -74,59 +63,34 @@ private fun MainScreenTablet(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-    NavigationDrawer(
+    RegularTabletDisplay(
         content = {
-            Scaffold(
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
-                    TopNavigationBar(
-                        scrollBehavior = scrollBehavior,
-                        rightIcon = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Search,
-                                    contentDescription = stringResource(id = R.string.search),
-                                    tint = FitiWhiteText,
-                                    modifier = Modifier.size(30.dp)
-                                )
-                            }
-                        },
-                        centerComponent = {
-                            Text(
-                                text = stringResource(id = R.string.fiti),
-                                style = MaterialTheme.typography.h2,
-                                color = FitiWhiteText
-                            )
-                        },
-                        defaulNav = onNavigateToResetHomeScreen
-                    )
-                }
-            ){
-                RoutineCardDisplay(
-                    modifier = Modifier
-                        .padding(it)
-                        .padding(horizontal = 20.dp),
-                    routines = createdRoutines,
-                    header = {
-                        Column(
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                                LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen)
-                            }
-
-                            Text(
-                                text = stringResource(id = R.string.created_routined),
-                                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
-                                color = FitiBlueText,
-                                modifier = Modifier.padding(vertical = 10.dp)
+            RoutineCardDisplay(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                routines = createdRoutines,
+                header = {
+                    Column(
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
+                            LastRoutineDoneDisplay(
+                                lastRoutineDone = lastRoutineDone,
+                                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
                             )
                         }
-                    },
-                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
-                )
-            }
-        }
+
+                        Text(
+                            text = stringResource(id = R.string.created_routined),
+                            style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
+                            color = FitiBlueText,
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
+                    }
+                },
+                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+            )
+        },
+        scrollBehavior = scrollBehavior
     )
 }
 
@@ -134,76 +98,46 @@ private fun MainScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenMobile(
-    onNavigateToFavoritesScreen : () -> Unit,
-    onNavigateToHomeScreen : () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
     onNavigateToResetHomeScreen : () -> Unit,
     onNavigateToRutineDetailScreen: () ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
-    createdRoutines : List<RoutineCardUiState>? = null
+    createdRoutines : List<RoutineCardUiState>? = null,
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
-    )
+    RegularMobileDisplay(
+        content = {
+            RoutineCardDisplay(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                routines = createdRoutines,
+                header = {
+                    Column(
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
+                            LastRoutineDoneDisplay(
+                                lastRoutineDone = lastRoutineDone,
+                                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                            )
+                        }
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        bottomBar = {
-            BottomNavigationBar(items = bottomNavItems)
-        },
-        topBar = {
-            TopNavigationBar(
-                scrollBehavior = scrollBehavior,
-                rightIcon = {
-                    IconButton(onClick = { onNavigateToResetHomeScreen() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(id = R.string.search),
-                            tint = FitiWhiteText,
-                            modifier = Modifier.size(30.dp)
+                        Text(
+                            text = stringResource(id = R.string.created_routined),
+                            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+                            color = FitiBlueText,
+                            modifier = Modifier.padding(vertical = 10.dp)
                         )
                     }
                 },
-                centerComponent = {
-                    Text(
-                        text = stringResource(id = R.string.fiti),
-                        style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
-                        color = FitiWhiteText
-                    )
-                },
-                defaulNav = onNavigateToResetHomeScreen
+                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
             )
-        }
-    ){
-        RoutineCardDisplay(
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = 20.dp),
-            routines = createdRoutines,
-            header = {
-                Column(
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                        LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,)
-                    }
-
-                    Text(
-                        text = stringResource(id = R.string.created_routined),
-                        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-                        color = FitiBlueText,
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
-                }
-            }
-        )
-    }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
+
+
+
 
 
 @Composable
@@ -263,10 +197,10 @@ private fun getItemsInRow(
     return 2
 }
 
-/*
+
 @Preview(showBackground = true)
 @Composable
-fun MainScreenPreview(){
+private fun MainScreenPreview(){
     TP3_HCITheme {
         MainScreen(
             lastRoutineDone = listOf(
@@ -280,8 +214,9 @@ fun MainScreenPreview(){
                     RoutineCardUiState("Abdominales", false, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
                     RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
                     RoutineCardUiState("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
-            )
+            ),
+            onNavigateToRutineDetailScreen = {},
+            onNavigateToResetHomeScreen = {}
         )
     }
 }
-*/

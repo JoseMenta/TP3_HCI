@@ -13,6 +13,7 @@ import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.screens.FavoritesScreen
 import com.example.tp3_hci.screens.MainScreen
+import com.example.tp3_hci.screens.SearchResultsScreen
 
 @Composable
 fun MyNavHost(
@@ -34,9 +35,6 @@ fun MyNavHost(
         }
         composable("MainScreen"){
             MainScreen(
-                onNavigateToFavoritesScreen = {navController.navigate("Favorites")},
-                onNavigateToHomeScreen = {navController.navigate("MainScreen")},
-                onNavigateToProfileScreen = {navController.navigate("Profile")},
                 onNavigateToRutineDetailScreen = {navController.navigate("RutineDetails")},
                 onNavigateToResetHomeScreen = {navController.navigate("MainScreen"){
                     popUpTo("MainScreen")
@@ -55,14 +53,27 @@ fun MyNavHost(
         }
         composable("Favorites"){
             FavoritesScreen(
-                onNavigateToFavoritesScreen = {navController.navigate("Favorites")},
-                onNavigateToHomeScreen = {navController.navigate("MainScreen")},
-                onNavigateToProfileScreen = {navController.navigate("Profile")},
                 onNavigateToRutineDetailScreen = {navController.navigate("RutineDetails")},
                 onNavigateToResetHomeScreen = {navController.navigate("MainScreen"){
                     popUpTo("MainScreen")
                 } },
-                createdRoutines = listOf(
+                favoriteRoutines = listOf(
+                    RoutineCardUiState("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
+                    RoutineCardUiState("Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
+                    RoutineCardUiState("Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
+                    RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
+                    RoutineCardUiState("Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
+                )
+            )
+        }
+        composable("SearchResults"){
+            SearchResultsScreen(
+                onNavigateToRutineDetailScreen = {navController.navigate("RutineDetails")},
+                onNavigateToResetHomeScreen = {navController.navigate("MainScreen"){
+                    popUpTo("MainScreen")
+                } },
+                stringSearched = "Fu",
+                routinesFound = listOf(
                     RoutineCardUiState("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
                     RoutineCardUiState("Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
                     RoutineCardUiState("Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
@@ -74,6 +85,7 @@ fun MyNavHost(
         composable("RutineDetails"){
             RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
         }
+
 
     }
 }
