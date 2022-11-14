@@ -8,6 +8,8 @@ import androidx.activity.result.contract.ActivityResultContract
 import java.util.*
 import kotlin.collections.ArrayList
 
+// Credits: https://www.youtube.com/watch?v=dbObvDfM6DM&ab_channel=NativeAndroidDevelopment
+
 class SpeechRecognizerContract: ActivityResultContract<Unit, ArrayList<String>?>() {
     // Realiza la solicitud para hacer busqueda por voz
     override fun createIntent(context: Context, input: Unit): Intent {
