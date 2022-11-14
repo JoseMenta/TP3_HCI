@@ -35,11 +35,11 @@ import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.review.ratingView
 import com.example.tp3_hci.cycles
-import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.screens.FavoritesScreen
 import com.example.tp3_hci.screens.MainScreen
 import com.example.tp3_hci.screens.Routines
+import com.example.tp3_hci.screens.SearchResultsScreen
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,9 +62,9 @@ fun MyNavHost(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), { navController.navigate("Favorites") }, Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), { navController.navigate("MainScreen") }, Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), { navController.navigate("Favorites") }, Icons.Filled.Person)
+        BottomNavItem(R.string.bottom_nav_favorites, { navController.navigate("Favorites") }, Icons.Filled.Favorite),
+        BottomNavItem(R.string.bottom_nav_home, { navController.navigate("MainScreen") }, Icons.Filled.Home),
+        BottomNavItem(R.string.bottom_nav_profile, { navController.navigate("Favorites") }, Icons.Filled.Person)
     )
 
     Scaffold(
@@ -76,7 +76,7 @@ fun MyNavHost(
             if (showBottomBar) TopNavigationBar(
                 scrollBehavior = scrollBehavior,
                 rightIcon = {
-                    IconButton(onClick = { navController.navigate("MainScreen")  }) {
+                    IconButton(onClick = { navController.navigate("SearchResults")  }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search),
@@ -109,7 +109,7 @@ fun MyNavHost(
             }
             composable("MainScreen"){
                 MainScreen(
-                    onNavigateToRutineDetailScreen = {index -> navController.navigate("RutineDetails/$index")},
+                    onNavigateToRutineDetailScreen = {name -> navController.navigate("RutineDetails/$name")},
                     onNavigateToResetHomeScreen = {navController.navigate("MainScreen"){
                         popUpTo("MainScreen")
                     } },
@@ -122,16 +122,17 @@ fun MyNavHost(
             }
             composable("Favorites"){
                 FavoritesScreen(
-                    onNavigateToRutineDetailScreen = {index -> navController.navigate("RutineDetails/$index")},
+                    onNavigateToRutineDetailScreen = {name -> navController.navigate("RutineDetails/$name")},
                     onNavigateToResetHomeScreen = {navController.navigate("MainScreen"){
                         popUpTo("MainScreen")
                     } },
-                    createdRoutines = Routines
+                    favoriteRoutines = Routines
                 )
             }
             composable("RutineDetails/{name}",
                 arguments = listOf(navArgument("name") { type = NavType.StringType })){
 
+                //Todos estos filters despues se sacan y se pone el manejo de la API
                 val aux = Routines.filter { routine -> routine.name == (it.arguments?.getString("name") ?: "") }.first()
                 RoutineDetail(
                     onNavigateToMakeRuotineScreen = {navController.navigate("MakeRuotine/${aux.name}")},
@@ -154,6 +155,14 @@ fun MyNavHost(
                 ratingView(
                     onNavigateToHomeScreen = {navController.navigate("MainScreen")},
                     aux
+                )
+            }
+            composable("SearchResults"){
+
+                SearchResultsScreen(
+                    stringSearched= "",
+                    routinesFound = Routines,
+                    onNavigateToRutineDetailScreen = {name -> navController.navigate("RutineDetails/$name")},
                 )
             }
         }

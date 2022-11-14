@@ -6,11 +6,21 @@
     <string name="name">Name</string>
     <string name="creation_date">Creation date</string>
     <string name="rating">Rating</string>
+    <string name="rating_icon">⭐</string>
     <string name="difficulty">Difficulty</string>
+    <string name="difficulty_icon">⚡</string>
     <string name="category">Category</string>
+    <string name="category_full_body">Full body</string>
+    <string name="category_upper">Upper body</string>
+    <string name="category_mid">Mid body</string>
+    <string name="category_lower">Lower body</string>
     <string name="order_by">Order by</string>
     <string name="descending">DES</string>
     <string name="ascending">ASC</string>
+    <string name="search_by">Search by</string>
+    <string name="routine_name">Routine name</string>
+    <string name="creator_name">Creator name</string>
+
     <string name="time">Time</string>
     <string name="repetitions">Repetitions</string>
 
@@ -45,4 +55,12 @@
     <string name="routine_image">Routine image</string>
     <string name="routine_is_favorite">Is favorite</string>
     <string name="routine_is_not_favorite">Is not favorite</string>
+    
+    <string name="delete_filter">Delete %1$s filter</string>
+    <string name="cancel_search">Cancel search</string>
+    <string name="voice_search">Voice search</string>
+    <string name="search_routines">Search routines</string>
+    <string name="delete_text">Delete text</string>
+
+    <string name="results_title">Results found for: \"%1$s\"</string>
 </resources>
