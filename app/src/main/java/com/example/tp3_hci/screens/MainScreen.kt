@@ -30,13 +30,19 @@ import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 import kotlin.math.min
 
+val Routines = listOf(
+    RoutineCardUiState("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
+    RoutineCardUiState("Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
+    RoutineCardUiState("Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
+    RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
+    RoutineCardUiState("Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
+)
+
+
 @Composable
 fun MainScreen(
-    onNavigateToFavoritesScreen : () -> Unit,
-    onNavigateToHomeScreen : () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
     onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen: () ->Unit,
+    onNavigateToRutineDetailScreen: (String) ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
@@ -45,10 +51,6 @@ fun MainScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
-            onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
-            onNavigateToHomeScreen = onNavigateToHomeScreen,
-            onNavigateToProfileScreen = onNavigateToProfileScreen,
-            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
             onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines
@@ -70,7 +72,7 @@ private fun MainScreenTablet(
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null,
     onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen: () ->Unit,
+    onNavigateToRutineDetailScreen: (String) ->Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -131,85 +133,41 @@ private fun MainScreenTablet(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenMobile(
-    onNavigateToFavoritesScreen : () -> Unit,
-    onNavigateToHomeScreen : () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen: () ->Unit,
+    onNavigateToRutineDetailScreen: (String) ->Unit,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-
-    val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
-    )
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        bottomBar = {
-            BottomNavigationBar(items = bottomNavItems)
-        },
-        topBar = {
-            TopNavigationBar(
-                scrollBehavior = scrollBehavior,
-                rightIcon = {
-                    IconButton(onClick = { onNavigateToResetHomeScreen() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(id = R.string.search),
-                            tint = FitiWhiteText,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                },
-                centerComponent = {
-                    Text(
-                        text = stringResource(id = R.string.fiti),
-                        style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
-                        color = FitiWhiteText
-                    )
-                },
-                defaulNav = onNavigateToResetHomeScreen
-            )
-        }
-    ){
-        RoutineCardDisplay(
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = 20.dp),
-            routines = createdRoutines,
-            header = {
-                Column(
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                        LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,)
-                    }
-
-                    Text(
-                        text = stringResource(id = R.string.created_routined),
-                        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-                        color = FitiBlueText,
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
+    RoutineCardDisplay(
+        onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+        modifier = Modifier
+            .padding(horizontal = 20.dp),
+        routines = createdRoutines,
+        header = {
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
+                if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
+                    LastRoutineDoneDisplay(lastRoutineDone = lastRoutineDone, onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen)
                 }
+
+                Text(
+                    text = stringResource(id = R.string.created_routined),
+                    style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+                    color = FitiBlueText,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
             }
-        )
-    }
+        }
+    )
 }
 
 
 @Composable
 private fun LastRoutineDoneDisplay(
     lastRoutineDone : List<RoutineCardUiState>,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ){
     val windowInfo = rememberWindowInfo()
 

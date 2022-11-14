@@ -46,14 +46,13 @@ fun BottomNavigationBar(
             val selected = (item.name == "Inicio")
             BottomNavigationItem(
                 selected = selected,
-                onClick = { /*TODO*/ },
+                onClick = { item.nav() },
                 selectedContentColor = FitiGreenButton,
                 unselectedContentColor = FitiWhiteText,
                 icon = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        IconButton(onClick = { item.nav()}){
                             Icon(
                                 imageVector = item.icon,
                                 contentDescription = item.name,
@@ -63,7 +62,6 @@ fun BottomNavigationBar(
                                 style = MaterialTheme.typography.caption,
                                 textAlign = TextAlign.Center
                             )
-                        }
                     }
                 }
             )

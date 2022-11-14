@@ -38,11 +38,8 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 
 @Composable
 fun FavoritesScreen(
-    onNavigateToFavoritesScreen: () -> Unit,
-    onNavigateToHomeScreen: () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
     onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen : () -> Unit,
+    onNavigateToRutineDetailScreen : (String) -> Unit,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
     val windowInfo = rememberWindowInfo()
@@ -50,10 +47,6 @@ fun FavoritesScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         FavoritesScreenMobile(
-            onNavigateToFavoritesScreen = onNavigateToFavoritesScreen,
-            onNavigateToHomeScreen = onNavigateToHomeScreen,
-            onNavigateToProfileScreen = onNavigateToProfileScreen,
-            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
             onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
             createdRoutines = createdRoutines,
         )
@@ -72,7 +65,7 @@ fun FavoritesScreen(
 private fun FavoritesScreenTablet(
     createdRoutines : List<RoutineCardUiState>? = null,
     onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ){
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -129,74 +122,30 @@ private fun FavoritesScreenTablet(
 }
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenMobile(
-    onNavigateToFavoritesScreen: () -> Unit,
-    onNavigateToHomeScreen: () -> Unit,
-    onNavigateToProfileScreen : () -> Unit,
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen : () -> Unit,
+    onNavigateToRutineDetailScreen : (String) -> Unit,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(stringResource(id = R.string.bottom_nav_favorites), onNavigateToFavoritesScreen, Icons.Filled.Favorite),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_home), onNavigateToHomeScreen, Icons.Filled.Home),
-        BottomNavItem(stringResource(id = R.string.bottom_nav_profile), onNavigateToProfileScreen, Icons.Filled.Person)
-    )
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        bottomBar = {
-            BottomNavigationBar(items = bottomNavItems)
-        },
-        topBar = {
-            TopNavigationBar(
-                scrollBehavior = scrollBehavior,
-                rightIcon = {
-                    IconButton(onClick = { onNavigateToResetHomeScreen()}) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(id = R.string.search),
-                            tint = FitiWhiteText,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                },
-                centerComponent = {
-                    Text(
-                        text = stringResource(id = R.string.fiti),
-                        style = MaterialTheme.typography.h3.copy(fontSize = 22.sp),
-                        color = FitiWhiteText
-                    )
-                },
-                defaulNav = onNavigateToResetHomeScreen
-            )
-        }
-    ){
-        RoutineCardDisplay(
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = 20.dp),
-            routines = createdRoutines,
-            header = {
-                Column(
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.favorites),
-                        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-                        color = FitiBlueText,
-                        modifier = Modifier.padding(vertical = 10.dp)
-                    )
-                }
+    RoutineCardDisplay(
+        onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+        modifier = Modifier
+            .padding(horizontal = 20.dp),
+        routines = createdRoutines,
+        header = {
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.favorites),
+                    style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+                    color = FitiBlueText,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
             }
-        )
-    }
+        }
+    )
 }
 
 /*

@@ -28,7 +28,7 @@ fun RoutineCardDisplay(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -69,7 +69,7 @@ private fun RoutineCardLazyGrid(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -122,7 +122,7 @@ private fun RoutineCardLazyList(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
