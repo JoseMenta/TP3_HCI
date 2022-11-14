@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 //Full Cycle
 data class NetworkCycle(
-    @SerializedName("id"          ) var id          : Int?    = null,
+    @SerializedName("id"          ) var id          : Int,
     @SerializedName("name"        ) var name        : String,
     @SerializedName("detail"      ) var detail      : String,
     @SerializedName("type"        ) var type        : String,

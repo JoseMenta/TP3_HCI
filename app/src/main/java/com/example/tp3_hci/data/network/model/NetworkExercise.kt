@@ -8,5 +8,5 @@ data class NetworkExercise(
     @SerializedName("detail"   ) var detail   : String,
     @SerializedName("type"     ) var type     : String,
     @SerializedName("date"     ) var date     : Int?    = null,
-    @SerializedName("metadata" ) var metadata : String? = null
+    @SerializedName("metadata" ) var metadata : ExerciseMetadata? = null
 )

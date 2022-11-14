@@ -34,6 +34,12 @@ interface ApiRoutineService {
     @GET("routines/{routineId}/cycles/{cycleId}")
     suspend fun getRoutineCycleById(@Path("routineId")routineId: Int, @Path("cycleId")cycleId: Int): Response<NetworkCycle>
 
+    @GET("cycles/{cycleId}/exercises")
+    suspend fun getCycleExercises(@Path("cycleId")cycleId: Int, @Query("page")page: Int): Response<NetworkPagedContent<NetworkCycleExercise>>
+
+    @GET("cycles/{cycleId}/exercises/{exerciseId}")
+    suspend fun getCycleExercise(@Path("cycleId")cycleId: Int, @Path("exerciseId")exerciseId: Int): Response<NetworkCycleExercise>
+
     @GET("executions/{routineId}")
     suspend fun getRoutineExecutions(@Path("routineId")routineId: Int, @Query("page")page: Int): Response<NetworkPagedContent<NetworkExecution>>
 

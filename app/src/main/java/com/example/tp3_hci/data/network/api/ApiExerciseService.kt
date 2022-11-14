@@ -10,11 +10,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiExerciseService {
-    @GET("cycles/{cycleId}/exercises")
-    suspend fun getCycleExercises(@Path("cycleId")cycleId: Int, @Query("page")page: Int): Response<NetworkPagedContent<NetworkCycleExercise>>
-
-    @GET("cycles/{cycleId}/exercises/{exerciseId}")
-    suspend fun getCycleExercise(@Path("cycleId")cycleId: Int, @Path("exerciseId")exerciseId: Int): Response<NetworkCycleExercise>
 
     @GET("exercises")
     suspend fun getCurrentUserExercises(@Query("page")page: Int): Response<NetworkPagedContent<NetworkExercise>>

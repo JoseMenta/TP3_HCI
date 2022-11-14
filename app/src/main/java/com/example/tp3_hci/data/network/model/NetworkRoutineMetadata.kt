@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class NetworkRoutineMetadata(
     @SerializedName("votes" ) var votes : Int?              = null,
-    @SerializedName("tags"  ) var tags  : ArrayList<String> = arrayListOf()
+    @SerializedName("tags"  ) var tags  : ArrayList<String> = arrayListOf(),
+    @SerializedName("image"  ) var image  : String? = null
 
 )

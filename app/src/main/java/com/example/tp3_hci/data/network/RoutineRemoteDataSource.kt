@@ -72,4 +72,14 @@ class RoutineRemoteDataSource(
             apiRoutineService.addRoutineReview(routineId,NetworkReviewPost(score,review))
         }
     }
+    suspend fun getCycleExercises(cycleId: Int, page: Int):NetworkPagedContent<NetworkCycleExercise>{
+        return handleApiResponse {
+            apiRoutineService.getCycleExercises(cycleId,page)
+        }
+    }
+    suspend fun getCycleExercise(cycleId: Int, exerciseId: Int):NetworkCycleExercise{
+        return handleApiResponse {
+            apiRoutineService.getCycleExercise(cycleId,exerciseId)
+        }
+    }
 }
