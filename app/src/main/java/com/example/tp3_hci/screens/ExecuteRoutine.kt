@@ -113,6 +113,7 @@ fun CountdownRepetitions(
 }
 @Composable
 fun ExecutionControls(
+    onNavigateToRatingRoutineScreen: () -> Unit,
     time:Long?,
     repetitions: Int?
 ){
@@ -160,7 +161,7 @@ fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { /*TODO*/ }
+                onClick = { if(true) onNavigateToRatingRoutineScreen()}
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
@@ -169,6 +170,7 @@ fun ExecutionControls(
 }
 @Composable
 fun ExecuteRoutineExerciseDetail(
+    onNavigateToRatingRoutineScreen: () -> Unit,
     exercise: ExerciseCardUiSate,
     expanded: Boolean = true
 ){
@@ -191,6 +193,7 @@ fun ExecuteRoutineExerciseDetail(
             Spacer(modifier = Modifier.size(20.dp))
         }
         ExecutionControls(
+            onNavigateToRatingRoutineScreen = onNavigateToRatingRoutineScreen,
             time = exercise.time.toLong(),
             repetitions = exercise.repetitions
         )
@@ -215,9 +218,11 @@ fun ExecuteRoutineGlobal(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExecuteRoutine(
+    onNavigateToRatingRoutineScreen: () -> Unit,
     routine: RoutineDetailUiState
 ){
-    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[1]
+    val nroExercise = 1
+    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[nroExercise]
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -256,7 +261,7 @@ fun ExecuteRoutine(
                             Icon(Icons.Outlined.ExpandMore, contentDescription = "close detail")
                         }
                     }
-                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed)
+                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed, onNavigateToRatingRoutineScreen = onNavigateToRatingRoutineScreen)
                 }
             }
         },
@@ -270,6 +275,7 @@ fun ExecuteRoutine(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun ExecuteRoutineGlobalPreview() {
@@ -277,3 +283,5 @@ fun ExecuteRoutineGlobalPreview() {
         ExecuteRoutine(routine = RoutineDetailUiState("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
     }
 }
+
+ */

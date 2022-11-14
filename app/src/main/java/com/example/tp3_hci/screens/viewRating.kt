@@ -13,38 +13,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 
 @Composable
 fun ratingView(
-    routine:RoutineDetailUiState,
-    srcImg : String
+    onNavigateToHomeScreen: ()-> Unit,
+    routine: RoutineCardUiState
 ){
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        Congratulations(routine, srcImg)
+        Congratulations(routine)
         valoration()
-        ButtonSide()
+        ButtonSide(onNavigateToHomeScreen)
 
     }
 }
 
 @Composable
 fun Congratulations(
-    routine: RoutineDetailUiState,
-    srcImg : String
+    routine: RoutineCardUiState
 ){
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
-            model = srcImg,
+            model = routine.imageUrl,
             contentDescription = "Rutina",
             modifier = Modifier.fillMaxWidth()
         )
@@ -81,7 +81,9 @@ fun valoration(){
 
 
 @Composable
-fun ButtonSide() {
+fun ButtonSide(
+    onNavigateToHomeScreen: () -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -92,7 +94,7 @@ fun ButtonSide() {
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = { },
+            onClick = {onNavigateToHomeScreen() },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -109,7 +111,7 @@ fun ButtonSide() {
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiBlue,
             ),
-            onClick = { },
+            onClick = { onNavigateToHomeScreen()},
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)

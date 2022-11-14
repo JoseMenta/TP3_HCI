@@ -39,4 +39,19 @@
     <string name="descending_abrev">DES</string>
     <string name="ascending_abrev">ASC</string>
     <string name="last_routines_done">Últimas rutinas realizadas</string>
+    <string name="rating_icon">⭐</string>
+    <string name="difficulty_icon">⚡</string>
+    <string name="category_full_body">Cuerpo completo</string>
+    <string name="category_upper">Tren superior</string>
+    <string name="category_mid">Tren medio</string>
+    <string name="category_lower">Tren inferior</string>
+    <string name="search_by">Buscar por</string>
+    <string name="routine_name">Nombre de la rutina</string>
+    <string name="creator_name">Nombre del creador</string>
+    <string name="delete_filter">Eliminar el filtro %1$s</string>
+    <string name="cancel_search">Cancelar la búsqueda</string>
+    <string name="voice_search">Búsqueda por voz</string>
+    <string name="search_routines">Buscar rutinas</string>
+    <string name="delete_text">Borrar el texto</string>
+    <string name="results_title">Resultados encontrados para: \"%1$s\"</string>
 </resources>

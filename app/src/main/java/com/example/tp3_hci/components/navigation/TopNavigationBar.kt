@@ -1,9 +1,14 @@
 package com.example.tp3_hci.components.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -14,13 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 
@@ -49,13 +51,15 @@ fun TopNavigationBar(
             if (leftIcon != null) {
                 leftIcon()
             } else if (windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded) {
-                Image(
-                    painter = painterResource(id = R.drawable.fiti),
-                    contentDescription = stringResource(id = R.string.fiti_logo),
-                    modifier = Modifier
-                        .size(50.dp)
-                )
-            }
+                Column(modifier = Modifier.clickable { defaulNav() }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.fiti),
+                        contentDescription = stringResource(id = R.string.fiti_logo),
+                        modifier = Modifier
+                            .size(50.dp)
+                    )
+                }
+                }
         },
         title = {
             if (centerComponent != null) {
@@ -81,6 +85,7 @@ fun TopNavigationBar(
 }
 
 /*
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable

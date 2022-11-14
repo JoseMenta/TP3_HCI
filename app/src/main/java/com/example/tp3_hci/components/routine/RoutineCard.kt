@@ -27,7 +27,7 @@ import com.example.tp3_hci.data.RoutineCardUiState
 fun RoutineCard(
     routine : RoutineCardUiState,
     modifier: Modifier = Modifier,
-    onNavigateToRutineDetailScreen: ()->Unit,
+    onNavigateToRutineDetailScreen: (String)->Unit,
 ){
     var favoriteState by remember { mutableStateOf(routine.isFavourite) }
 
@@ -42,7 +42,7 @@ fun RoutineCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { onNavigateToRutineDetailScreen() },
+                onClick = { onNavigateToRutineDetailScreen(routine.name) },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {

@@ -11,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
+import com.example.tp3_hci.data.DropDownItem
+import com.example.tp3_hci.data.OrderByItem
 import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
@@ -28,7 +30,7 @@ fun RoutineCardDisplay(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -69,7 +71,7 @@ private fun RoutineCardLazyGrid(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -89,7 +91,6 @@ private fun RoutineCardLazyGrid(
             span = { GridItemSpan(itemsPerGrid) }
         ) {
             RoutineOrderDropDown(
-                items = orderByItems(),
                 modifier = Modifier.padding(bottom = 10.dp)
             )
         }
@@ -122,7 +123,7 @@ private fun RoutineCardLazyList(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : () -> Unit
+    onNavigateToRutineDetailScreen : (String) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
@@ -136,7 +137,6 @@ private fun RoutineCardLazyList(
 
         item {
             RoutineOrderDropDown(
-                items = orderByItems(),
                 modifier = Modifier.padding(bottom = 10.dp)
             )
         }
@@ -161,18 +161,6 @@ private fun RoutineCardLazyList(
 }
 
 
-@Composable
-private fun orderByItems(): List<DropDownItem>{
-    return listOf(
-        DropDownItem(stringResource(id = R.string.name)),
-        DropDownItem(stringResource(id = R.string.creation_date)),
-        DropDownItem(stringResource(id = R.string.rating)),
-        DropDownItem(stringResource(id = R.string.difficulty)),
-        DropDownItem(stringResource(id = R.string.category))
-    )
-}
-
-/*
 @Preview(showBackground = true)
 @Composable
 fun RoutineCardDisplayPreview(
@@ -185,6 +173,8 @@ fun RoutineCardDisplayPreview(
         RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
         RoutineCardUiState("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
     )
-    RoutineCardDisplay(routines = routines)
+    RoutineCardDisplay(
+        routines = routines,
+        onNavigateToRutineDetailScreen = {}
+    )
 }
- */

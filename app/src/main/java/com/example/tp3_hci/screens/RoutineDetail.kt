@@ -129,7 +129,9 @@ fun RoutineCycle(
 }
 @Composable
 fun RoutineDetail(
-    routine: RoutineDetailUiState
+    onNavigateToMakeRuotineScreen: () -> Unit,
+    routine: RoutineDetailUiState,
+    srcImg: String
 ){
     Scaffold(
         floatingActionButton = {
@@ -137,7 +139,7 @@ fun RoutineDetail(
                 modifier = Modifier.padding(8.dp),
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
-                onClick = { /*TODO*/ },
+                onClick = { onNavigateToMakeRuotineScreen() },
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colors.onPrimary
         )
@@ -158,7 +160,7 @@ fun RoutineDetail(
                 ){
                     RoutineData(name = routine.name, difficulty = routine.difficulty ,creator = routine.creator, rating = routine.rating , votes = routine.votes )
                     RoutineImage(
-                        source = "https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",
+                        source = srcImg,
                         contentDescription = "Routine Image",
                         modifier = Modifier
                             .clip(Shapes.medium)
@@ -177,6 +179,7 @@ fun RoutineDetail(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun RoutineDetailPreview() {
@@ -184,3 +187,4 @@ fun RoutineDetailPreview() {
         RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000,listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"), cycles))
     }
 }
+*/
