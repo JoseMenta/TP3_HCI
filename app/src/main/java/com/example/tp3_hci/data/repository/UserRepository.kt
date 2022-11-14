@@ -10,7 +10,9 @@ class UserRepository(
     private val remoteDataSource: UserRemoteDataSource
 ) {
     private val currentUserMutex = Mutex()
+
     private var currentUser: User? = null
+
     suspend fun login(username: String, password: String){
         remoteDataSource.login(username,password)
     }

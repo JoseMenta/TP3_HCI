@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class NetworkImage(
     @SerializedName("id"     ) var id     : Int?    = null,
-    @SerializedName("number" ) var number : Int?    = null,
-    @SerializedName("url"    ) var url    : String? = null
+    @SerializedName("number" ) var number : Int,
+    @SerializedName("url"    ) var url    : String
 )
