@@ -11,7 +11,7 @@ private val DarkColorPalette = darkColors(
     primary = FitiBlue,
     primaryVariant = FitiDarkBlue,
     secondary = FitiGrey,
-    background = Color.Black,
+    background = Color.White,
     surface = FitiGreyImage,
     onPrimary = FitiGreenButton
 )

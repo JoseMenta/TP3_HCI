@@ -1,8 +1,6 @@
 package com.example.tp3_hci.utilities
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -28,6 +26,8 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.screens.RoutineDetail
 import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
+import com.example.tp3_hci.components.navigation.RegularBottomNavItem
+import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 import com.example.tp3_hci.screens.RatingView
 import com.example.tp3_hci.screens.cycles
 import com.example.tp3_hci.data.RoutineDetailUiState
@@ -59,19 +59,9 @@ fun MyNavHost(
     }
 
     var showBottomBar by rememberSaveable { mutableStateOf(false) }
-    showBottomBar = when (navBackStackEntry?.destination?.route) {
-        "Login" -> false // on this screen bottom bar should be hidden
-        "MakeRoutine/{name}" -> false
-        "RatingRoutine/{name}" -> false
-        "SearchResults" -> false
-        else -> true // in all other cases show bottom bar
-    }
-
-    val bottomNavItems : List<BottomNavItem> = listOf(
-        BottomNavItem(R.string.bottom_nav_favorites, { navController.navigate("Favorites") }, Icons.Filled.Favorite),
-        BottomNavItem(R.string.bottom_nav_home, { navController.navigate("MainScreen") }, Icons.Filled.Home),
-        BottomNavItem(R.string.bottom_nav_profile, { navController.navigate("Favorites") }, Icons.Filled.Person)
-    )
+    showBottomBar = (getBottomNavItems().find { bottomNavItem ->
+        navBackStackEntry?.destination?.route == bottomNavItem.route
+    } != null)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -80,12 +70,15 @@ fun MyNavHost(
                 visible = showBottomBar,
                 enter = expandVertically(
                     expandFrom = Alignment.Bottom
-                ),
+                ) + fadeIn(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Bottom
-                )
+                ) + fadeOut()
             ) {
-                BottomNavigationBar(items = bottomNavItems)
+                BottomNavigationBar(
+                    items = getBottomNavItems(),
+                    navigationUtilities = navigationUtilities
+                )
             }
         },
         topBar = {
@@ -93,10 +86,10 @@ fun MyNavHost(
                 visible = (topAppBar.getTopAppBar() != null),
                 enter = expandVertically(
                     expandFrom = Alignment.Bottom
-                ),
+                ) + fadeIn(),
                 exit = shrinkVertically(
                     shrinkTowards = Alignment.Bottom
-                )
+                ) + fadeOut()
             ) {
                 if(topAppBar.getTopAppBar() != null){
                     topAppBar.getTopAppBar()!!.invoke()
