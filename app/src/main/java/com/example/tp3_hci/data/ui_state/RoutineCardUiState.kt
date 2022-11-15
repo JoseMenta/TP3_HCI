@@ -7,5 +7,7 @@ data class RoutineCardUiState(
     val isFavourite: Boolean = false,
     val score: Int = 0,
     val tags: List<String>? = null,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val isLoading: Boolean = false,
+    val message: String? = null
 )
