@@ -123,6 +123,8 @@ private fun CountdownRepetitions(
 
 @Composable
 private fun ExecutionControls(
+    navigationUtilities: NavigationUtilities,
+    routine: RoutineDetailUiState,
     time:Long?,
     repetitions: Int?
 ){
@@ -170,7 +172,7 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { /*TODO*/ }
+                onClick = { navigationUtilities.navigateToRoute("RatingRoutine/${routine.id}")}
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
@@ -180,6 +182,8 @@ private fun ExecutionControls(
 
 @Composable
 private fun ExecuteRoutineExerciseDetail(
+    navigationUtilities: NavigationUtilities,
+    routine: RoutineDetailUiState,
     exercise: ExerciseCardUiSate,
     expanded: Boolean = true
 ){
@@ -203,7 +207,9 @@ private fun ExecuteRoutineExerciseDetail(
         }
         ExecutionControls(
             time = exercise.time.toLong(),
-            repetitions = exercise.repetitions
+            repetitions = exercise.repetitions,
+            navigationUtilities = navigationUtilities,
+            routine = routine
         )
     }
 }
@@ -284,7 +290,7 @@ fun ExecuteRoutine(
                             Icon(Icons.Outlined.ExpandMore, contentDescription = "close detail")
                         }
                     }
-                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed)
+                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed, navigationUtilities = navigationUtilities, routine = routine)
                 }
             }
         },

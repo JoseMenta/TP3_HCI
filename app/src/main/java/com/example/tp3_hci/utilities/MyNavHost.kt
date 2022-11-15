@@ -1,5 +1,6 @@
 package com.example.tp3_hci.utilities
 
+import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -43,6 +44,8 @@ fun MyNavHost(
     modifier: Modifier = Modifier,
     startDestination: String = "Login"
 ) {
+    val uri = "https://fiti.com"
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -123,32 +126,34 @@ fun MyNavHost(
                     favoriteRoutines = Routines
                 )
             }
-            composable("RoutineDetails/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })){
+            composable("RoutineDetails/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+                deepLinks = listOf(navDeepLink { uriPattern = "$uri/RoutineDetails/{id}"
+                    action = Intent.ACTION_VIEW})){
 
                 //Todos estos filters despues se sacan y se pone el manejo de la API
-                val aux = Routines.filter { routine -> routine.name == (it.arguments?.getString("name") ?: "") }.first()
+                val aux = Routines.filter { routine -> routine.id == (it.arguments?.getInt("id") ?: 0) }.first()
                 RoutineDetail(
                     navigationUtilities = navigationUtilities,
                     setTopAppBar = changeTopAppBarType,
-                    routine = RoutineDetailUiState(aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
+                    routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
                     srcImg = aux.imageUrl!!
                 )
             }
-            composable("MakeRoutine/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })){
+            composable("MakeRoutine/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
-                val aux = Routines.filter { routine -> routine.name == it.arguments?.getString("name")!! }.first()
+                val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
                 ExecuteRoutine(
                     navigationUtilities = navigationUtilities,
                     setTopAppBar = changeTopAppBarType,
-                    routine = RoutineDetailUiState(aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
+                    routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
                 )
             }
-            composable("RatingRoutine/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })){
+            composable("RatingRoutine/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
-                val aux = Routines.filter { routine -> routine.name == it.arguments?.getString("name")!! }.first()
+                val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
                 RatingView(
                     navigationUtilities = navigationUtilities,
                     setTopAppBar = changeTopAppBarType,

@@ -17,6 +17,7 @@ data class RoutineCycleUiState(
 )
 //AKA Routine
 data class RoutineDetailUiState(
+    val id: Int,
     val name:String,
     val difficulty: Int,
     val creator:String,
@@ -27,6 +28,7 @@ data class RoutineDetailUiState(
 )
 //AKA RoutineInfo
 data class RoutineCardUiState(
+    val id: Int,
     val name: String,
     val isFavourite: Boolean = false,
     val score: Int = 0,

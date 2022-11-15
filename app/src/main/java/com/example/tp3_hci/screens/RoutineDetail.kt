@@ -19,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.ExerciseCard
 import com.example.tp3_hci.ExerciseCardStatus
@@ -153,6 +155,7 @@ fun RoutineDetail(
     setTopAppBar(
         TopAppBarType(
             topAppBar = { TopAppBar(
+                routine = routine,
                 scrollBehavior = scrollBehavior,
                 navigationUtilities = navigationUtilities
             ) }
@@ -165,7 +168,7 @@ fun RoutineDetail(
                 modifier = Modifier.padding(8.dp),
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
-                onClick = { navigationUtilities.navigateToRoute("MakeRoutine/${routine.name}") },
+                onClick = { navigationUtilities.navigateToRoute("MakeRoutine/${routine.id}") },
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
@@ -210,8 +213,12 @@ fun RoutineDetail(
 @Composable
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    navigationUtilities: NavigationUtilities
+    navigationUtilities: NavigationUtilities,
+    routine: RoutineDetailUiState,
 ){
+    val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
+        LocalClipboardManager.current
+
     TopNavigationBar(
         scrollBehavior = scrollBehavior,
         leftIcon = {
@@ -235,7 +242,7 @@ private fun TopAppBar(
         },
         secondRightIcon = {
             IconButton(onClick = {
-                /* TODO */
+                clipboardManager.setText(AnnotatedString( "https://fiti.com/RoutineDetails/${routine.id}"))
             }) {
                 Icon(
                     imageVector = Icons.Filled.Share,

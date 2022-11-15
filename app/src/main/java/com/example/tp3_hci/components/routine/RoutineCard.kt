@@ -43,7 +43,7 @@ fun RoutineCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { navigationUtilities.navigateToRoute("RoutineDetails/${routine.name}") },
+                onClick = { navigationUtilities.navigateToRoute("RoutineDetails/${routine.id}") },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {
