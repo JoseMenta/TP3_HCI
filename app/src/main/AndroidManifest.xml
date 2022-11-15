@@ -30,7 +30,7 @@
             <intent-filter>
                 <data android:scheme="https"
                     android:host="fiti.com"
-                    android:pathPrefix="/RoutineDetails"/>
+                    android:pathPrefix="/Routine"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <action android:name="android.intent.action.VIEW"/>

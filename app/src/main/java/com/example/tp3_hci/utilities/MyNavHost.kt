@@ -153,10 +153,22 @@ fun MyNavHost(
                     favoriteRoutines = Routines
                 )
             }
+            composable("Routine/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+                deepLinks = listOf(navDeepLink { uriPattern = "$uri/Routine/{id}"
+                action = Intent.ACTION_VIEW})){
+
+                LoginView(
+                    setTopAppBar = changeTopAppBarType,
+                    loginNavigation = LoginNavigation {
+                        navController.navigate("RoutineDetails/${it.arguments?.getString("id")}") {
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
             composable("RoutineDetails/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.IntType }),
-                deepLinks = listOf(navDeepLink { uriPattern = "$uri/RoutineDetails/{id}"
-                    action = Intent.ACTION_VIEW})){
+                arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
                 //Todos estos filters despues se sacan y se pone el manejo de la API
                 val aux = Routines.filter { routine -> routine.id == (it.arguments?.getInt("id") ?: 0) }.first()

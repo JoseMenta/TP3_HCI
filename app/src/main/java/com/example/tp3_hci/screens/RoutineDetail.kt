@@ -244,7 +244,7 @@ private fun TopAppBar(
         },
         secondRightIcon = {
             IconButton(onClick = {
-                clipboardManager.setText(AnnotatedString( "https://fiti.com/RoutineDetails/${routine.id}"))
+                clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routine.id}"))
             }) {
                 Icon(
                     imageVector = Icons.Filled.Share,

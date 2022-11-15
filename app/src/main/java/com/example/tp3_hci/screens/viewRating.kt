@@ -93,7 +93,7 @@ private fun ShareURL(
             backgroundColor = Color.White
         ) {
             Row( verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 10.dp) ) {
-                val route = "https://fiti.com/RoutineDetails/${routine.id}"
+                val route = "https://fiti.com/Routine/${routine.id}"
                 Text(
                     text = route,
                     fontWeight = FontWeight.Bold,
