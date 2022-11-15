@@ -18,6 +18,7 @@ import com.example.tp3_hci.ui.theme.FitiBlueText
 import androidx.compose.ui.text.font.FontWeight
 import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.utilities.*
+import com.example.tp3_hci.utilities.navigation.MainScreenNavigation
 import kotlin.math.min
 
 val Routines = listOf(
@@ -31,7 +32,7 @@ val Routines = listOf(
 
 @Composable
 fun MainScreen(
-    navigationUtilities : NavigationUtilities,
+    mainScreenNavigation: MainScreenNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
@@ -41,14 +42,14 @@ fun MainScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
-            navigationUtilities = navigationUtilities,
+            mainScreenNavigation = mainScreenNavigation,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines,
             setTopAppBar = setTopAppBar
         )
     } else {
         MainScreenTablet(
-            navigationUtilities = navigationUtilities,
+            mainScreenNavigation = mainScreenNavigation,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines,
             setTopAppBar = setTopAppBar
@@ -60,7 +61,7 @@ fun MainScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenTablet(
-    navigationUtilities : NavigationUtilities,
+    mainScreenNavigation: MainScreenNavigation,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null,
     setTopAppBar : ((TopAppBarType)->Unit),
@@ -77,7 +78,7 @@ private fun MainScreenTablet(
                 onTopAppBarState = {
                     topAppBarState = it
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = mainScreenNavigation.getSearchNavigation()
             )
         }
     )
@@ -94,7 +95,7 @@ private fun MainScreenTablet(
                         if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
                             LastRoutineDoneDisplay(
                                 lastRoutineDone = lastRoutineDone,
-                                navigationUtilities = navigationUtilities
+                                mainScreenNavigation = mainScreenNavigation
                             )
                         }
 
@@ -106,7 +107,7 @@ private fun MainScreenTablet(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState
@@ -117,7 +118,7 @@ private fun MainScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenMobile(
-    navigationUtilities : NavigationUtilities,
+    mainScreenNavigation: MainScreenNavigation,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null,
     setTopAppBar : ((TopAppBarType)->Unit),
@@ -134,7 +135,7 @@ private fun MainScreenMobile(
                 onTopAppBarState = {
                     topAppBarState = it
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = mainScreenNavigation.getSearchNavigation()
             )
         }
     )
@@ -151,7 +152,7 @@ private fun MainScreenMobile(
                         if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
                             LastRoutineDoneDisplay(
                                 lastRoutineDone = lastRoutineDone,
-                                navigationUtilities = navigationUtilities
+                                mainScreenNavigation = mainScreenNavigation
                             )
                         }
 
@@ -163,7 +164,7 @@ private fun MainScreenMobile(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState
@@ -177,7 +178,7 @@ private fun MainScreenMobile(
 @Composable
 private fun LastRoutineDoneDisplay(
     lastRoutineDone : List<RoutineCardUiState>,
-    navigationUtilities : NavigationUtilities
+    mainScreenNavigation: MainScreenNavigation,
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -192,7 +193,7 @@ private fun LastRoutineDoneDisplay(
         RoutineCard(
             routine = lastRoutineDone[0],
             modifier = Modifier.padding(bottom = 20.dp),
-            navigationUtilities = navigationUtilities
+            routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
         )
     } else {
         Text(
@@ -212,7 +213,7 @@ private fun LastRoutineDoneDisplay(
                     routine = lastRoutineDone[i-1],
                     modifier = Modifier
                         .weight(1f),
-                    navigationUtilities = navigationUtilities
+                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
                 )
             }
         }

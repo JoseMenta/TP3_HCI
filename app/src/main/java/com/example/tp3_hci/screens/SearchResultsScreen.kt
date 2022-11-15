@@ -24,11 +24,12 @@ import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.*
+import com.example.tp3_hci.utilities.navigation.SearchResultsNavigation
 
 
 @Composable
 fun SearchResultsScreen(
-    navigationUtilities: NavigationUtilities,
+    searchResultsNavigation: SearchResultsNavigation,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
     setTopAppBar : ((TopAppBarType)->Unit),
@@ -40,14 +41,14 @@ fun SearchResultsScreen(
         SearchResultsScreenMobile(
             stringSearched = stringSearched,
             routinesFound = routinesFound,
-            navigationUtilities = navigationUtilities,
+            searchResultsNavigation = searchResultsNavigation,
             setTopAppBar = setTopAppBar
         )
     } else {
         SearchResultsScreenTablet(
             stringSearched = stringSearched,
             routinesFound = routinesFound,
-            navigationUtilities = navigationUtilities,
+            searchResultsNavigation = searchResultsNavigation,
             setTopAppBar = setTopAppBar
         )
     }
@@ -57,7 +58,7 @@ fun SearchResultsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResultsScreenTablet(
-    navigationUtilities: NavigationUtilities,
+    searchResultsNavigation: SearchResultsNavigation,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
     setTopAppBar : ((TopAppBarType)->Unit),
@@ -76,7 +77,7 @@ private fun SearchResultsScreenTablet(
                 },
                 leftIcon = {
                     IconButton(onClick = {
-                        /* TODO */
+                        searchResultsNavigation.getPreviousScreen().invoke()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -86,7 +87,7 @@ private fun SearchResultsScreenTablet(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = searchResultsNavigation.getSearchNavigation()
             )
         }
     )
@@ -109,7 +110,7 @@ private fun SearchResultsScreenTablet(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = searchResultsNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState
@@ -120,7 +121,7 @@ private fun SearchResultsScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResultsScreenMobile(
-    navigationUtilities: NavigationUtilities,
+    searchResultsNavigation: SearchResultsNavigation,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
     setTopAppBar : ((TopAppBarType)->Unit),
@@ -139,7 +140,7 @@ private fun SearchResultsScreenMobile(
                 },
                 leftIcon = {
                     IconButton(onClick = {
-                        navigationUtilities.navigateToPreviousScreen()
+                        searchResultsNavigation.getPreviousScreen().invoke()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -149,7 +150,7 @@ private fun SearchResultsScreenMobile(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = searchResultsNavigation.getSearchNavigation()
             )
         }
     )
@@ -172,7 +173,7 @@ private fun SearchResultsScreenMobile(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = searchResultsNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState

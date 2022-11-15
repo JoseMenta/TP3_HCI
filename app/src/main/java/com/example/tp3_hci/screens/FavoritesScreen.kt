@@ -15,11 +15,12 @@ import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.utilities.*
+import com.example.tp3_hci.utilities.navigation.FavoritesNavigation
 
 
 @Composable
 fun FavoritesScreen(
-    navigationUtilities: NavigationUtilities,
+    favoritesNavigation: FavoritesNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null
 ){
@@ -28,13 +29,13 @@ fun FavoritesScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         FavoritesScreenMobile(
-            navigationUtilities = navigationUtilities,
+            favoritesNavigation = favoritesNavigation,
             setTopAppBar = setTopAppBar,
             favoriteRoutines = favoriteRoutines,
         )
     } else {
         FavoritesScreenTablet(
-            navigationUtilities = navigationUtilities,
+            favoritesNavigation = favoritesNavigation,
             setTopAppBar = setTopAppBar,
             favoriteRoutines = favoriteRoutines,
         )
@@ -45,7 +46,7 @@ fun FavoritesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenTablet(
-    navigationUtilities: NavigationUtilities,
+    favoritesNavigation: FavoritesNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null,
 ){
@@ -61,7 +62,7 @@ private fun FavoritesScreenTablet(
                 onTopAppBarState = {
                     topAppBarState = it
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = favoritesNavigation.getSearchNavigation()
             )
         }
     )
@@ -84,7 +85,7 @@ private fun FavoritesScreenTablet(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState
@@ -96,7 +97,7 @@ private fun FavoritesScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenMobile(
-    navigationUtilities: NavigationUtilities,
+    favoritesNavigation: FavoritesNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null
 ){
@@ -112,7 +113,7 @@ private fun FavoritesScreenMobile(
                 onTopAppBarState = {
                     topAppBarState = it
                 },
-                navigationUtilities = navigationUtilities
+                searchNavigation = favoritesNavigation.getSearchNavigation()
             )
         }
     )
@@ -135,7 +136,7 @@ private fun FavoritesScreenMobile(
                         )
                     }
                 },
-                navigationUtilities = navigationUtilities
+                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
             )
         },
         topAppBarState = topAppBarState

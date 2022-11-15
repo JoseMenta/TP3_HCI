@@ -18,7 +18,7 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 import com.example.tp3_hci.ui.theme.FitiWhiteText
-import com.example.tp3_hci.utilities.NavigationUtilities
+import com.example.tp3_hci.utilities.navigation.BottomBarNavigation
 
 open class BottomNavItem(
     open val nameId: Int,
@@ -52,7 +52,7 @@ sealed class RegularBottomNavItem(
 // -------------------------------------------------------------------------
 @Composable
 fun BottomNavigationBar(
-    navigationUtilities: NavigationUtilities,
+    bottomBarNavigation: BottomBarNavigation,
     items : List<BottomNavItem>,
     modifier: Modifier = Modifier
 ){
@@ -65,7 +65,9 @@ fun BottomNavigationBar(
             val selected = (stringResource(id = item.nameId) == "Inicio")
             BottomNavigationItem(
                 selected = selected,
-                onClick = { navigationUtilities.navigateToRoute(item.route) },
+                onClick = {
+                    bottomBarNavigation.getItemScreen().invoke(item.route)
+                },
                 selectedContentColor = FitiGreenButton,
                 unselectedContentColor = FitiWhiteText,
                 icon = {

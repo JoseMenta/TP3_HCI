@@ -36,6 +36,7 @@ import com.example.tp3_hci.screens.FavoritesScreen
 import com.example.tp3_hci.screens.MainScreen
 import com.example.tp3_hci.screens.Routines
 import com.example.tp3_hci.screens.SearchResultsScreen
+import com.example.tp3_hci.utilities.navigation.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,10 +50,6 @@ fun MyNavHost(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
-    val navigationUtilities by remember {
-        mutableStateOf(NavigationUtilities(navController))
-    }
 
     var topAppBar by remember {
         mutableStateOf(TopAppBarType(topAppBar = null))
@@ -80,7 +77,11 @@ fun MyNavHost(
             ) {
                 BottomNavigationBar(
                     items = getBottomNavItems(),
-                    navigationUtilities = navigationUtilities
+                    bottomBarNavigation = BottomBarNavigation {
+                        route -> navController.navigate(route) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
         },
@@ -108,12 +109,27 @@ fun MyNavHost(
             composable("Login") {
                 LoginView(
                     setTopAppBar = changeTopAppBarType,
-                    navigationUtilities = navigationUtilities
+                    loginNavigation = LoginNavigation {
+                        navController.navigate("MainScreen") {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
             composable("MainScreen"){
                 MainScreen(
-                    navigationUtilities = navigationUtilities,
+                    mainScreenNavigation = MainScreenNavigation(
+                        routineCardNavigation = RoutineCardNavigation {
+                            routine -> navController.navigate("RoutineDetails/${routine}") {
+                                launchSingleTop = true
+                            }
+                        },
+                        searchNavigation = SearchNavigation {
+                            search -> navController.navigate("SearchResults/${search}") {
+                                launchSingleTop = true
+                            }
+                        }
+                    ),
                     setTopAppBar = changeTopAppBarType,
                     lastRoutineDone = Routines,
                     createdRoutines = Routines
@@ -121,7 +137,18 @@ fun MyNavHost(
             }
             composable("Favorites"){
                 FavoritesScreen(
-                    navigationUtilities = navigationUtilities,
+                    favoritesNavigation = FavoritesNavigation(
+                        routineCardNavigation = RoutineCardNavigation {
+                                routine -> navController.navigate("RoutineDetails/${routine}") {
+                                    launchSingleTop = true
+                                }
+                        },
+                        searchNavigation = SearchNavigation {
+                                search -> navController.navigate("SearchResults/${search}") {
+                                    launchSingleTop = true
+                                }
+                        }
+                    ),
                     setTopAppBar = changeTopAppBarType,
                     favoriteRoutines = Routines
                 )
@@ -134,7 +161,16 @@ fun MyNavHost(
                 //Todos estos filters despues se sacan y se pone el manejo de la API
                 val aux = Routines.filter { routine -> routine.id == (it.arguments?.getInt("id") ?: 0) }.first()
                 RoutineDetail(
-                    navigationUtilities = navigationUtilities,
+                    routineDetailNavigation = RoutineDetailNavigation(
+                        previousScreen = {
+                            navController.navigateUp()
+                        },
+                        executeRoutineScreen = {
+                            routine -> navController.navigate("MakeRoutine/${routine}") {
+                                launchSingleTop = true
+                            }
+                        }
+                    ),
                     setTopAppBar = changeTopAppBarType,
                     routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
                     srcImg = aux.imageUrl!!
@@ -145,7 +181,16 @@ fun MyNavHost(
 
                 val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
                 ExecuteRoutine(
-                    navigationUtilities = navigationUtilities,
+                    executeRoutineNavigation = ExecuteRoutineNavigation(
+                        previousScreen = {
+                            navController.navigateUp()
+                        },
+                        rateRoutineScreen = {
+                            routine -> navController.navigate("RatingRoutine/${routine}") {
+                                launchSingleTop = true
+                            }
+                        }
+                    ),
                     setTopAppBar = changeTopAppBarType,
                     routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
                 )
@@ -155,7 +200,16 @@ fun MyNavHost(
 
                 val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
                 RatingView(
-                    navigationUtilities = navigationUtilities,
+                    viewRatingNavigation = ViewRatingNavigation(
+                        homeScreen = {
+                            navController.navigate("MainScreen") {
+                                launchSingleTop = true
+                            }
+                        },
+                        previousScreen = {
+                            navController.navigateUp()
+                        }
+                    ),
                     setTopAppBar = changeTopAppBarType,
                     routine = aux
                 )
@@ -169,8 +223,20 @@ fun MyNavHost(
                 SearchResultsScreen(
                     stringSearched = it.arguments?.getString("search")!! ,
                     routinesFound = Routines,
-                    navigationUtilities = navigationUtilities,
-                    setTopAppBar = changeTopAppBarType
+                    setTopAppBar = changeTopAppBarType,
+                    searchResultsNavigation = SearchResultsNavigation(
+                        previousScreen = {
+                            navController.navigateUp()
+                        },
+                        searchNavigation = SearchNavigation {
+                            search -> navController.navigate("SearchResults/${search}")
+                        },
+                        routineCardNavigation = RoutineCardNavigation {
+                            routine -> navController.navigate("RoutineDetails/${routine}") {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                 )
             }
         }

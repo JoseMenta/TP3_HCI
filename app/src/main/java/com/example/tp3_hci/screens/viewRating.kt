@@ -1,11 +1,7 @@
 package com.example.tp3_hci.screens
 
-import android.content.ClipboardManager
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import com.example.tp3_hci.R
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,15 +9,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,13 +32,13 @@ import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 import com.example.tp3_hci.ui.theme.FitiWhiteText
-import com.example.tp3_hci.utilities.NavigationUtilities
 import com.example.tp3_hci.utilities.TopAppBarType
+import com.example.tp3_hci.utilities.navigation.ViewRatingNavigation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RatingView(
-    navigationUtilities: NavigationUtilities,
+    viewRatingNavigation: ViewRatingNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineCardUiState
 ){
@@ -56,7 +49,7 @@ fun RatingView(
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
                     title = routine.name,
-                    navigationUtilities = navigationUtilities
+                    viewRatingNavigation = viewRatingNavigation
                 )
             }
         )
@@ -75,7 +68,7 @@ fun RatingView(
         Spacer(modifier = Modifier.height(20.dp))
         ShareURL(routine = routine)
         Spacer(modifier = Modifier.height(20.dp))
-        ButtonSide(navigationUtilities)
+        ButtonSide(viewRatingNavigation)
     }
 }
 
@@ -164,7 +157,7 @@ private fun Valoration(){
 
 @Composable
 private fun ButtonSide(
-    navigationUtilities: NavigationUtilities
+    viewRatingNavigation: ViewRatingNavigation
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -176,7 +169,7 @@ private fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = { navigationUtilities.navigateToRoute("MainScreen") },
+            onClick = { viewRatingNavigation.getHomeScreen().invoke() },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -193,7 +186,9 @@ private fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiBlue,
             ),
-            onClick = { navigationUtilities.navigateToRoute("MainScreen") },
+            onClick = {
+                viewRatingNavigation.getHomeScreen().invoke()
+            },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -213,7 +208,7 @@ private fun ButtonSide(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopAppBar(
-    navigationUtilities: NavigationUtilities,
+    viewRatingNavigation: ViewRatingNavigation,
     scrollBehavior: TopAppBarScrollBehavior,
     title: String
 ){
@@ -222,7 +217,7 @@ private fun TopAppBar(
         scrollBehavior = scrollBehavior,
         leftIcon = {
             IconButton(onClick = {
-                navigationUtilities.navigateToPreviousScreen()
+                viewRatingNavigation.getPreviousScreen().invoke()
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,

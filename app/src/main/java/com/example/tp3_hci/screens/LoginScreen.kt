@@ -20,13 +20,13 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
-import com.example.tp3_hci.utilities.NavigationUtilities
 import com.example.tp3_hci.utilities.TopAppBarType
+import com.example.tp3_hci.utilities.navigation.LoginNavigation
 
 @Composable
 fun LoginView(
     setTopAppBar : ((TopAppBarType)->Unit),
-    navigationUtilities : NavigationUtilities
+    loginNavigation: LoginNavigation
 ){
     setTopAppBar(
         TopAppBarType(
@@ -47,7 +47,7 @@ fun LoginView(
                 .fillMaxWidth()
                 .padding(top = 10.dp, start = 40.dp, end = 40.dp)
         )
-        BLockLogin(navigationUtilities)
+        BLockLogin(loginNavigation)
         BLockRegister()
     }
 
@@ -87,7 +87,7 @@ private fun BLockRegister() {
 /* Intentar "Composearlo" mas con la API */
 @Composable
 private fun BLockLogin(
-    navigationUtilities : NavigationUtilities
+    loginNavigation: LoginNavigation
 ) {
     Card(
         border = BorderStroke(2.dp, FitiBlack),
@@ -185,8 +185,13 @@ private fun BLockLogin(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = FitiGreenButton,
                 ),
-                onClick = { required.value = true;
-                    if(password.value.text == "fiti" && username.value.text == "fiti") navigationUtilities.navigateToRoute("MainScreen") else textError.value = "Usuario y contraseña invalidos"},
+                onClick = {
+                    required.value = true;
+                    if(password.value.text == "fiti" && username.value.text == "fiti")
+                        loginNavigation.getOnLoginScreen().invoke()
+                    else
+                        textError.value = "Usuario y contraseña invalidos"
+                },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()

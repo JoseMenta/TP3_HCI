@@ -36,10 +36,8 @@ import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.data.RoutineCycleUiState
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
-import com.example.tp3_hci.utilities.NavigationUtilities
 import com.example.tp3_hci.utilities.TopAppBarType
-
-val names = listOf("Futbol","Scaloneta")
+import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
 
 
@@ -146,7 +144,7 @@ fun RoutineCycle(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutineDetail(
-    navigationUtilities: NavigationUtilities,
+    routineDetailNavigation: RoutineDetailNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineDetailUiState,
     srcImg: String
@@ -154,11 +152,13 @@ fun RoutineDetail(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
-            topAppBar = { TopAppBar(
-                routine = routine,
-                scrollBehavior = scrollBehavior,
-                navigationUtilities = navigationUtilities
-            ) }
+            topAppBar = {
+                TopAppBar(
+                    routine = routine,
+                    scrollBehavior = scrollBehavior,
+                    routineDetailNavigation = routineDetailNavigation
+                )
+            }
         )
     )
 
@@ -168,7 +168,9 @@ fun RoutineDetail(
                 modifier = Modifier.padding(8.dp),
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
-                onClick = { navigationUtilities.navigateToRoute("MakeRoutine/${routine.id}") },
+                onClick = {
+                    routineDetailNavigation.getExecuteRoutineScreen().invoke("${routine.id}")
+                },
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
@@ -213,7 +215,7 @@ fun RoutineDetail(
 @Composable
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    navigationUtilities: NavigationUtilities,
+    routineDetailNavigation: RoutineDetailNavigation,
     routine: RoutineDetailUiState,
 ){
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
@@ -223,7 +225,7 @@ private fun TopAppBar(
         scrollBehavior = scrollBehavior,
         leftIcon = {
             IconButton(onClick = {
-                navigationUtilities.navigateToPreviousScreen()
+                routineDetailNavigation.getPreviousScreen().invoke()
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,

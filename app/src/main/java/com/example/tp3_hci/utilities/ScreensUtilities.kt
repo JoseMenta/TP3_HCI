@@ -17,6 +17,7 @@ import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.search.SearchFiltersSurface
 import com.example.tp3_hci.components.search.SearchTopBar
 import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.utilities.navigation.SearchNavigation
 
 
 class TopAppBarType(
@@ -87,7 +88,7 @@ fun RegularTabletDisplay(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegularTopAppBar(
-    navigationUtilities: NavigationUtilities,
+    searchNavigation: SearchNavigation,
     scrollBehavior: TopAppBarScrollBehavior,
     topAppBarState: TopAppBarState,
     onTopAppBarState: (TopAppBarState) -> Unit,
@@ -109,7 +110,7 @@ fun RegularTopAppBar(
                     searchInput = newInput
                 },
                 onSearchClicked = {
-                    navigationUtilities.navigateToRoute("SearchResults/$it")
+                    searchNavigation.getSearchScreen().invoke(it)
                 }
             )
         }

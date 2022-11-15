@@ -34,8 +34,8 @@ import com.example.tp3_hci.data.ExerciseCardUiSate
 import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
-import com.example.tp3_hci.utilities.NavigationUtilities
 import com.example.tp3_hci.utilities.TopAppBarType
+import com.example.tp3_hci.utilities.navigation.ExecuteRoutineNavigation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -123,7 +123,7 @@ private fun CountdownRepetitions(
 
 @Composable
 private fun ExecutionControls(
-    navigationUtilities: NavigationUtilities,
+    executeRoutineNavigation: ExecuteRoutineNavigation,
     routine: RoutineDetailUiState,
     time:Long?,
     repetitions: Int?
@@ -172,7 +172,9 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { navigationUtilities.navigateToRoute("RatingRoutine/${routine.id}")}
+                onClick = {
+                    executeRoutineNavigation.getRateRoutineScreen().invoke("${routine.id}")
+                }
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
@@ -182,7 +184,7 @@ private fun ExecutionControls(
 
 @Composable
 private fun ExecuteRoutineExerciseDetail(
-    navigationUtilities: NavigationUtilities,
+    executeRoutineNavigation: ExecuteRoutineNavigation,
     routine: RoutineDetailUiState,
     exercise: ExerciseCardUiSate,
     expanded: Boolean = true
@@ -208,7 +210,7 @@ private fun ExecuteRoutineExerciseDetail(
         ExecutionControls(
             time = exercise.time.toLong(),
             repetitions = exercise.repetitions,
-            navigationUtilities = navigationUtilities,
+            executeRoutineNavigation = executeRoutineNavigation,
             routine = routine
         )
     }
@@ -235,7 +237,7 @@ private fun ExecuteRoutineGlobal(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ExecuteRoutine(
-    navigationUtilities: NavigationUtilities,
+    executeRoutineNavigation: ExecuteRoutineNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineDetailUiState
 ){
@@ -245,7 +247,7 @@ fun ExecuteRoutine(
             topAppBar = { TopAppBar(
                 scrollBehavior = scrollBehavior,
                 title = routine.name,
-                navigationUtilities = navigationUtilities
+                executeRoutineNavigation = executeRoutineNavigation
             ) }
         )
     )
@@ -290,7 +292,12 @@ fun ExecuteRoutine(
                             Icon(Icons.Outlined.ExpandMore, contentDescription = "close detail")
                         }
                     }
-                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed, navigationUtilities = navigationUtilities, routine = routine)
+                    ExecuteRoutineExerciseDetail(
+                        exercise = selectedExercise,
+                        expanded = !compressed,
+                        executeRoutineNavigation = executeRoutineNavigation,
+                        routine = routine
+                    )
                 }
             }
         },
@@ -309,14 +316,14 @@ fun ExecuteRoutine(
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     title: String,
-    navigationUtilities: NavigationUtilities
+    executeRoutineNavigation: ExecuteRoutineNavigation
 ){
 
     TopNavigationBar(
         scrollBehavior = scrollBehavior,
         leftIcon = {
             IconButton(onClick = {
-                navigationUtilities.navigateToPreviousScreen()
+                executeRoutineNavigation.getPreviousScreen().invoke()
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
