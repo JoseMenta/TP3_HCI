@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.RoutineCardDisplay
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.*

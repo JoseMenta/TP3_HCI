@@ -31,7 +31,7 @@ import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 import com.example.tp3_hci.screens.RatingView
 import com.example.tp3_hci.screens.cycles
-import com.example.tp3_hci.data.RoutineDetailUiState
+import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.screens.FavoritesScreen
 import com.example.tp3_hci.screens.MainScreen
 import com.example.tp3_hci.screens.Routines

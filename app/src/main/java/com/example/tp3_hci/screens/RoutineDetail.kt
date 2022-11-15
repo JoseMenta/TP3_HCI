@@ -31,9 +31,9 @@ import com.example.tp3_hci.components.routine.DifficultyIcons
 import com.example.tp3_hci.components.routine.RatingStars
 import com.example.tp3_hci.components.routine.RoutineImage
 import com.example.tp3_hci.components.routine.RoutineTag
-import com.example.tp3_hci.data.ExerciseCardUiSate
-import com.example.tp3_hci.data.RoutineDetailUiState
-import com.example.tp3_hci.data.RoutineCycleUiState
+import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
+import com.example.tp3_hci.data.ui_state.RoutineCycleUiState
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.utilities.TopAppBarType
@@ -42,10 +42,10 @@ import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
 
 val exercises = listOf(
-    ExerciseCardUiSate("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
-    ExerciseCardUiSate("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
-    ExerciseCardUiSate("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
-    ExerciseCardUiSate("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
+    ExerciseCardUiState("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
+    ExerciseCardUiState("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
+    ExerciseCardUiState("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
+    ExerciseCardUiState("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
 )
 val cycles = listOf(
     RoutineCycleUiState("Calentamiento",2, exercises),

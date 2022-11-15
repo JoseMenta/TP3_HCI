@@ -30,8 +30,8 @@ import coil.compose.AsyncImage
 import com.example.tp3_hci.ExerciseCardStatus
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
-import com.example.tp3_hci.data.ExerciseCardUiSate
-import com.example.tp3_hci.data.RoutineDetailUiState
+import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.utilities.TopAppBarType
@@ -186,7 +186,7 @@ private fun ExecutionControls(
 private fun ExecuteRoutineExerciseDetail(
     executeRoutineNavigation: ExecuteRoutineNavigation,
     routine: RoutineDetailUiState,
-    exercise: ExerciseCardUiSate,
+    exercise: ExerciseCardUiState,
     expanded: Boolean = true
 ){
     Column (
@@ -221,7 +221,7 @@ private fun ExecuteRoutineGlobal(
     routine: RoutineDetailUiState,
     modifier: Modifier = Modifier
 ){
-    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[0]
+    val selectedExercise: ExerciseCardUiState = routine.cycles[0].exercises[0]
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ){
@@ -253,7 +253,7 @@ fun ExecuteRoutine(
     )
 
     val nroExercise = 1
-    val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[nroExercise]
+    val selectedExercise: ExerciseCardUiState = routine.cycles[0].exercises[nroExercise]
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState

@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 import com.example.tp3_hci.utilities.rememberWindowInfo
