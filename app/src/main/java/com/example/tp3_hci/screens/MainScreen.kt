@@ -16,7 +16,7 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import androidx.compose.ui.text.font.FontWeight
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.utilities.*
 import com.example.tp3_hci.utilities.navigation.MainScreenNavigation
 import kotlin.math.min

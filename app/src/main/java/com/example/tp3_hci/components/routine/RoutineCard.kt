@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 import com.example.tp3_hci.R
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 
