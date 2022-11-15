@@ -1,4 +1,4 @@
-package com.example.tp3_hci
+package com.example.tp3_hci.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -6,15 +6,25 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tp3_hci.ExerciseCard
+import com.example.tp3_hci.ExerciseCardStatus
+import com.example.tp3_hci.R
+import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.routine.DifficultyIcons
 import com.example.tp3_hci.components.routine.RatingStars
 import com.example.tp3_hci.components.routine.RoutineImage
@@ -22,8 +32,10 @@ import com.example.tp3_hci.components.routine.RoutineTag
 import com.example.tp3_hci.data.ExerciseCardUiSate
 import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.data.RoutineCycleUiState
+import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.utilities.NavigationUtilities
+import com.example.tp3_hci.utilities.TopAppBarType
 
 val names = listOf("Futbol","Scaloneta")
 
@@ -43,7 +55,7 @@ val cycles = listOf(
 )
 
 @Composable
-fun RoutineData(
+private fun RoutineData(
     name:String,
     difficulty: Int,
     creator: String,
@@ -67,8 +79,9 @@ fun RoutineData(
 
         }
 }
+
 @Composable
-fun RoutineTags(
+private fun RoutineTags(
     tags: List<String>,
     modifier:Modifier = Modifier
 ){
@@ -127,22 +140,35 @@ fun RoutineCycle(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoutineDetail(
-    onNavigateToMakeRuotineScreen: () -> Unit,
+    navigationUtilities: NavigationUtilities,
+    setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineDetailUiState,
     srcImg: String
 ){
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = { TopAppBar(
+                scrollBehavior = scrollBehavior,
+                navigationUtilities = navigationUtilities
+            ) }
+        )
+    )
+
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 modifier = Modifier.padding(8.dp),
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
-                onClick = { onNavigateToMakeRuotineScreen() },
+                onClick = { navigationUtilities.navigateToRoute("MakeRoutine/${routine.name}") },
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colors.onPrimary
-        )
+            )
         },
         floatingActionButtonPosition = FabPosition.Center
     ){
@@ -177,6 +203,61 @@ fun RoutineDetail(
             }
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    navigationUtilities: NavigationUtilities
+){
+    TopNavigationBar(
+        scrollBehavior = scrollBehavior,
+        leftIcon = {
+            IconButton(onClick = {
+                navigationUtilities.navigateToPreviousScreen()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        },
+        centerComponent = {
+            Text(
+                text = stringResource(id = R.string.fiti),
+                style = MaterialTheme.typography.h2,
+                color = FitiWhiteText
+            )
+        },
+        secondRightIcon = {
+            IconButton(onClick = {
+                /* TODO */
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        },
+        rightIcon = {
+            IconButton(onClick = {
+                /* TODO */
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        }
+    )
 }
 
 /*

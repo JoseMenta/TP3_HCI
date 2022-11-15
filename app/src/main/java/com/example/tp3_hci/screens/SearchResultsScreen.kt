@@ -3,8 +3,13 @@ package com.example.tp3_hci.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -12,21 +17,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.RoutineCardDisplay
 import com.example.tp3_hci.data.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiBlueText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.*
 
 
 @Composable
 fun SearchResultsScreen(
+    navigationUtilities: NavigationUtilities,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    setTopAppBar : ((TopAppBarType)->Unit),
 ) {
     val windowInfo = rememberWindowInfo()
 
@@ -35,13 +40,15 @@ fun SearchResultsScreen(
         SearchResultsScreenMobile(
             stringSearched = stringSearched,
             routinesFound = routinesFound,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            navigationUtilities = navigationUtilities,
+            setTopAppBar = setTopAppBar
         )
     } else {
         SearchResultsScreenTablet(
             stringSearched = stringSearched,
             routinesFound = routinesFound,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            navigationUtilities = navigationUtilities,
+            setTopAppBar = setTopAppBar
         )
     }
 }
@@ -50,14 +57,42 @@ fun SearchResultsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResultsScreenTablet(
+    navigationUtilities: NavigationUtilities,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    setTopAppBar : ((TopAppBarType)->Unit),
 ){
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                leftIcon = {
+                    IconButton(onClick = {
+                        /* TODO */
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.search),
+                            tint = FitiWhiteText,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                },
+                navigationUtilities = navigationUtilities
+            )
+        }
+    )
 
-    //RegularTabletDisplay(
-    //    content = {
+    RegularTabletDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier
                     .padding(horizontal = 20.dp),
@@ -74,25 +109,53 @@ private fun SearchResultsScreenTablet(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                navigationUtilities = navigationUtilities
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchResultsScreenMobile(
+    navigationUtilities: NavigationUtilities,
     stringSearched: String = "",
     routinesFound : List<RoutineCardUiState>? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    setTopAppBar : ((TopAppBarType)->Unit),
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                leftIcon = {
+                    IconButton(onClick = {
+                        navigationUtilities.navigateToPreviousScreen()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.search),
+                            tint = FitiWhiteText,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                },
+                navigationUtilities = navigationUtilities
+            )
+        }
+    )
 
-    //RegularMobileDisplay(
-    //    content = {
+    RegularMobileDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier
                     .padding(horizontal = 20.dp),
@@ -109,14 +172,14 @@ private fun SearchResultsScreenMobile(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                navigationUtilities = navigationUtilities
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun SearchResultsScreenPreview(){
@@ -130,7 +193,9 @@ private fun SearchResultsScreenPreview(){
                 RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
                 RoutineCardUiState("Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
             ),
-            onNavigateToRutineDetailScreen = {},
+            onNavigateToRoutineDetailScreen = {},
+            setTopAppBar = {}
         )
     }
 }
+ */

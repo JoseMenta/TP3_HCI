@@ -1,18 +1,8 @@
 package com.example.tp3_hci.components.navigation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -40,8 +30,7 @@ fun TopNavigationBar(
     leftIcon: (@Composable () -> Unit?)? = null,
     centerComponent: (@Composable () -> Unit)? = null,
     secondRightIcon: (@Composable () -> Unit)? = null,
-    rightIcon: (@Composable () -> Unit)? = null,
-    defaulNav: () ->Unit
+    rightIcon: (@Composable () -> Unit)? = null
 ) {
     val windowInfo = rememberWindowInfo()
 
@@ -51,15 +40,13 @@ fun TopNavigationBar(
             if (leftIcon != null) {
                 leftIcon()
             } else if (windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded) {
-                Column(modifier = Modifier.clickable { defaulNav() }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.fiti),
-                        contentDescription = stringResource(id = R.string.fiti_logo),
-                        modifier = Modifier
-                            .size(50.dp)
-                    )
-                }
-                }
+                Image(
+                    painter = painterResource(id = R.drawable.fiti),
+                    contentDescription = stringResource(id = R.string.fiti_logo),
+                    modifier = Modifier
+                        .size(50.dp)
+                )
+            }
         },
         title = {
             if (centerComponent != null) {

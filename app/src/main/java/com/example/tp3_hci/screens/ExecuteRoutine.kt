@@ -1,4 +1,4 @@
-package com.example.tp3_hci
+package com.example.tp3_hci.screens
 
 
 import androidx.compose.animation.core.LinearEasing
@@ -12,27 +12,36 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tp3_hci.ExerciseCardStatus
+import com.example.tp3_hci.R
+import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.data.ExerciseCardUiSate
-import com.example.tp3_hci.data.RoutineCycleUiState
 import com.example.tp3_hci.data.RoutineDetailUiState
+import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
+import com.example.tp3_hci.utilities.NavigationUtilities
+import com.example.tp3_hci.utilities.TopAppBarType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun CountdownTimer(
+private fun CountdownTimer(
     time: Long,
     modifier: Modifier = Modifier,
     paused : Boolean
@@ -91,7 +100,7 @@ fun CountdownTimer(
 }
 
 @Composable
-fun CountdownRepetitions(
+private fun CountdownRepetitions(
     modifier: Modifier = Modifier,
     repetitions:Int
 ){
@@ -111,9 +120,9 @@ fun CountdownRepetitions(
         }
     }
 }
+
 @Composable
-fun ExecutionControls(
-    onNavigateToRatingRoutineScreen: () -> Unit,
+private fun ExecutionControls(
     time:Long?,
     repetitions: Int?
 ){
@@ -161,16 +170,16 @@ fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { if(true) onNavigateToRatingRoutineScreen()}
+                onClick = { /*TODO*/ }
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
         }
     }
 }
+
 @Composable
-fun ExecuteRoutineExerciseDetail(
-    onNavigateToRatingRoutineScreen: () -> Unit,
+private fun ExecuteRoutineExerciseDetail(
     exercise: ExerciseCardUiSate,
     expanded: Boolean = true
 ){
@@ -193,14 +202,14 @@ fun ExecuteRoutineExerciseDetail(
             Spacer(modifier = Modifier.size(20.dp))
         }
         ExecutionControls(
-            onNavigateToRatingRoutineScreen = onNavigateToRatingRoutineScreen,
             time = exercise.time.toLong(),
             repetitions = exercise.repetitions
         )
     }
 }
+
 @Composable
-fun ExecuteRoutineGlobal(
+private fun ExecuteRoutineGlobal(
     routine: RoutineDetailUiState,
     modifier: Modifier = Modifier
 ){
@@ -211,16 +220,30 @@ fun ExecuteRoutineGlobal(
         items(routine.cycles){cycle->
             RoutineCycle(
                 cycle = cycle,
-                status = ExerciseCardStatus.SELECTABLE)
+                status = ExerciseCardStatus.SELECTABLE
+            )
         }
     }
 }
-@OptIn(ExperimentalMaterialApi::class)
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ExecuteRoutine(
-    onNavigateToRatingRoutineScreen: () -> Unit,
+    navigationUtilities: NavigationUtilities,
+    setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineDetailUiState
 ){
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = { TopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = routine.name,
+                navigationUtilities = navigationUtilities
+            ) }
+        )
+    )
+
     val nroExercise = 1
     val selectedExercise: ExerciseCardUiSate = routine.cycles[0].exercises[nroExercise]
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -261,7 +284,7 @@ fun ExecuteRoutine(
                             Icon(Icons.Outlined.ExpandMore, contentDescription = "close detail")
                         }
                     }
-                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed, onNavigateToRatingRoutineScreen = onNavigateToRatingRoutineScreen)
+                    ExecuteRoutineExerciseDetail(exercise = selectedExercise, expanded = !compressed)
                 }
             }
         },
@@ -273,6 +296,38 @@ fun ExecuteRoutine(
         ExecuteRoutineGlobal(routine = routine,
         modifier = Modifier.padding(it))
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    title: String,
+    navigationUtilities: NavigationUtilities
+){
+
+    TopNavigationBar(
+        scrollBehavior = scrollBehavior,
+        leftIcon = {
+            IconButton(onClick = {
+                navigationUtilities.navigateToPreviousScreen()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        },
+        centerComponent = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = FitiWhiteText
+            )
+        }
+    )
 }
 
 /*

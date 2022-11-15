@@ -1,42 +1,66 @@
-package com.example.tp3_hci.components.review
+package com.example.tp3_hci.screens
 
 import androidx.compose.foundation.layout.*
+import com.example.tp3_hci.R
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tp3_hci.components.navigation.TopNavigationBar
+import com.example.tp3_hci.components.review.RatingBar
 import com.example.tp3_hci.data.RoutineCardUiState
-import com.example.tp3_hci.data.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
+import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.utilities.NavigationUtilities
+import com.example.tp3_hci.utilities.TopAppBarType
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ratingView(
-    onNavigateToHomeScreen: ()-> Unit,
+fun RatingView(
+    navigationUtilities: NavigationUtilities,
+    setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineCardUiState
 ){
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = {
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = routine.name,
+                    navigationUtilities = navigationUtilities
+                )
+            }
+        )
+    )
+
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         Congratulations(routine)
-        valoration()
-        ButtonSide(onNavigateToHomeScreen)
+        Valoration()
+        ButtonSide(navigationUtilities)
 
     }
 }
 
 @Composable
-fun Congratulations(
+private fun Congratulations(
     routine: RoutineCardUiState
 ){
     Column(
@@ -63,7 +87,7 @@ fun Congratulations(
 
 
 @Composable
-fun valoration(){
+private fun Valoration(){
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,8 +105,8 @@ fun valoration(){
 
 
 @Composable
-fun ButtonSide(
-    onNavigateToHomeScreen: () -> Unit
+private fun ButtonSide(
+    navigationUtilities: NavigationUtilities
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -94,7 +118,7 @@ fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = {onNavigateToHomeScreen() },
+            onClick = { navigationUtilities.navigateToRoute("MainScreen") },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -111,7 +135,7 @@ fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiBlue,
             ),
-            onClick = { onNavigateToHomeScreen()},
+            onClick = { navigationUtilities.navigateToRoute("MainScreen") },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -125,5 +149,38 @@ fun ButtonSide(
             )
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(
+    navigationUtilities: NavigationUtilities,
+    scrollBehavior: TopAppBarScrollBehavior,
+    title: String
+){
+
+    TopNavigationBar(
+        scrollBehavior = scrollBehavior,
+        leftIcon = {
+            IconButton(onClick = {
+                navigationUtilities.navigateToPreviousScreen()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        },
+        centerComponent = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = FitiWhiteText
+            )
+        }
+    )
 }
 
