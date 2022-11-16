@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class ExecuteRoutineViewModel(
     private val routineRepository: RoutineRepository
 ): ViewModel() {
-    var uiState by mutableStateOf(ExecuteRoutineUiState())
+    var uiState by mutableStateOf(ExecuteRoutineUiState(isFetching = false, message = null))
         private set
     private var fetchJob: Job? = null
     private var cycleIndex: Int = 0
@@ -31,8 +31,9 @@ class ExecuteRoutineViewModel(
                 uiState = uiState.copy(
                     isFetching = false,
                     routine = it,
-                    selectedExercise = getFirstExercise()
+                    selectedExercise = it.cycles[0].exercises[0]
                 )
+                it.cycles[0].exercises[0].isSelected = true
             }.onFailure { e ->
                 uiState = uiState.copy(
                     message = e.message,
@@ -55,8 +56,13 @@ class ExecuteRoutineViewModel(
         return null
     }
     fun nextExercise(){
-        uiState.selectedExercise?.isSelected = false
-        exerciseIndex+=1
+        if (uiState.routine != null) {
+            uiState.routine!!.cycles[0].exercises[0].isSelected = false
+            uiState = uiState.copy(
+                selectedExercise = uiState.routine!!.cycles[0].exercises[1]
+            )
+        }
+        exerciseIndex += 1
     }
     fun prevExercise(){
         uiState.selectedExercise?.isSelected = false

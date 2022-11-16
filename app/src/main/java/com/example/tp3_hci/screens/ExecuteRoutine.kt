@@ -159,7 +159,7 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { onPrevTouched }
+                onClick = onPrevTouched
             ) {
                 Icon( Icons.Outlined.SkipPrevious, contentDescription = "previous", tint = Color.White)
             }
@@ -257,6 +257,9 @@ fun ExecuteRoutine(
     viewModel: ExecuteRoutineViewModel = viewModel(factory = getViewModelFactory())
 ){
     val uiState = viewModel.uiState
+    if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
+        viewModel.getRoutine(12)
+    }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
@@ -267,8 +270,6 @@ fun ExecuteRoutine(
             ) }
         )
     )
-
-    val nroExercise = 1
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -320,11 +321,12 @@ fun ExecuteRoutine(
                                 expanded = !compressed,
                                 onPrevTouched = { viewModel.prevExercise() },
                                 onNextTouched = {
+                                    viewModel.nextExercise()
                                     if (!viewModel.hasNextExercise()) {
                                         executeRoutineNavigation.getRateRoutineScreen()
                                             .invoke("${uiState.routine?.id ?: 0}")
                                     } else {
-                                        viewModel.nextExercise()
+
                                     }
                                 },
                                 executeRoutineNavigation = executeRoutineNavigation,

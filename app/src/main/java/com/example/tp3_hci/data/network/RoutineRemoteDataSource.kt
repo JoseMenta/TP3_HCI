@@ -9,7 +9,7 @@ import com.example.tp3_hci.data.repository.OrderDirection
 class RoutineRemoteDataSource(
     private val apiRoutineService: ApiRoutineService
 ): RemoteDataSource() {
-    suspend fun getCurrentUserRoutines(page: Int, orderCriteria: String, orderDirection: String): NetworkPagedContent<NetworkRoutine>{
+    suspend fun getCurrentUserRoutines(page: Int, orderCriteria: String? = null, orderDirection: String? = null): NetworkPagedContent<NetworkRoutine>{
         return handleApiResponse {
             apiRoutineService.getCurrentUserRoutines(page, orderCriteria, orderDirection)
         }
