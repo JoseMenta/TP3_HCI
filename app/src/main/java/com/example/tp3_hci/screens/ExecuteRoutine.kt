@@ -59,6 +59,9 @@ private fun CountdownTimer(
     var minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
     var seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
     var display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
+//    LaunchedEffect(key1 = time){
+//        currentTime = time
+//    }
     LaunchedEffect(value) {
         animateFloat.animateTo(
             targetValue = value,
@@ -144,7 +147,7 @@ private fun ExecutionControls(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             if(time!=null){
-                CountdownTimer(time = time, paused = paused, onTimeFinished = {onNextTouched()})
+                CountdownTimer(time = time+1, paused = paused, onTimeFinished = {onNextTouched()})
             }
             if(repetitions!=null){
                 CountdownRepetitions(repetitions = repetitions)
@@ -323,7 +326,7 @@ fun ExecuteRoutine(
                                 onNextTouched = {
                                     if (!viewModel.hasNextExercise()) {
                                         executeRoutineNavigation.getRateRoutineScreen()
-                                            .invoke("${uiState.routine.id ?: 0}")
+                                            .invoke("$routineId")
                                     } else {
                                         viewModel.nextExercise()
                                     }
