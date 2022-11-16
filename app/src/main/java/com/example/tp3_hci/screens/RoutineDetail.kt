@@ -34,8 +34,12 @@ import com.example.tp3_hci.components.routine.RoutineTag
 import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
 import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.data.ui_state.RoutineCycleUiState
+import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.data.model.Cycle
+import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
@@ -100,7 +104,7 @@ private fun RoutineTags(
 
 @Composable
 fun RoutineCycle(
-    cycle: RoutineCycleUiState,
+    cycle: Cycle,
     status: ExerciseCardStatus = ExerciseCardStatus.VIEW_ONLY
 ){
     Card(
@@ -146,15 +150,17 @@ fun RoutineCycle(
 fun RoutineDetail(
     routineDetailNavigation: RoutineDetailNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    routine: RoutineDetailUiState,
-    srcImg: String
+    routineId: Int,
+    viewModel: RoutineDetailViewModel = viewModel(factory = getViewModelFactory() )
 ){
+    val uiState = viewModel.uiState
+    viewModel.getRoutineDetails(routineId)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
             topAppBar = {
                 TopAppBar(
-                    routine = routine,
+                    routineId = routineId,
                     scrollBehavior = scrollBehavior,
                     routineDetailNavigation = routineDetailNavigation
                 )
@@ -169,42 +175,66 @@ fun RoutineDetail(
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
                 onClick = {
-                    routineDetailNavigation.getExecuteRoutineScreen().invoke("${routine.id}")
+                    routineDetailNavigation.getExecuteRoutineScreen().invoke("$routineId")
                 },
                 shape = MaterialTheme.shapes.medium,
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
         },
         floatingActionButtonPosition = FabPosition.Center
-    ){
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-            contentPadding = it
-        ){
-            item{
-                Row(
-                    modifier = Modifier
-                        .padding(8.dp, 8.dp)
-                        .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    RoutineData(name = routine.name, difficulty = routine.difficulty ,creator = routine.creator, rating = routine.rating , votes = routine.votes )
-                    RoutineImage(
-                        source = srcImg,
-                        contentDescription = "Routine Image",
-                        modifier = Modifier
-                            .clip(Shapes.medium)
-                            .size(140.dp)
-                            .aspectRatio(1f / 1f)
-                    )
+    ) {
+        if (uiState.isFetching) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                CircularProgressIndicator()
+            }
+        } else {
+            if (uiState.routine != null) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    contentPadding = it
+                ) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .padding(8.dp, 8.dp)
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            RoutineData(
+                                name = uiState.routine.name,
+                                difficulty = uiState.routine.difficulty,
+                                creator = uiState.routine.creator,
+                                rating = uiState.routine.rating,
+                                votes = uiState.routine.votes
+                            )
+                            RoutineImage(
+                                source = uiState.routine.imageUrl,
+                                contentDescription = "Routine Image",
+                                modifier = Modifier
+                                    .clip(Shapes.medium)
+                                    .size(140.dp)
+                                    .aspectRatio(1f / 1f)
+                            )
+                        }
+                    }
+                    item {
+                        RoutineTags(tags = uiState.routine.tags, modifier = Modifier.padding(8.dp, 0.dp))
+                    }
+                    items(uiState.routine.cycles) {
+                        RoutineCycle(it, status = ExerciseCardStatus.EDITABLE)
+                    }
                 }
-            }
-            item {
-                RoutineTags(tags = routine.tags, modifier = Modifier.padding(8.dp,0.dp))
-            }
-            items(routine.cycles){
-                RoutineCycle(it, status = ExerciseCardStatus.EDITABLE)
+            }else{
+                //TODO: seguir
+                Text("Ocurrio un error")
+                Text(text = uiState.message?:"")
             }
         }
     }
@@ -216,7 +246,7 @@ fun RoutineDetail(
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     routineDetailNavigation: RoutineDetailNavigation,
-    routine: RoutineDetailUiState,
+    routineId: Int,
 ){
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
         LocalClipboardManager.current
@@ -244,7 +274,7 @@ private fun TopAppBar(
         },
         secondRightIcon = {
             IconButton(onClick = {
-                clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routine.id}"))
+                clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routineId}"))
             }) {
                 Icon(
                     imageVector = Icons.Filled.Share,
@@ -259,6 +289,8 @@ private fun TopAppBar(
                 /* TODO */
             }) {
                 Icon(
+                    //Ver como le pasamos el estado aca
+                    //va a ser raro me parece
                     imageVector = Icons.Filled.Favorite,
                     contentDescription = stringResource(id = R.string.search),
                     tint = FitiWhiteText,

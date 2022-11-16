@@ -10,6 +10,7 @@ import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.data.view_model.LoginViewModel
 import com.example.tp3_hci.data.view_model.ProfileViewModel
+import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 
 class ViewModelFactory constructor(
     private val sessionManager: SessionManager,
@@ -31,6 +32,8 @@ class ViewModelFactory constructor(
                 LoginViewModel(sessionManager, userRepository)
             isAssignableFrom(ProfileViewModel::class.java)->
                 ProfileViewModel(sessionManager, userRepository)
+            isAssignableFrom(RoutineDetailViewModel::class.java) ->
+                RoutineDetailViewModel(routineRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

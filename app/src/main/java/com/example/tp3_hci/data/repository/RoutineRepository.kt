@@ -33,10 +33,10 @@ class RoutineRepository(
         }
         return result.content
     }
-    suspend fun getRoutineOverviews(refresh: Boolean = false):List<RoutineOverview>{
+    suspend fun getCurrentUserRoutineOverviews(refresh: Boolean = false):List<RoutineOverview>{
         if(refresh || routineOverviews.isEmpty()|| favouriteRoutinesOverviews.isEmpty()){
             getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
-            val result = getAll {   remoteDataSource.getAllRoutines(it) }
+            val result = getAll {   remoteDataSource.getCurrentUserRoutines(it) }
             routineMutex.withLock {
                 routineOverviews = result.map {
                     RoutineOverview(
@@ -106,6 +106,7 @@ class RoutineRepository(
             difficulty = difficulty.indexOf(routine.difficulty)+1,
             creator =  routine.user?.username?:"",
             rating = routine.score,
+            imageUrl = routine.metadata?.image?:"",
             votes = remoteDataSource.getRoutineReviews(routineId,0).totalCount,
             isFavourite = favouriteRoutinesOverviews.any{ it.id == routineId},
             tags = routine.metadata?.tags?: emptyList(),

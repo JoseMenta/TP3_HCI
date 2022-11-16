@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.components.exercise.DialogRepetitions
 import com.example.tp3_hci.components.exercise.DialogTime
+import com.example.tp3_hci.data.model.CycleExercise
 import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
 import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiBlack
@@ -53,7 +54,7 @@ fun ExerciseCard(
     background: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(background),
     shape: Shape = RoundedCornerShape(12.dp),
-    exercise: ExerciseCardUiState,
+    exercise: CycleExercise,
     status: ExerciseCardStatus = ExerciseCardStatus.VIEW_ONLY
 ) {
     var checkedState by remember { mutableStateOf(true) }
@@ -234,6 +235,6 @@ fun IconInfoExercise(   modifier: Modifier=Modifier,
 @Composable
 fun ExerciseCardPreview() {
     TP3_HCITheme {
-        ExerciseCard(exercise = ExerciseCardUiState("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,), status = ExerciseCardStatus.EDITABLE)
+        ExerciseCard(exercise = CycleExercise("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
     }
 }
