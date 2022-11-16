@@ -121,6 +121,7 @@ class RoutineRepository(
         val routine = remoteDataSource.getRoutineById(routineId)
         val cycles = getAll { remoteDataSource.getRoutineCycles(routineId,it) }
         return RoutineDetail(
+            id = routine.id,
             name = routine.name,
             difficulty = difficultyToInt.get(routine.difficulty)?:1,
             creator =  routine.user?.username?:"",

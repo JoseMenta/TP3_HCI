@@ -195,8 +195,6 @@ fun MyNavHost(
             }
             composable("MakeRoutine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.IntType })){
-
-                val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
                 ExecuteRoutine(
                     executeRoutineNavigation = ExecuteRoutineNavigation(
                         previousScreen = {
@@ -209,7 +207,7 @@ fun MyNavHost(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
+                    routineId = it.arguments?.getInt("id")!!
                 )
             }
             composable("RatingRoutine/{id}",

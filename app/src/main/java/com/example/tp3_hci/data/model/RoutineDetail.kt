@@ -3,6 +3,7 @@ package com.example.tp3_hci.data.model
 
 
 data class RoutineDetail (
+    val id: Int,
     val name:String,
     val difficulty: Int,
     val creator:String,

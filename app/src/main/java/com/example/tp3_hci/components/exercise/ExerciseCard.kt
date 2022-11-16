@@ -59,11 +59,10 @@ fun ExerciseCard(
 ) {
     var checkedState by remember { mutableStateOf(true) }
     var expandedState by remember { mutableStateOf(false) }
-    var selected = false
     var checked by remember { mutableStateOf(true) }
     var repeat by remember { mutableStateOf(exercise.repetitions) }
     val sizeEditable = if (!expandedState) 272.dp else 362.dp
-    val backgroundColor= backgroundColorCard(selected, checkedState )
+    val backgroundColor= backgroundColorCard(exercise.isSelected, checkedState )
     var time  by remember { mutableStateOf(exercise.time)}
     val minutes = if(time/60>=10){"${time/60}"}else{"0${time/60}"}
     val seconds = if(time%60>=10){"${time%60}"}else{"0${time%60}"}
@@ -74,14 +73,14 @@ fun ExerciseCard(
                 if (checkedState) ContentAlpha.high else ContentAlpha.disabled
     ) {
         Card(
-            backgroundColor = backgroundColorCard(selected,checkedState),
+            backgroundColor = backgroundColor,
             contentColor = contentColor,
             shape = shape,
             elevation = elevation,
             border = border,
             modifier = modifier.combinedClickable (
                 onLongClick = {if(status == ExerciseCardStatus.EDITABLE && checkedState){expandedState=!expandedState}},
-                onClick = {if (status==ExerciseCardStatus.SELECTABLE){selected = true}} )
+                onClick = {/*TODO*/} )
 
 
         ) {
