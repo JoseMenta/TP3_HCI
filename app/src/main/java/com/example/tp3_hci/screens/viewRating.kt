@@ -23,17 +23,21 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.review.RatingBar
 import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import com.example.tp3_hci.data.view_model.RatingViewModel
 import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.ViewRatingNavigation
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +72,7 @@ fun RatingView(
         Spacer(modifier = Modifier.height(20.dp))
         ShareURL(routine = routine)
         Spacer(modifier = Modifier.height(20.dp))
-        ButtonSide(viewRatingNavigation)
+        ButtonSide(viewRatingNavigation, routine)
     }
 }
 
@@ -157,7 +161,9 @@ private fun Valoration(){
 
 @Composable
 private fun ButtonSide(
-    viewRatingNavigation: ViewRatingNavigation
+    viewRatingNavigation: ViewRatingNavigation,
+    routine : RoutineCardUiState,
+    viewModel: RatingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -169,7 +175,9 @@ private fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = { viewRatingNavigation.getHomeScreen().invoke() },
+            onClick = {
+                viewModel.ratingRoutine(routine.id)
+                viewRatingNavigation.getHomeScreen().invoke() },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)

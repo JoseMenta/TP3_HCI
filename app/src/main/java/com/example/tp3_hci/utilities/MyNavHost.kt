@@ -10,12 +10,14 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,13 +26,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
+import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.screens.*
 import com.example.tp3_hci.utilities.navigation.*
 
-
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyNavHost(
@@ -41,20 +44,67 @@ fun MyNavHost(
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     var topAppBar by remember {
         mutableStateOf(TopAppBarType(topAppBar = null))
     }
-    val changeTopAppBarType = { newTopAppBar : TopAppBarType ->
+    val changeTopAppBarType = { newTopAppBar: TopAppBarType ->
         topAppBar = newTopAppBar
     }
 
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var showBottomBar by rememberSaveable { mutableStateOf(false) }
     showBottomBar = (getBottomNavItems().find { bottomNavItem ->
         navBackStackEntry?.destination?.route == bottomNavItem.route
     } != null)
 
+    val windowInfo = rememberWindowInfo()
+
+    if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
+        windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact
+    ) {
+        scaf(
+            uri = uri,
+            changeTopAppBarType = changeTopAppBarType,
+            modifier = modifier,
+            scrollBehavior = scrollBehavior,
+            showBottomBar = showBottomBar,
+            topAppBar = topAppBar,
+            navController = navController,
+            startDestination = startDestination
+        )
+    } else {
+        NavigationDrawer(
+            content = {
+                scaf(
+                    uri = uri,
+                    changeTopAppBarType = changeTopAppBarType,
+                    modifier = modifier,
+                    scrollBehavior = scrollBehavior,
+                    showBottomBar = showBottomBar,
+                    topAppBar = topAppBar,
+                    navController = navController,
+                    startDestination = startDestination
+                )
+            }
+        )
+    }
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun scaf(
+    uri : String,
+    changeTopAppBarType : (TopAppBarType) -> Unit,
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior,
+    showBottomBar: Boolean,
+    topAppBar :  TopAppBarType,
+    navController : NavHostController,
+    startDestination : String
+){
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
@@ -70,9 +120,9 @@ fun MyNavHost(
                 BottomNavigationBar(
                     items = getBottomNavItems(),
                     bottomBarNavigation = BottomBarNavigation {
-                        route -> navController.navigate(route) {
-                            launchSingleTop = true
-                        }
+                            route -> navController.navigate(route) {
+                        launchSingleTop = true
+                    }
                     }
                 )
             }
@@ -112,14 +162,14 @@ fun MyNavHost(
                 MainScreen(
                     mainScreenNavigation = MainScreenNavigation(
                         routineCardNavigation = RoutineCardNavigation {
-                            routine -> navController.navigate("RoutineDetails/${routine}") {
-                                launchSingleTop = true
-                            }
+                                routine -> navController.navigate("RoutineDetails/${routine}") {
+                            launchSingleTop = true
+                        }
                         },
                         searchNavigation = SearchNavigation {
-                            search -> navController.navigate("SearchResults/${search}") {
-                                launchSingleTop = true
-                            }
+                                search -> navController.navigate("SearchResults/${search}") {
+                            launchSingleTop = true
+                        }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
@@ -132,13 +182,13 @@ fun MyNavHost(
                     favoritesNavigation = FavoritesNavigation(
                         routineCardNavigation = RoutineCardNavigation {
                                 routine -> navController.navigate("RoutineDetails/${routine}") {
-                                    launchSingleTop = true
-                                }
+                            launchSingleTop = true
+                        }
                         },
                         searchNavigation = SearchNavigation {
                                 search -> navController.navigate("SearchResults/${search}") {
-                                    launchSingleTop = true
-                                }
+                            launchSingleTop = true
+                        }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
@@ -163,7 +213,7 @@ fun MyNavHost(
             composable("Routine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
                 deepLinks = listOf(navDeepLink { uriPattern = "$uri/Routine/{id}"
-                action = Intent.ACTION_VIEW})){
+                    action = Intent.ACTION_VIEW})){
 
                 LoginView(
                     setTopAppBar = changeTopAppBarType,
@@ -184,15 +234,16 @@ fun MyNavHost(
                             navController.navigateUp()
                         },
                         executeRoutineScreen = {
-                            routine -> navController.navigate("MakeRoutine/${routine}") {
-                                launchSingleTop = true
-                            }
+                                routine -> navController.navigate("MakeRoutine/${routine}") {
+                            launchSingleTop = true
+                        }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
                     routineId = it.arguments?.getInt("id") ?: -1
                 )
             }
+            /*
             composable("MakeRoutine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
@@ -203,15 +254,16 @@ fun MyNavHost(
                             navController.navigateUp()
                         },
                         rateRoutineScreen = {
-                            routine -> navController.navigate("RatingRoutine/${routine}") {
-                                launchSingleTop = true
-                            }
+                                routine -> navController.navigate("RatingRoutine/${routine}") {
+                            launchSingleTop = true
+                        }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
                     routine = RoutineDetailUiState(aux.id, aux.name,3,"Jose",aux.score,120000,aux.tags!!, cycles),
                 )
             }
+            */
             composable("RatingRoutine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
@@ -246,12 +298,12 @@ fun MyNavHost(
                             navController.navigateUp()
                         },
                         searchNavigation = SearchNavigation {
-                            search -> navController.navigate("SearchResults/${search}")
+                                search -> navController.navigate("SearchResults/${search}")
                         },
                         routineCardNavigation = RoutineCardNavigation {
-                            routine -> navController.navigate("RoutineDetails/${routine}") {
-                                launchSingleTop = true
-                            }
+                                routine -> navController.navigate("RoutineDetails/${routine}") {
+                            launchSingleTop = true
+                        }
                         }
                     )
                 )
@@ -259,7 +311,6 @@ fun MyNavHost(
         }
     }
 }
-
 
 
 

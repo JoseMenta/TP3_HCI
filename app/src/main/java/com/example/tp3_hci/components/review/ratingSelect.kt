@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tp3_hci.data.view_model.ProfileViewModel
+import com.example.tp3_hci.data.view_model.RatingViewModel
+import com.example.tp3_hci.util.getViewModelFactory
 
 @Preview
 @Composable
@@ -22,7 +25,8 @@ fun justView(){
 @Composable
 fun RatingBar(
     modifier: Modifier = Modifier,
-    rating: Int
+    rating: Int,
+    viewModel: RatingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
 ){
     var ratingState by remember {
         mutableStateOf(rating)
@@ -38,11 +42,11 @@ fun RatingBar(
                 modifier = modifier
                     .width(64.dp)
                     .height(64.dp)
-                    .clickable { ratingState = i },
+                    .clickable { ratingState = i
+                        viewModel.changeRating(ratingState)},
                 tint = if( i <= ratingState) Color.Black else Color.Gray,
 
             )
         }
     }
-
 }

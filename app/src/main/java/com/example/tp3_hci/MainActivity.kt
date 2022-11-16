@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.data.model.RoutineDetail
 import kotlin.random.Random
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +66,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
 @Composable
 fun ActionButton(
     text: String,
