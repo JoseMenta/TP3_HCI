@@ -19,14 +19,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tp3_hci.data.view_model.LoginViewModel
 import com.example.tp3_hci.ui.theme.*
+import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.LoginNavigation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.MainViewModel
 
 @Composable
 fun LoginView(
     setTopAppBar : ((TopAppBarType)->Unit),
-    loginNavigation: LoginNavigation
+    loginNavigation: LoginNavigation,
 ){
     setTopAppBar(
         TopAppBarType(
@@ -87,8 +91,22 @@ private fun BLockRegister() {
 /* Intentar "Composearlo" mas con la API */
 @Composable
 private fun BLockLogin(
-    loginNavigation: LoginNavigation
+    loginNavigation: LoginNavigation,
+    viewModel: LoginViewModel = viewModel(factory = getViewModelFactory())
 ) {
+    val UiState = viewModel.uiState
+    var textError = remember { mutableStateOf("") }
+    var required = remember { mutableStateOf(false) }
+    if( UiState.isAuthenticated == true){
+        loginNavigation.getOnLoginScreen().invoke()
+    }
+    else if(UiState.isFetching == true && required.value){
+        textError.value = "Loding..."
+    }
+    else if(UiState.isAuthenticated == false && required.value){
+        textError.value = "Usuario y contraseña invalidos"
+    }
+
     Card(
         border = BorderStroke(2.dp, FitiBlack),
         modifier = Modifier.padding(20.dp),
@@ -100,15 +118,13 @@ private fun BLockLogin(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-
-
             Text(
                 text = "Inicio de Sesion",
                 style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
                 color = FitiBlueText
             )
 
-            var required = remember { mutableStateOf(false) }
+
             val username = remember { mutableStateOf(TextFieldValue()) }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -170,7 +186,7 @@ private fun BLockLogin(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-            var textError = remember { mutableStateOf("") }
+
 
             Column(
                 modifier = Modifier,
@@ -187,10 +203,13 @@ private fun BLockLogin(
                 ),
                 onClick = {
                     required.value = true;
-                    if(password.value.text == "fiti" && username.value.text == "fiti")
-                        loginNavigation.getOnLoginScreen().invoke()
-                    else
-                        textError.value = "Usuario y contraseña invalidos"
+                    viewModel.login(username = username.value.text, password = password.value.text)
+                    //while(viewModel.uiState.isFetching == true){ }
+                    //viewModel.login(username = "bb@mail.com", password = "1234")
+                    //if( UiState.isAuthenticated == true){
+                    //    loginNavigation.getOnLoginScreen().invoke()
+                    //}
+                        textError.value = "Loding..."
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier

@@ -38,7 +38,7 @@ sealed class RegularBottomNavItem(
     // TODO: Cambiar la ruta de Profile
     object Favorite : RegularBottomNavItem(R.string.bottom_nav_favorites, "Favorites", Icons.Filled.Favorite)
     object Home: RegularBottomNavItem(R.string.bottom_nav_home, "MainScreen", Icons.Filled.Home)
-    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Favorites", Icons.Filled.Person)
+    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Profile", Icons.Filled.Person)
 
     fun getBottomNavItems(): List<BottomNavItem>{
         return RegularBottomNavItem::class.sealedSubclasses.map{

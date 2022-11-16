@@ -21,21 +21,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.tp3_hci.screens.ExecuteRoutine
-import com.example.tp3_hci.screens.LoginView
 import com.example.tp3_hci.R
-import com.example.tp3_hci.screens.RoutineDetail
 import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
-import com.example.tp3_hci.screens.RatingView
-import com.example.tp3_hci.screens.cycles
 import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
-import com.example.tp3_hci.screens.FavoritesScreen
-import com.example.tp3_hci.screens.MainScreen
-import com.example.tp3_hci.screens.Routines
-import com.example.tp3_hci.screens.SearchResultsScreen
+import com.example.tp3_hci.screens.*
 import com.example.tp3_hci.utilities.navigation.*
 
 
@@ -151,6 +143,21 @@ fun MyNavHost(
                     ),
                     setTopAppBar = changeTopAppBarType,
                     favoriteRoutines = Routines
+                )
+            }
+            composable("Profile"){
+                ProfileScreen(
+                    profileNavigation = profileNavigation(
+                        LoginNavigation = {
+                            navController.navigate("Login") {
+                                launchSingleTop = true
+                            }
+                        },
+                        previousScreen = {
+                            navController.navigateUp()
+                        }
+                    ),
+                    setTopAppBar = changeTopAppBarType
                 )
             }
             composable("Routine/{id}",
