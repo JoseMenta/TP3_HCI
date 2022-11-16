@@ -1,42 +1,117 @@
-package com.example.tp3_hci.components.review
+package com.example.tp3_hci.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import com.example.tp3_hci.R
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.CopyAll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.tp3_hci.data.RoutineCardUiState
-import com.example.tp3_hci.data.RoutineDetailUiState
+import com.example.tp3_hci.components.navigation.TopNavigationBar
+import com.example.tp3_hci.components.review.RatingBar
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
+import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.utilities.TopAppBarType
+import com.example.tp3_hci.utilities.navigation.ViewRatingNavigation
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ratingView(
-    onNavigateToHomeScreen: ()-> Unit,
+fun RatingView(
+    viewRatingNavigation: ViewRatingNavigation,
+    setTopAppBar : ((TopAppBarType)->Unit),
     routine: RoutineCardUiState
 ){
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = {
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = routine.name,
+                    viewRatingNavigation = viewRatingNavigation
+                )
+            }
+        )
+    )
+
     Column(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         Congratulations(routine)
-        valoration()
-        ButtonSide(onNavigateToHomeScreen)
-
+        Spacer(modifier = Modifier.height(20.dp))
+        Valoration()
+        Spacer(modifier = Modifier.height(20.dp))
+        ShareURL(routine = routine)
+        Spacer(modifier = Modifier.height(20.dp))
+        ButtonSide(viewRatingNavigation)
     }
 }
 
 @Composable
-fun Congratulations(
+private fun ShareURL(
+    routine : RoutineCardUiState
+) {
+    val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
+        LocalClipboardManager.current
+
+    Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,) {
+
+        Text(
+            text = "Comparti esta Rutina",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Card( border = BorderStroke(2.dp, FitiBlack),
+            modifier = Modifier,
+            backgroundColor = Color.White
+        ) {
+            Row( verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 10.dp) ) {
+                val route = "https://fiti.com/Routine/${routine.id}"
+                Text(
+                    text = route,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                IconButton(onClick = {
+                    clipboardManager.setText(AnnotatedString(route))
+                }){
+                    Icon(painter = rememberVectorPainter(Icons.Rounded.CopyAll), contentDescription = "copy")
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun Congratulations(
     routine: RoutineCardUiState
 ){
     Column(
@@ -63,7 +138,7 @@ fun Congratulations(
 
 
 @Composable
-fun valoration(){
+private fun Valoration(){
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,8 +156,8 @@ fun valoration(){
 
 
 @Composable
-fun ButtonSide(
-    onNavigateToHomeScreen: () -> Unit
+private fun ButtonSide(
+    viewRatingNavigation: ViewRatingNavigation
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -94,7 +169,7 @@ fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = {onNavigateToHomeScreen() },
+            onClick = { viewRatingNavigation.getHomeScreen().invoke() },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -111,7 +186,9 @@ fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiBlue,
             ),
-            onClick = { onNavigateToHomeScreen()},
+            onClick = {
+                viewRatingNavigation.getHomeScreen().invoke()
+            },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
@@ -125,5 +202,38 @@ fun ButtonSide(
             )
         }
     }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopAppBar(
+    viewRatingNavigation: ViewRatingNavigation,
+    scrollBehavior: TopAppBarScrollBehavior,
+    title: String
+){
+
+    TopNavigationBar(
+        scrollBehavior = scrollBehavior,
+        leftIcon = {
+            IconButton(onClick = {
+                viewRatingNavigation.getPreviousScreen().invoke()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = FitiWhiteText,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        },
+        centerComponent = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.h2,
+                color = FitiWhiteText
+            )
+        }
+    )
 }
 

@@ -11,30 +11,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import androidx.compose.ui.text.font.FontWeight
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.utilities.*
+import com.example.tp3_hci.utilities.navigation.MainScreenNavigation
 import kotlin.math.min
 
 val Routines = listOf(
-    RoutineCardUiState("Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
-    RoutineCardUiState("Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
-    RoutineCardUiState("Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
-    RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
-    RoutineCardUiState("Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
+    RoutineCardUiState(1,"Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
+    RoutineCardUiState(2,"Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
+    RoutineCardUiState(3,"Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
+    RoutineCardUiState(4,"Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
+    RoutineCardUiState(5,"Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
 )
 
 
 @Composable
 fun MainScreen(
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen: (String) ->Unit,
+    mainScreenNavigation: MainScreenNavigation,
+    setTopAppBar : ((TopAppBarType)->Unit),
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null
 ){
@@ -43,33 +42,49 @@ fun MainScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            mainScreenNavigation = mainScreenNavigation,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines,
+            setTopAppBar = setTopAppBar
         )
     } else {
         MainScreenTablet(
+            mainScreenNavigation = mainScreenNavigation,
             lastRoutineDone = lastRoutineDone,
             createdRoutines = createdRoutines,
-            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            setTopAppBar = setTopAppBar
         )
     }
 }
 
 
-//@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenTablet(
+    mainScreenNavigation: MainScreenNavigation,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null,
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen: (String) ->Unit,
+    setTopAppBar : ((TopAppBarType)->Unit),
 ) {
-    //val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                searchNavigation = mainScreenNavigation.getSearchNavigation()
+            )
+        }
+    )
 
-    //RegularTabletDisplay(
-    //    content = {
+    RegularTabletDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 routines = createdRoutines,
@@ -80,7 +95,7 @@ private fun MainScreenTablet(
                         if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
                             LastRoutineDoneDisplay(
                                 lastRoutineDone = lastRoutineDone,
-                                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                                mainScreenNavigation = mainScreenNavigation
                             )
                         }
 
@@ -92,25 +107,41 @@ private fun MainScreenTablet(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
 
-//@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainScreenMobile(
-    onNavigateToRutineDetailScreen: (String) ->Unit,
+    mainScreenNavigation: MainScreenNavigation,
     lastRoutineDone : List<RoutineCardUiState>? = null,
     createdRoutines : List<RoutineCardUiState>? = null,
+    setTopAppBar : ((TopAppBarType)->Unit),
 ){
-    //val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                searchNavigation = mainScreenNavigation.getSearchNavigation()
+            )
+        }
+    )
 
-    //RegularMobileDisplay(
-    //    content = {
+    RegularMobileDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 routines = createdRoutines,
@@ -121,7 +152,7 @@ private fun MainScreenMobile(
                         if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
                             LastRoutineDoneDisplay(
                                 lastRoutineDone = lastRoutineDone,
-                                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                                mainScreenNavigation = mainScreenNavigation
                             )
                         }
 
@@ -133,11 +164,11 @@ private fun MainScreenMobile(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
 
@@ -147,7 +178,7 @@ private fun MainScreenMobile(
 @Composable
 private fun LastRoutineDoneDisplay(
     lastRoutineDone : List<RoutineCardUiState>,
-    onNavigateToRutineDetailScreen : (String) -> Unit
+    mainScreenNavigation: MainScreenNavigation,
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -162,7 +193,7 @@ private fun LastRoutineDoneDisplay(
         RoutineCard(
             routine = lastRoutineDone[0],
             modifier = Modifier.padding(bottom = 20.dp),
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+            routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
         )
     } else {
         Text(
@@ -182,7 +213,7 @@ private fun LastRoutineDoneDisplay(
                     routine = lastRoutineDone[i-1],
                     modifier = Modifier
                         .weight(1f),
-                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
                 )
             }
         }
@@ -202,6 +233,7 @@ private fun getItemsInRow(
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenPreview(){
@@ -219,8 +251,9 @@ private fun MainScreenPreview(){
                     RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
                     RoutineCardUiState("null", false, 0, listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
             ),
-            onNavigateToRutineDetailScreen = {},
-            onNavigateToResetHomeScreen = {}
+            onNavigateToRoutineDetailScreen = {},
+            setTopAppBar = {}
         )
     }
 }
+ */

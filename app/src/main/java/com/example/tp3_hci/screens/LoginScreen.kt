@@ -1,4 +1,4 @@
-package com.example.tp3_hci
+package com.example.tp3_hci.screens
 
 
 import androidx.compose.foundation.BorderStroke
@@ -20,11 +20,20 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
+import com.example.tp3_hci.utilities.TopAppBarType
+import com.example.tp3_hci.utilities.navigation.LoginNavigation
 
 @Composable
 fun LoginView(
-    onNavigateToMainScreen: () -> Unit
+    setTopAppBar : ((TopAppBarType)->Unit),
+    loginNavigation: LoginNavigation
 ){
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = null,
+        )
+    )
+
     Column(
         //modifier = Modifier.verticalScroll().fillMaxHeight(),
         modifier = Modifier.fillMaxHeight(),
@@ -38,7 +47,7 @@ fun LoginView(
                 .fillMaxWidth()
                 .padding(top = 10.dp, start = 40.dp, end = 40.dp)
         )
-        BLockLogin(onNavigateToMainScreen)
+        BLockLogin(loginNavigation)
         BLockRegister()
     }
 
@@ -46,7 +55,7 @@ fun LoginView(
 
 
 @Composable
-fun BLockRegister() {
+private fun BLockRegister() {
     Column(
             modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 10.dp),
             verticalArrangement = Arrangement.Center,
@@ -77,8 +86,8 @@ fun BLockRegister() {
 
 /* Intentar "Composearlo" mas con la API */
 @Composable
-fun BLockLogin(
-    onNavigateToMainScreen: () -> Unit
+private fun BLockLogin(
+    loginNavigation: LoginNavigation
 ) {
     Card(
         border = BorderStroke(2.dp, FitiBlack),
@@ -176,8 +185,13 @@ fun BLockLogin(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = FitiGreenButton,
                 ),
-                onClick = { required.value = true;
-                    if(password.value.text == "fiti" && username.value.text == "fiti") onNavigateToMainScreen() else textError.value = "Usuario y contraseña invalidos"},
+                onClick = {
+                    required.value = true;
+                    if(password.value.text == "fiti" && username.value.text == "fiti")
+                        loginNavigation.getOnLoginScreen().invoke()
+                    else
+                        textError.value = "Usuario y contraseña invalidos"
+                },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()

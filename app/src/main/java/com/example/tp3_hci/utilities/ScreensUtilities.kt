@@ -1,31 +1,32 @@
 package com.example.tp3_hci.utilities
-/*
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.tp3_hci.R
-import com.example.tp3_hci.components.navigation.BottomNavItem
-import com.example.tp3_hci.components.navigation.BottomNavigationBar
-import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.search.SearchFiltersSurface
 import com.example.tp3_hci.components.search.SearchTopBar
 import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.utilities.navigation.SearchNavigation
+
+
+class TopAppBarType(
+    private val topAppBar: (@Composable ()->Unit)?
+){
+    fun getTopAppBar(): @Composable() (() -> Unit)? {
+        return this.topAppBar
+    }
+}
 
 
 sealed class TopAppBarState(){
@@ -33,143 +34,86 @@ sealed class TopAppBarState(){
     object Search: TopAppBarState()
 }
 
-sealed class RegularBottomNavItem(
-    override val nameId: Int,
-    override val nav: () -> Unit,
-    override val icon: ImageVector
-): BottomNavItem(
-    nameId = nameId,
-    nav = nav,
-    icon = icon
-){
-    object Favorites : RegularBottomNavItem(R.string.bottom_nav_favorites, "Favorites", Icons.Filled.Favorite)
-    object Home : RegularBottomNavItem(R.string.bottom_nav_home, "MainScreen", Icons.Filled.Home)
-    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Profile", Icons.Filled.Person)
-}
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegularMobileDisplay(
     content: @Composable ()->Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    topAppBarState: TopAppBarState
 ){
-    var topAppBarState by remember { mutableStateOf(TopAppBarState.Regular as TopAppBarState) }
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        bottomBar = {
-            BottomNavigationBar(
-                items = RegularBottomNavItem::class.sealedSubclasses.map {
-                    subclass -> subclass.objectInstance as BottomNavItem
-                },
-                navController = rememberNavController()
-            )
-        },
-        topBar = {
-            RegularTopAppBar(
-                scrollBehavior = scrollBehavior,
-                topAppBarState = topAppBarState,
-                onTopAppBarState = { newState ->
-                    topAppBarState = newState
-                }
-            )
-        }
+    Box(
+        contentAlignment = Alignment.Center
     ){
-        Box(
-            modifier = Modifier.padding(it)
-        ){
-            content()
+        content()
 
-            AnimatedVisibility(
-                visible = (topAppBarState is TopAppBarState.Search),
-                enter = expandVertically(
-                    expandFrom = Alignment.Top
-                ),
-                exit = shrinkVertically(
-                    shrinkTowards = Alignment.Top
-                )
-            ) {
-                SearchFiltersSurface()
-            }
+        AnimatedVisibility(
+            visible = (topAppBarState is TopAppBarState.Search),
+            enter = expandVertically(
+                expandFrom = Alignment.Top
+            ) + fadeIn(),
+            exit = shrinkVertically(
+                shrinkTowards = Alignment.Top
+            ) + fadeOut()
+        ) {
+            SearchFiltersSurface()
         }
+    }
+}
 
+
+@Composable
+fun RegularTabletDisplay(
+    content: @Composable ()->Unit,
+    topAppBarState: TopAppBarState
+){
+    Box(
+        contentAlignment = Alignment.Center
+    ){
+        content()
+
+        AnimatedVisibility(
+            visible = (topAppBarState is TopAppBarState.Search),
+            enter = expandVertically(
+                expandFrom = Alignment.Top
+            ),
+            exit = shrinkVertically(
+                shrinkTowards = Alignment.Top
+            )
+        ) {
+            SearchFiltersSurface()
+        }
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegularTabletDisplay(
-    content: @Composable ()->Unit,
-    scrollBehavior: TopAppBarScrollBehavior
-){
-    var topAppBarState by remember { mutableStateOf(TopAppBarState.Regular as TopAppBarState) }
-
-    NavigationDrawer(
-        content = {
-            Scaffold(
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
-                    RegularTopAppBar(
-                        scrollBehavior = scrollBehavior,
-                        topAppBarState = topAppBarState,
-                        onTopAppBarState = { newState ->
-                            topAppBarState = newState
-                        }
-                    )
-                }
-            ){
-                Box(
-                    modifier = Modifier.padding(it)
-                ){
-                    content()
-
-                    AnimatedVisibility(
-                        visible = (topAppBarState is TopAppBarState.Search),
-                        enter = expandVertically(
-                            expandFrom = Alignment.Top
-                        ),
-                        exit = shrinkVertically(
-                            shrinkTowards = Alignment.Top
-                        )
-                    ) {
-                        SearchFiltersSurface()
-                    }
-                }
-            }
-        }
-    )
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RegularTopAppBar(
+fun RegularTopAppBar(
+    searchNavigation: SearchNavigation,
     scrollBehavior: TopAppBarScrollBehavior,
     topAppBarState: TopAppBarState,
-    onTopAppBarState: (TopAppBarState) -> Unit
+    onTopAppBarState: (TopAppBarState) -> Unit,
+    leftIcon : (@Composable ()->Unit)? = null
 ) {
     var searchInput by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        SearchTopBar(
-            scrollBehavior = scrollBehavior,
-            input = searchInput,
-            onCloseSearchBarState = {
-                onTopAppBarState(TopAppBarState.Regular)
-            },
-            onInputChange = { newInput ->
-                searchInput = newInput
-            },
-            onSearchClicked = {
-                println("Se busco $it")
-            }
-        )
+        if(topAppBarState is TopAppBarState.Search){
+            SearchTopBar(
+                scrollBehavior = scrollBehavior,
+                input = searchInput,
+                onCloseSearchBarState = {
+                    onTopAppBarState(TopAppBarState.Regular)
+                },
+                onInputChange = { newInput ->
+                    searchInput = newInput
+                },
+                onSearchClicked = {
+                    searchNavigation.getSearchScreen().invoke(it)
+                }
+            )
+        }
 
         AnimatedVisibility(
             visible = (topAppBarState is TopAppBarState.Regular),
@@ -200,10 +144,9 @@ private fun RegularTopAppBar(
                         style = MaterialTheme.typography.h2,
                         color = FitiWhiteText
                     )
-                }
+                },
+                leftIcon = leftIcon
             )
         }
     }
 }
-
-*/

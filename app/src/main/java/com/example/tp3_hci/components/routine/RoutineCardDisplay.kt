@@ -7,14 +7,10 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tp3_hci.R
-import com.example.tp3_hci.data.DropDownItem
-import com.example.tp3_hci.data.OrderByItem
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 import com.example.tp3_hci.utilities.rememberWindowInfo
 
 
@@ -30,7 +26,7 @@ fun RoutineCardDisplay(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit
+    routineCardNavigation: RoutineCardNavigation
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -39,7 +35,7 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+            routineCardNavigation = routineCardNavigation
         )
     }
     else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
@@ -50,7 +46,7 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+            routineCardNavigation = routineCardNavigation
         )
     } else {
         RoutineCardLazyGrid(
@@ -59,7 +55,7 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+            routineCardNavigation = routineCardNavigation
         )
     }
 }
@@ -71,7 +67,7 @@ private fun RoutineCardLazyGrid(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit
+    routineCardNavigation: RoutineCardNavigation
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -101,7 +97,7 @@ private fun RoutineCardLazyGrid(
                 RoutineCard(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
-                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                    routineCardNavigation = routineCardNavigation
                 )
             }
         }
@@ -123,7 +119,7 @@ private fun RoutineCardLazyList(
     routines: List<RoutineCardUiState>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    onNavigateToRutineDetailScreen : (String) -> Unit
+    routineCardNavigation: RoutineCardNavigation
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
@@ -147,7 +143,7 @@ private fun RoutineCardLazyList(
                 RoutineCard(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
-                    onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                    routineCardNavigation = routineCardNavigation
                 )
             }
         }
@@ -160,7 +156,7 @@ private fun RoutineCardLazyList(
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun RoutineCardDisplayPreview(
@@ -175,6 +171,8 @@ fun RoutineCardDisplayPreview(
     )
     RoutineCardDisplay(
         routines = routines,
-        onNavigateToRutineDetailScreen = {}
+        navigationUtilities = NavigationUtilities(rememberN)
     )
 }
+
+ */

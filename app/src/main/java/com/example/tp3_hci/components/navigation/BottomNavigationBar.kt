@@ -3,6 +3,10 @@ package com.example.tp3_hci.components.navigation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -10,25 +14,46 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
 import com.example.tp3_hci.ui.theme.FitiWhiteText
+import com.example.tp3_hci.utilities.navigation.BottomBarNavigation
 
 open class BottomNavItem(
     open val nameId: Int,
-    open val nav: () -> Unit,
+    open val route: String,
     open val icon: ImageVector
 )
 
+sealed class RegularBottomNavItem(
+    override val nameId: Int,
+    override val route: String,
+    override val icon: ImageVector
+): BottomNavItem(
+    nameId = nameId,
+    route = route,
+    icon = icon
+){
+    // TODO: Cambiar la ruta de Profile
+    object Favorite : RegularBottomNavItem(R.string.bottom_nav_favorites, "Favorites", Icons.Filled.Favorite)
+    object Home: RegularBottomNavItem(R.string.bottom_nav_home, "MainScreen", Icons.Filled.Home)
+    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Favorites", Icons.Filled.Person)
+
+    fun getBottomNavItems(): List<BottomNavItem>{
+        return RegularBottomNavItem::class.sealedSubclasses.map{
+            subclass -> subclass.objectInstance as BottomNavItem
+        }
+    }
+}
+
 // -------------------------------------------------------------------------
 // Componente para la navegacion entre las pantallas principales
-// TODO: Implementar navegacion
 // -------------------------------------------------------------------------
 @Composable
 fun BottomNavigationBar(
+    bottomBarNavigation: BottomBarNavigation,
     items : List<BottomNavItem>,
-    //navController : NavController,
     modifier: Modifier = Modifier
 ){
     BottomNavigation(
@@ -40,7 +65,9 @@ fun BottomNavigationBar(
             val selected = (stringResource(id = item.nameId) == "Inicio")
             BottomNavigationItem(
                 selected = selected,
-                onClick = { item.nav() },
+                onClick = {
+                    bottomBarNavigation.getItemScreen().invoke(item.route)
+                },
                 selectedContentColor = FitiGreenButton,
                 unselectedContentColor = FitiWhiteText,
                 icon = {

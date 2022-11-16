@@ -20,14 +20,15 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 import com.example.tp3_hci.R
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 
 @Composable
 fun RoutineCard(
     routine : RoutineCardUiState,
     modifier: Modifier = Modifier,
-    onNavigateToRutineDetailScreen: (String)->Unit,
+    routineCardNavigation: RoutineCardNavigation
 ){
     var favoriteState by remember { mutableStateOf(routine.isFavourite) }
 
@@ -42,7 +43,9 @@ fun RoutineCard(
             modifier = Modifier.fillMaxSize()
         ) {
             Button(
-                onClick = { onNavigateToRutineDetailScreen(routine.name) },
+                onClick = {
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.id}")
+                },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {

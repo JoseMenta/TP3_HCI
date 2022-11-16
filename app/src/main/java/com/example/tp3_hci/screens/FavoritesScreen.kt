@@ -9,20 +9,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.*
-import com.example.tp3_hci.data.RoutineCardUiState
+import com.example.tp3_hci.data.ui_state.RoutineCardUiState
 import com.example.tp3_hci.ui.theme.FitiBlueText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.utilities.*
+import com.example.tp3_hci.utilities.navigation.FavoritesNavigation
 
 
 @Composable
 fun FavoritesScreen(
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    favoritesNavigation: FavoritesNavigation,
+    setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null
 ){
     val windowInfo = rememberWindowInfo()
@@ -30,13 +29,14 @@ fun FavoritesScreen(
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         FavoritesScreenMobile(
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            favoritesNavigation = favoritesNavigation,
+            setTopAppBar = setTopAppBar,
             favoriteRoutines = favoriteRoutines,
         )
     } else {
         FavoritesScreenTablet(
-            onNavigateToResetHomeScreen = onNavigateToResetHomeScreen,
-            onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen,
+            favoritesNavigation = favoritesNavigation,
+            setTopAppBar = setTopAppBar,
             favoriteRoutines = favoriteRoutines,
         )
     }
@@ -46,14 +46,29 @@ fun FavoritesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenTablet(
-    onNavigateToResetHomeScreen : () -> Unit,
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    favoritesNavigation: FavoritesNavigation,
+    setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null,
 ){
-    //val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                searchNavigation = favoritesNavigation.getSearchNavigation()
+            )
+        }
+    )
 
-    //RegularTabletDisplay(
-    //    content = {
+    RegularTabletDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier
                     .padding(horizontal = 20.dp),
@@ -70,11 +85,11 @@ private fun FavoritesScreenTablet(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
 
@@ -82,13 +97,29 @@ private fun FavoritesScreenTablet(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FavoritesScreenMobile(
-    onNavigateToRutineDetailScreen : (String) -> Unit,
+    favoritesNavigation: FavoritesNavigation,
+    setTopAppBar : ((TopAppBarType)->Unit),
     favoriteRoutines : List<RoutineCardUiState>? = null
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    var topAppBarState by remember {
+        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
+    }
+    setTopAppBar(
+        TopAppBarType {
+            RegularTopAppBar(
+                scrollBehavior = scrollBehavior,
+                topAppBarState = topAppBarState,
+                onTopAppBarState = {
+                    topAppBarState = it
+                },
+                searchNavigation = favoritesNavigation.getSearchNavigation()
+            )
+        }
+    )
 
-    //RegularMobileDisplay(
-    //    content = {
+    RegularMobileDisplay(
+        content = {
             RoutineCardDisplay(
                 modifier = Modifier
                     .padding(horizontal = 20.dp),
@@ -105,14 +136,14 @@ private fun FavoritesScreenMobile(
                         )
                     }
                 },
-                onNavigateToRutineDetailScreen = onNavigateToRutineDetailScreen
+                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
             )
-        //},
-        //scrollBehavior = scrollBehavior
-    //)
+        },
+        topAppBarState = topAppBarState
+    )
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 private fun FavoritesScreenPreview(){
@@ -125,8 +156,10 @@ private fun FavoritesScreenPreview(){
                 RoutineCardUiState("Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
                 RoutineCardUiState("Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
             ),
-            onNavigateToRutineDetailScreen = {},
-            onNavigateToResetHomeScreen = {},
+            onNavigateToRoutineDetailScreen = {},
+            setTopAppBar = {}
         )
     }
 }
+
+ */
