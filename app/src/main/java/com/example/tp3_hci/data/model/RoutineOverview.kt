@@ -5,7 +5,7 @@ import java.util.Date
 data class RoutineOverview(
     val id: Int,
     val name: String,
-    val isFavourite: Boolean = false,
+    var isFavourite: Boolean = false,
     val score: Int = 0,
     val creationDate: Date,
     val difficulty: Int,
