@@ -10,5 +10,5 @@ data class NetworkCycle(
     @SerializedName("type"        ) var type        : String,
     @SerializedName("order"       ) var order       : Int,
     @SerializedName("repetitions" ) var repetitions : Int,
-    @SerializedName("metadata"    ) var metadata    : String? = null
+    @SerializedName("metadata"    ) var metadata    : NetworkCycleMetadata? = null
 )

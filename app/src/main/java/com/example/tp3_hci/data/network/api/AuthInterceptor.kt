@@ -10,10 +10,11 @@ class AuthInterceptor(context: Context): Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        //si no es null, ejecuta lo que hay en let
-        sessionManager.loadAuthToken()?.let{
-            requestBuilder.addHeader("Authorization","Bearer $it")
+
+        sessionManager.loadAuthToken()?.let {
+            requestBuilder.addHeader("Authorization", "Bearer $it")
         }
+
         return chain.proceed(requestBuilder.build())
     }
 }

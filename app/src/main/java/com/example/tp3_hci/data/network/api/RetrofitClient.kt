@@ -3,12 +3,15 @@ package com.example.api_fiti.data.network.api
 import android.content.Context
 import com.example.tp3_hci.BuildConfig
 import com.example.tp3_hci.data.network.api.ApiDateTypeAdapter
+import com.example.tp3_hci.data.network.api.ApiExerciseService
+import com.example.tp3_hci.data.network.api.ApiRoutineService
 import com.example.tp3_hci.data.network.api.AuthInterceptor
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.*
 
 object RetrofitClient {
@@ -41,5 +44,14 @@ object RetrofitClient {
     }
     fun getApiUserService(context: Context): ApiUserService{
         return getInstance(context).create(ApiUserService::class.java)
+    }
+    fun getApiRoutineService(context: Context): ApiRoutineService{
+        return getInstance(context).create(ApiRoutineService::class.java)
+    }
+    fun getApiExerciseService(context: Context): ApiExerciseService{
+        return getInstance(context).create(ApiExerciseService::class.java)
+    }
+    fun getApiSportService(context: Context): ApiSportService{
+        return getInstance(context).create(ApiSportService::class.java)
     }
 }

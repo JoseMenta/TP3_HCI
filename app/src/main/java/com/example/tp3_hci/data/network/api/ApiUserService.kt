@@ -13,10 +13,10 @@ import retrofit2.http.POST
 
 interface ApiUserService {
     @POST("users/login")
-    suspend fun login(@Body credential: NetworkCredentials): Response<NetworkToken>
+    suspend fun login(@Body credentials: NetworkCredentials): Response<NetworkToken>
 
     @POST("users/logout")
-    suspend fun logout():Response<Unit>
+    suspend fun logout(): Response<Unit>
 
     @GET("users/current")
     suspend fun getCurrentUser(): Response<NetworkUser>

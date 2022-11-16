@@ -36,7 +36,7 @@ class RoutineRepository(
     suspend fun getRoutineOverviews(refresh: Boolean = false):List<RoutineOverview>{
         if(refresh || routineOverviews.isEmpty()|| favouriteRoutinesOverviews.isEmpty()){
             getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
-            val result = getAll { remoteDataSource.getAllRoutines(it) }
+            val result = getAll {   remoteDataSource.getAllRoutines(it) }
             routineMutex.withLock {
                 routineOverviews = result.map {
                     RoutineOverview(
@@ -149,5 +149,5 @@ class RoutineRepository(
             )
         }
     }
-    
+
 }

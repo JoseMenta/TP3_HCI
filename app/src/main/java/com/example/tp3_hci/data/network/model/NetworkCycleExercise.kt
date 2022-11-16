@@ -9,7 +9,7 @@ data class NetworkCycleExercise(
     @SerializedName("order"       ) var order       : Int,
     @SerializedName("duration"    ) var duration    : Int,
     @SerializedName("repetitions" ) var repetitions : Int,
-    @SerializedName("metadata"    ) var metadata    : String?   = null
+    @SerializedName("metadata"    ) var metadata    : ExerciseMetadata?   = null
 ){
     fun toCycleExercise():CycleExercise{
         return CycleExercise(
