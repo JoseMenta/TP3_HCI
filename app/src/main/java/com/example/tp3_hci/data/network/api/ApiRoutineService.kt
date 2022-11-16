@@ -8,7 +8,7 @@ import retrofit2.http.*
 interface ApiRoutineService {
 
     @GET("users/current/routines")
-    suspend fun getCurrentUserRoutines(@Query("page")page: Int): Response<NetworkPagedContent<NetworkRoutine>>
+    suspend fun getCurrentUserRoutines(@Query("page")page: Int, @Query("orderBy") orderBy: String?, @Query("direction") direction: String?): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("users/current/executions")
     suspend fun getCurrentUserExecutions(@Query("page")page: Int): Response<NetworkPagedContent<NetworkExecution>>
@@ -24,6 +24,9 @@ interface ApiRoutineService {
 
     @GET("routines")
     suspend fun getAllRoutines(@Query("page")page: Int): Response<NetworkPagedContent<NetworkRoutine>>
+
+    @GET("routines")
+    suspend fun filterAllRoutines(@Query("page")page: Int,@Query("categoryId")categoryId: Int = 0,@Query("userId")userId: Int?,@Query("difficulty")difficulty:String?,@Query("score")score:Int?,@Query("search")search:String?, @Query("orderBy") orderBy: String?, @Query("direction") direction: String?): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("routines/{routineId}")
     suspend fun getRoutineById(@Path("routineId")routineId: Int): Response<NetworkRoutine>
