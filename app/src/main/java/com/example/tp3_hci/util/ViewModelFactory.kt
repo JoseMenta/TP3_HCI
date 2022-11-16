@@ -8,6 +8,8 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.example.tp3_hci.MainViewModel
 import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
+import com.example.tp3_hci.data.view_model.LoginViewModel
+import com.example.tp3_hci.data.view_model.ProfileViewModel
 
 class ViewModelFactory constructor(
     private val sessionManager: SessionManager,
@@ -25,6 +27,10 @@ class ViewModelFactory constructor(
         when {
             isAssignableFrom(MainViewModel::class.java) ->
                 MainViewModel(sessionManager, userRepository, routineRepository)
+            isAssignableFrom(LoginViewModel::class.java)->
+                LoginViewModel(sessionManager, userRepository)
+            isAssignableFrom(ProfileViewModel::class.java)->
+                ProfileViewModel(sessionManager, userRepository)
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
