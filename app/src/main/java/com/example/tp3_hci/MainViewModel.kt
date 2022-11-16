@@ -87,7 +87,7 @@ class MainViewModel(
             message = null
         )
         runCatching {
-            routineRepository.getRoutineOverviews(true)
+            routineRepository.getCurrentUserRoutineOverviews(true)
         }.onSuccess {
             uiState = uiState.copy(
                 isFetching = false,

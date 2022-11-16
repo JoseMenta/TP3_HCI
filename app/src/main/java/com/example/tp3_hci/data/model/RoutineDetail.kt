@@ -10,5 +10,6 @@ data class RoutineDetail (
     val votes:Int,
     val isFavourite: Boolean,
     val tags: List<String>,
-    val cycles: List<Cycle>
+    val cycles: List<Cycle>,
+    val imageUrl: String
 )
