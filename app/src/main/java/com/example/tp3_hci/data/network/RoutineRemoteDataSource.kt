@@ -16,16 +16,16 @@ class RoutineRemoteDataSource(
     }
     suspend fun getFilteredRoutines(
         page: Int,
-        categoryId: Int?,
-        userId: Int?,
-        score: Int?,
-        difficulty: String?,
-        search: String?,
-        orderCriteria: String?,
-        orderDirection: String?
+        categoryId: Int? = null,
+        userId: Int? = null,
+        score: Int? = null,
+        difficulty: String? = null,
+        search: String? = null,
+        orderCriteria: String? = null,
+        orderDirection: String? = null
     ):NetworkPagedContent<NetworkRoutine>{
         return handleApiResponse {
-            apiRoutineService.filterAllRoutines(page,categoryId?:1,userId,difficulty,score,search,orderCriteria,orderDirection)
+            apiRoutineService.filterAllRoutines(page,categoryId,userId,difficulty,score,search,orderCriteria,orderDirection)
         }
     }
     suspend fun getCurrentUserExecutions(page: Int): NetworkPagedContent<NetworkExecution>{

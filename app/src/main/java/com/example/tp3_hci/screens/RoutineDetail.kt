@@ -154,7 +154,9 @@ fun RoutineDetail(
     viewModel: RoutineDetailViewModel = viewModel(factory = getViewModelFactory() )
 ){
     val uiState = viewModel.uiState
-    viewModel.getRoutineDetails(routineId)
+    if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
+        viewModel.getRoutineDetails(12)
+    }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
@@ -191,7 +193,7 @@ fun RoutineDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ){
-                CircularProgressIndicator()
+//                CircularProgressIndicator()
             }
         } else {
             if (uiState.routine != null) {

@@ -144,6 +144,9 @@ fun MainScreen(
                 }
             }else{
                 Text("no estan disponibles las rutinas ")
+                if(uiState.message!=null){
+                    Text(text = uiState.message)
+                }
             }
             if(uiState.detailedRoutine!=null){
                 Text(uiState.detailedRoutine.name)

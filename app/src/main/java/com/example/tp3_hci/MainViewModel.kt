@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tp3_hci.data.repository.OrderCriteria
+import com.example.tp3_hci.data.repository.OrderDirection
 import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.util.SessionManager
@@ -87,7 +89,13 @@ class MainViewModel(
             message = null
         )
         runCatching {
-            routineRepository.getCurrentUserRoutineOverviews(true)
+//            routineRepository.getCurrentUserRoutineOverviews(true)
+            routineRepository.getFilteredRoutineOverviews(
+                categoryId = 1,
+                difficulty = 1,
+                search = "ho",
+                orderDirection = OrderDirection.Desc,
+            orderCriteria = OrderCriteria.Score)
         }.onSuccess {
             uiState = uiState.copy(
                 isFetching = false,
@@ -100,7 +108,6 @@ class MainViewModel(
             )
         }
     }
-
     fun getDetailedRoutine() = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,
