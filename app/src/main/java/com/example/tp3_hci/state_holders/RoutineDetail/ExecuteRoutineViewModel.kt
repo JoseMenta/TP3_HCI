@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tp3_hci.data.model.CycleExercise
+import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ class ExecuteRoutineViewModel(
         private set
     private var fetchJob: Job? = null
     private var cycleIndex: Int = 0
+    private var cycleReps: Int = 0
     private var exerciseIndex: Int = 0
     fun getRoutine(routineId: Int) {
         fetchJob?.cancel()
@@ -31,7 +33,7 @@ class ExecuteRoutineViewModel(
                 uiState = uiState.copy(
                     isFetching = false,
                     routine = it,
-                    selectedExercise = it.cycles[0].exercises[0]
+                    selectedExercise = getFirstExercise(it)
                 )
                 it.cycles[0].exercises[0].isSelected = true
             }.onFailure { e ->
@@ -42,44 +44,91 @@ class ExecuteRoutineViewModel(
             }
         }
     }
-    fun getFirstExercise(): CycleExercise?{
-        val routine = uiState.routine
-        if(routine!=null){
+    fun getFirstExercise(routine: RoutineDetail): CycleExercise?{
             while (cycleIndex<routine.cycles.size){
                 val cycle = routine.cycles[cycleIndex]
                 if(exerciseIndex<cycle.exercises.size){
+                    cycleReps = cycle.repetitions
                     return routine.cycles[cycleIndex].exercises[exerciseIndex]
                 }
                 exerciseIndex = 0
             }
-        }
         return null
     }
     fun nextExercise(){
         if (uiState.routine != null) {
-            uiState.routine!!.cycles[0].exercises[0].isSelected = false
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = false
+            if(exerciseIndex == uiState.routine!!.cycles[cycleIndex].exercises.size-1){
+                cycleReps-=1
+                if(cycleReps==0){
+                    cycleIndex+=1
+                    if(cycleIndex == uiState.routine!!.cycles.size){
+                        cycleIndex-=1
+                        //guardar la ejecucion
+                        //hacer que llame a hasNext luego para ir a la otra ventana si no
+                        return
+                    }else{
+                        cycleReps = uiState.routine!!.cycles[cycleIndex].repetitions
+                        exerciseIndex = 0
+                    }
+                }else{
+                    exerciseIndex = 0
+                }
+            }else{
+                exerciseIndex+=1
+            }
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = true
             uiState = uiState.copy(
-                selectedExercise = uiState.routine!!.cycles[0].exercises[1]
+                selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
             )
+//            uiState.routine!!.cycles[0].exercises[0].isSelected = false
+//            uiState = uiState.copy(
+//                selectedExercise = uiState.routine!!.cycles[0].exercises[1]
+//            )
         }
-        exerciseIndex += 1
     }
     fun prevExercise(){
-        uiState.selectedExercise?.isSelected = false
-        exerciseIndex-=1
+        if(uiState.routine!=null){
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = false
+            if(exerciseIndex==0){
+                if(cycleReps == uiState.routine!!.cycles[cycleIndex].repetitions){
+                    if(cycleIndex==0){
+                        return
+                    }
+                    cycleIndex-=1
+                    exerciseIndex = uiState.routine!!.cycles[cycleIndex].exercises.size-1
+                    cycleReps=1
+                }else{
+                    cycleReps+=1
+                    exerciseIndex = uiState.routine!!.cycles[cycleIndex].exercises.size-1
+                }
+            }else{
+                exerciseIndex-=1
+            }
+            //restart timer
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = true
+            uiState = uiState.copy(
+                selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
+            )
+        }
     }
     fun hasNextExercise():Boolean{
-        val routine = uiState.routine
-        if(routine!=null) {
-            while (cycleIndex<routine.cycles.size){
-                val cycle = routine.cycles[cycleIndex]
-                if(exerciseIndex<cycle.exercises.size){
-                    return true
-                }
-                exerciseIndex = 0
-            }
+        if(exerciseIndex == uiState.routine!!.cycles[cycleIndex].exercises.size-1
+            && cycleReps==1 && cycleIndex == uiState.routine!!.cycles.size-1){
             return false
         }
-        return false
+        return true
+//        val routine = uiState.routine
+//        if(routine!=null) {
+//            while (cycleIndex<routine.cycles.size){
+//                val cycle = routine.cycles[cycleIndex]
+//                if(exerciseIndex<cycle.exercises.size){
+//                    return true
+//                }
+//                exerciseIndex = 0
+//            }
+//            return false
+//        }
+//        return false
     }
 }

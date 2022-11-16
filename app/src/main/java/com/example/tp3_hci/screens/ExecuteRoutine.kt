@@ -321,12 +321,11 @@ fun ExecuteRoutine(
                                 expanded = !compressed,
                                 onPrevTouched = { viewModel.prevExercise() },
                                 onNextTouched = {
-                                    viewModel.nextExercise()
                                     if (!viewModel.hasNextExercise()) {
                                         executeRoutineNavigation.getRateRoutineScreen()
-                                            .invoke("${uiState.routine?.id ?: 0}")
+                                            .invoke("${uiState.routine.id ?: 0}")
                                     } else {
-
+                                        viewModel.nextExercise()
                                     }
                                 },
                                 executeRoutineNavigation = executeRoutineNavigation,
