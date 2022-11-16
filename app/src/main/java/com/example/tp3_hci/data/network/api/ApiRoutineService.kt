@@ -11,7 +11,7 @@ interface ApiRoutineService {
     suspend fun getCurrentUserRoutines(@Query("page")page: Int, @Query("orderBy") orderBy: String?, @Query("direction") direction: String?): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("users/current/executions")
-    suspend fun getCurrentUserExecutions(@Query("page")page: Int): Response<NetworkPagedContent<NetworkExecution>>
+    suspend fun getCurrentUserExecutions(@Query("page")page: Int, @Query("orderBy") orderBy: String?, @Query("direction") direction: String?): Response<NetworkPagedContent<NetworkExecution>>
 
     @POST("favourites/{routineId}")
     suspend fun markRoutineAsFavourite(@Path("routineId") routineId: Int): Response<Unit>
@@ -20,7 +20,7 @@ interface ApiRoutineService {
     suspend fun unmarkRoutineAsFavourite(@Path("routineId") routineId: Int): Response<Unit>
 
     @GET("favourites")
-    suspend fun getCurrentUserFavouriteRoutines(@Query("page")page: Int): Response<NetworkPagedContent<NetworkRoutine>>
+    suspend fun getCurrentUserFavouriteRoutines(@Query("page")page: Int, @Query("orderBy") orderBy: String?, @Query("direction") direction: String?): Response<NetworkPagedContent<NetworkRoutine>>
 
     @GET("routines")
     suspend fun getAllRoutines(@Query("page")page: Int): Response<NetworkPagedContent<NetworkRoutine>>

@@ -49,7 +49,7 @@ class RoutineRepository(
     }
     suspend fun getCurrentUserRoutineOverviews(refresh: Boolean = false, orderCriteria: OrderCriteria = OrderCriteria.Name,orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>{
         if(refresh || routineOverviews.isEmpty()|| favouriteRoutinesOverviews.isEmpty()){
-            getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
+            getFavouritesOverviews(orderCriteria = orderCriteria, orderDirection = orderDirection)//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
             val result = getAll {   remoteDataSource.getCurrentUserRoutines(it,orderCriteria.apiName, orderDirection.apiName) }
             routineMutex.withLock {
                 routineOverviews = result.map {
@@ -69,7 +69,7 @@ class RoutineRepository(
         orderCriteria: OrderCriteria = OrderCriteria.Name,
         orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>
     {
-        getFavouritesOverviews()
+        getFavouritesOverviews(orderCriteria = orderCriteria, orderDirection = orderDirection)
         val result = getAll { remoteDataSource.getFilteredRoutines(
                 page = it,
                 categoryId = categoryId,
@@ -83,9 +83,9 @@ class RoutineRepository(
             networkRoutineToRoutineOverview(it)
         }
     }
-    suspend fun getFavouritesOverviews(refresh: Boolean = false): List<RoutineOverview>{
+    suspend fun getFavouritesOverviews(refresh: Boolean = false, orderCriteria: OrderCriteria = OrderCriteria.Name, orderDirection: OrderDirection = OrderDirection.Asc): List<RoutineOverview>{
         if(refresh || favouriteRoutinesOverviews.isEmpty()){
-            val result = getAll { remoteDataSource.getCurrentUserFavouriteRoutines(it) }
+            val result = getAll { remoteDataSource.getCurrentUserFavouriteRoutines(it, orderCriteria.apiName, orderDirection.apiName) }
             routineMutex.withLock {
                 favouriteRoutinesOverviews = result.map {
                     networkRoutineToRoutineOverview(it)
@@ -148,8 +148,8 @@ class RoutineRepository(
         }
     }
 
-    suspend fun getCurrentUserExecutions():List<Execution>{
-        val result = getAll { remoteDataSource.getCurrentUserExecutions(it) }
+    suspend fun getCurrentUserExecutions(orderCriteria: OrderCriteria, orderDirection: OrderDirection):List<Execution>{
+        val result = getAll { remoteDataSource.getCurrentUserExecutions(it, orderCriteria.apiName, orderDirection.apiName) }
         return result.map {
             Execution(
                 id = it.id,

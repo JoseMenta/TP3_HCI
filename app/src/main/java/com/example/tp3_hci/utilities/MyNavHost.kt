@@ -42,6 +42,7 @@ fun MyNavHost(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scaffoldState = rememberScaffoldState()
 
     var topAppBar by remember {
         mutableStateOf(TopAppBarType(topAppBar = null))
@@ -123,28 +124,27 @@ fun MyNavHost(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    lastRoutineDone = Routines,
-                    createdRoutines = Routines
+                    scaffoldState = scaffoldState
                 )
             }
-            composable("Favorites"){
-                FavoritesScreen(
-                    favoritesNavigation = FavoritesNavigation(
-                        routineCardNavigation = RoutineCardNavigation {
-                                routine -> navController.navigate("RoutineDetails/${routine}") {
-                                    launchSingleTop = true
-                                }
-                        },
-                        searchNavigation = SearchNavigation {
-                                search -> navController.navigate("SearchResults/${search}") {
-                                    launchSingleTop = true
-                                }
-                        }
-                    ),
-                    setTopAppBar = changeTopAppBarType,
-                    favoriteRoutines = Routines
-                )
-            }
+//            composable("Favorites"){
+//                FavoritesScreen(
+//                    favoritesNavigation = FavoritesNavigation(
+//                        routineCardNavigation = RoutineCardNavigation {
+//                                routine -> navController.navigate("RoutineDetails/${routine}") {
+//                                    launchSingleTop = true
+//                                }
+//                        },
+//                        searchNavigation = SearchNavigation {
+//                                search -> navController.navigate("SearchResults/${search}") {
+//                                    launchSingleTop = true
+//                                }
+//                        }
+//                    ),
+//                    setTopAppBar = changeTopAppBarType,
+//                    favoriteRoutines = Routines
+//                )
+//            }
             composable("Profile"){
                 ProfileScreen(
                     profileNavigation = profileNavigation(
@@ -229,31 +229,31 @@ fun MyNavHost(
                     routine = aux
                 )
             }
-            composable("SearchResults/{search}",
-                arguments = listOf(
-                    navArgument("search") { type = NavType.StringType }
-                )
-            ){
-
-                SearchResultsScreen(
-                    stringSearched = it.arguments?.getString("search")!! ,
-                    routinesFound = Routines,
-                    setTopAppBar = changeTopAppBarType,
-                    searchResultsNavigation = SearchResultsNavigation(
-                        previousScreen = {
-                            navController.navigateUp()
-                        },
-                        searchNavigation = SearchNavigation {
-                            search -> navController.navigate("SearchResults/${search}")
-                        },
-                        routineCardNavigation = RoutineCardNavigation {
-                            routine -> navController.navigate("RoutineDetails/${routine}") {
-                                launchSingleTop = true
-                            }
-                        }
-                    )
-                )
-            }
+//            composable("SearchResults/{search}",
+//                arguments = listOf(
+//                    navArgument("search") { type = NavType.StringType }
+//                )
+//            ){
+//
+//                SearchResultsScreen(
+//                    stringSearched = it.arguments?.getString("search")!! ,
+//                    routinesFound = Routines,
+//                    setTopAppBar = changeTopAppBarType,
+//                    searchResultsNavigation = SearchResultsNavigation(
+//                        previousScreen = {
+//                            navController.navigateUp()
+//                        },
+//                        searchNavigation = SearchNavigation {
+//                            search -> navController.navigate("SearchResults/${search}")
+//                        },
+//                        routineCardNavigation = RoutineCardNavigation {
+//                            routine -> navController.navigate("RoutineDetails/${routine}") {
+//                                launchSingleTop = true
+//                            }
+//                        }
+//                    )
+//                )
+//            }
         }
     }
 }
