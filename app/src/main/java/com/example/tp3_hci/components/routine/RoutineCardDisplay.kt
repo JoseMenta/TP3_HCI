@@ -83,7 +83,7 @@ private fun RoutineCardLazyGrid(
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
         if(header != null){
@@ -129,7 +129,7 @@ private fun RoutineCardLazyList(
     simplify : Boolean
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
         if(header != null){

@@ -198,11 +198,12 @@ private fun FavoritesScreenContent(
         content = {
             RoutineCardDisplay(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 20.dp).fillMaxHeight(),
                 routines = favoritesScreenUiState.favoriteRoutines,
                 header = {
                     Column(
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Top,
+                        modifier = Modifier.height(IntrinsicSize.Max)
                     ) {
                         Text(
                             text = stringResource(id = R.string.favorites),
