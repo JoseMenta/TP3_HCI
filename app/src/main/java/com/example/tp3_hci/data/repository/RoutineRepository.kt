@@ -12,7 +12,9 @@ import kotlin.collections.HashMap
 
 class RoutineRepository(
     private val remoteDataSource: RoutineRemoteDataSource,
-) {
+    private val userRepository: UserRepository,
+    private val categoryRepository: CategoryRepository
+): DataRepository() {
     private val routineMutex = Mutex()
 
     private var routineOverviews: List<RoutineOverview> = emptyList()
@@ -24,18 +26,6 @@ class RoutineRepository(
     private val difficultyToStrig: HashMap<Int, String> = hashMapOf(Pair(1,"rookie"),Pair(2,"beginner"),Pair(3,"intermediate"),Pair(4,"advanced"),Pair(5,"expert"))
 
     //todo: cache del detalle de la rutina
-    private suspend fun<T:Any> getAll(execute: suspend (page:Int)->NetworkPagedContent<T>):List<T>{
-        var i = 0
-        val result = execute(i)
-        i+=1
-        var aux = result
-        while (!aux.isLastPage){
-            aux = execute(i)
-            result.content.addAll(aux.content)
-            i+=1
-        }
-        return result.content
-    }
     private fun networkRoutineToRoutineOverview(networkRoutine: NetworkRoutine):RoutineOverview{
         return RoutineOverview(
             id = networkRoutine.id,
@@ -61,12 +51,8 @@ class RoutineRepository(
         }
         return routineMutex.withLock{ this.routineOverviews}
     }
-    suspend fun getCategories(search: String? = null):List<Category>{
-        val result = getAll { remoteDataSource.getCategories(it,search) }
-        return result.map { it.toCategory() }
-    }
-    suspend fun getFilteredRoutineOverviews(
-        categoryId: Int? = null,
+    private suspend fun getFilteredRoutineOverviewsForUser(
+        category: String? = null,
         userId: Int? = null,
         score: Int? = null,
         difficulty: Int? = null,
@@ -74,8 +60,16 @@ class RoutineRepository(
         orderCriteria: OrderCriteria = OrderCriteria.Name,
         orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>
     {
+        var categoryId: Int? = null;
+        if(category!=null){
+            val result = categoryRepository.getCategories(category)
+            if(result.isNotEmpty()){
+                categoryId = result[0].id
+            }
+        }
         getFavouritesOverviews()
-        val result = getAll { remoteDataSource.getFilteredRoutines(
+        val result = getAll {
+            remoteDataSource.getFilteredRoutines(
                 page = it,
                 categoryId = categoryId,
                 userId = userId,
@@ -83,9 +77,50 @@ class RoutineRepository(
                 difficulty = difficultyToStrig[difficulty],
                 search = search,
                 orderCriteria = orderCriteria.apiName,
-                orderDirection = orderDirection.apiName)  }
+                orderDirection = orderDirection.apiName
+            )
+        }
         return result.map {
             networkRoutineToRoutineOverview(it)
+        }
+    }
+    suspend fun getFilteredRoutineOverviews(
+        category: String? = null,
+        userId: Int? = null,
+        username: String?= null,
+        score: Int? = null,
+        difficulty: Int? = null,
+        search: String? = null,
+        orderCriteria: OrderCriteria = OrderCriteria.Name,
+        orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>
+    {
+        if(username!=null && userId == null) {
+            //tengo que hacer el filter para cada usuario que me devuelve
+            val users = userRepository.getUsers(username)
+            val result = arrayListOf<RoutineOverview>()
+            users.forEach{
+                result.addAll(getFilteredRoutineOverviewsForUser(
+                    category = category,
+                    userId = it.id,
+                    score = score,
+                    difficulty = difficulty,
+                    search = search,
+                    orderCriteria = orderCriteria,
+                    orderDirection = orderDirection
+                ))
+            }
+            return result
+        }else {
+            val result = getFilteredRoutineOverviewsForUser(
+                category = category,
+                userId = userId,
+                score = score,
+                difficulty = difficulty,
+                search = search,
+                orderCriteria = orderCriteria,
+                orderDirection = orderDirection
+            )
+            return result
         }
     }
     suspend fun getFavouritesOverviews(refresh: Boolean = false): List<RoutineOverview>{

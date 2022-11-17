@@ -1,6 +1,8 @@
 package com.example.tp3_hci.data.repository
 
+import com.example.api_fiti.data.network.model.NetworkPagedContent
 import com.example.api_fiti.data.network.model.NetworkUser
+import com.example.tp3_hci.data.model.PublicUser
 import com.example.tp3_hci.data.model.User
 import com.example.tp3_hci.data.network.UserRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
@@ -8,13 +10,16 @@ import kotlinx.coroutines.sync.withLock
 
 class UserRepository(
     private val remoteDataSource: UserRemoteDataSource
-) {
-
+): DataRepository() {
     // Mutex to make writes to cached values thread-safe.
     private val currentUserMutex = Mutex()
     // Cache of the current user got from the network.
     private var currentUser: User? = null
 
+    suspend fun getUsers(search: String? = null):List<PublicUser>{
+        val result =  getAll { remoteDataSource.getUsers(it,search) }
+        return result.map { it.toModel() }
+    }
     suspend fun login(username: String, password: String) {
         remoteDataSource.login(username, password)
     }
