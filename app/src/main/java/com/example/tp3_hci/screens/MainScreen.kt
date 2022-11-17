@@ -100,7 +100,7 @@ private fun MainScreenContent(
     RegularDisplay(
         content = {
             RoutineCardDisplay(
-                modifier = Modifier.padding(horizontal = 20.dp),
+                modifier = Modifier.padding(horizontal = 20.dp).fillMaxHeight(),
                 routines = mainScreenUiState.createdRoutines,
                 header = {
                     Column(

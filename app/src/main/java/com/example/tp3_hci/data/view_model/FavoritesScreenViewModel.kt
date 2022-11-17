@@ -24,7 +24,6 @@ class FavoritesScreenViewModel(
 
     var favoritesScreenUiState by mutableStateOf(
         FavoritesScreenUiState(
-            routines = null,
             favoriteRoutines = null,
             orderBy = OrderByItem.Name,
             orderType = OrderTypeItem.Descending,
@@ -51,41 +50,25 @@ class FavoritesScreenViewModel(
         fetchFavoriteRoutines = viewModelScope.launch {
             dismissMessage()
             favoritesScreenUiState = favoritesScreenUiState.copy(
-                isLoading = true
+                isLoading = true,
+                favoriteRoutines = null
             )
             kotlin.runCatching {
-                getOrderedRoutines(
+                routineRepository.getFilteredRoutineOverviews(
                     orderCriteria = favoritesScreenUiState.orderBy.criteria,
                     orderDirection = favoritesScreenUiState.orderType.orderDirection
                 )
-            }.onSuccess {
-                kotlin.runCatching {
-                    routineRepository.getFavouritesOverviews()
-                }.onSuccess { response ->
-                    val favoriteRoutines = favoritesScreenUiState.routines?.intersect(response.toSet())
-                    if (favoriteRoutines != null) {
-                        favoritesScreenUiState = favoritesScreenUiState.copy(
-                            favoriteRoutines = favoriteRoutines.map { routineOverview -> mutableStateOf(routineOverview) },
-                            isLoading = false
-                        )
-                    } else {
-                        favoritesScreenUiState = favoritesScreenUiState.copy(
-                            favoriteRoutines = null,
-                            isLoading = false
-                        )
-                    }
-                }.onFailure {
-                    throw it
-                }
+            }.onSuccess { response ->
+                favoritesScreenUiState = favoritesScreenUiState.copy(
+                    favoriteRoutines = response.filter { routineOverview -> routineOverview.isFavourite == true }.map { routineOverview -> mutableStateOf(routineOverview) },
+                    isLoading = false
+                )
             }.onFailure {
                 favoritesScreenUiState = favoritesScreenUiState.copy(
                     isLoading = false,
                     message = it.message
                 )
             }
-
-
-
         }
     }
 
@@ -99,7 +82,12 @@ class FavoritesScreenViewModel(
                 routineRepository.markRoutineAsFavourite(routine.value.id)
             }
         }.onSuccess {
-
+            if(favoritesScreenUiState.favoriteRoutines != null){
+                val routines = favoritesScreenUiState.favoriteRoutines!!.filter { routine -> routine.value.id == routine.value.id }
+                routines.forEach { routine ->
+                    routine.value.isFavourite = !routine.value.isFavourite
+                }
+            }
         }.onFailure {
             favoritesScreenUiState = favoritesScreenUiState.copy(
                 message = it.message
@@ -135,29 +123,5 @@ class FavoritesScreenViewModel(
         favoritesScreenUiState = favoritesScreenUiState.copy(
             message = null
         )
-    }
-
-    // Obtiene todas las rutinas, las cuales luego se filtraran para quedarse con las favoritas
-    private suspend fun getOrderedRoutines(
-        orderCriteria: OrderCriteria,
-        orderDirection: OrderDirection
-    ) {
-        viewModelScope.launch {
-            favoritesScreenUiState = favoritesScreenUiState.copy(
-                routines = null
-            )
-            kotlin.runCatching {
-                routineRepository.getFilteredRoutineOverviews(
-                    orderCriteria = orderCriteria,
-                    orderDirection = orderDirection
-                )
-            }.onSuccess { response ->
-                favoritesScreenUiState = favoritesScreenUiState.copy(
-                    routines = response
-                )
-            }.onFailure {
-                throw it
-            }
-        }
     }
 }

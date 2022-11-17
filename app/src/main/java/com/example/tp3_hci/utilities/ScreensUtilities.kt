@@ -49,7 +49,8 @@ fun RegularDisplay(
     onRefreshSwipe : ()->Unit = {}
 ){
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxHeight()
     ){
         if(hasSwipeRefresh){
             SwipeRefresh(

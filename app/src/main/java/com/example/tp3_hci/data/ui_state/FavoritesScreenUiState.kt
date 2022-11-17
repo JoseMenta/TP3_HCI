@@ -6,7 +6,6 @@ import com.example.tp3_hci.data.OrderTypeItem
 import com.example.tp3_hci.data.model.RoutineOverview
 
 data class FavoritesScreenUiState(
-    val routines : List<RoutineOverview>?,
     val favoriteRoutines : List<MutableState<RoutineOverview>>?,
     val orderBy : OrderByItem,
     val orderType : OrderTypeItem,
