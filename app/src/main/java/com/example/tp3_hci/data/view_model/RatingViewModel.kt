@@ -16,6 +16,25 @@ class RatingViewModel(
     var uiState by mutableStateOf(RatingUiState())
         private set
 
+    fun getRoutineOverview(routineId: Int) = viewModelScope.launch {
+        uiState = uiState.copy(
+            isFetching = true,
+            message = null
+        )
+        runCatching {
+            RoutineRepository.getRoutineOverview(routineId)
+        }.onSuccess {
+            uiState = uiState.copy(
+                isFetching = false,
+                routine = it
+            )
+        }.onFailure { e->
+            uiState = uiState.copy(
+                message = e.message,
+                isFetching = false
+            )
+        }
+    }
     fun ratingRoutine(routineId: Int) = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,

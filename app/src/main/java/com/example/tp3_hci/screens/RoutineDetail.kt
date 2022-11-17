@@ -44,18 +44,6 @@ import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
 
 
-//val exercises = listOf(
-//    ExerciseCardUiState("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
-//    ExerciseCardUiState("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
-//    ExerciseCardUiState("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
-//    ExerciseCardUiState("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
-//)
-//val cycles = listOf(
-//    RoutineCycleUiState("Calentamiento",2, exercises),
-//    RoutineCycleUiState("Ciclo 1",4, exercises),
-//    RoutineCycleUiState("Ciclo 2",3, exercises),
-//    RoutineCycleUiState("Enfriamiento",3, exercises)
-//)
 
 @Composable
 private fun RoutineData(
@@ -65,7 +53,7 @@ private fun RoutineData(
     rating: Int,
     votes: Int
     ){
-        val thousand_votes = votes/1000.0
+        val votesText = if(votes>1000){"${votes/1000} K"}else{"$votes"}
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ){
@@ -77,7 +65,7 @@ private fun RoutineData(
             Text(text = "${stringResource(R.string.created_by)}: $creator",style = MaterialTheme.typography.h4)
             Row{
                 RatingStars(rating = rating)
-                Text(text = "($thousand_votes K)")
+                Text(text = "($votesText)")
             }
 
         }
@@ -154,7 +142,7 @@ fun RoutineDetail(
 ){
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
-        viewModel.getRoutineDetails(12)
+        viewModel.getRoutineDetails(routineId)
     }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
@@ -192,7 +180,7 @@ fun RoutineDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ){
-//                CircularProgressIndicator()
+                CircularProgressIndicator()
             }
         } else {
             if (uiState.routine != null) {

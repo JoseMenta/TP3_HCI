@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.components.navigation.TopNavigationBar
@@ -43,36 +42,66 @@ import com.example.tp3_hci.utilities.navigation.ViewRatingNavigation
 fun RatingView(
     viewRatingNavigation: ViewRatingNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    routineId: Int
+    routineId: Int,
+    viewModel: RatingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
 ){
+    val uiState = viewModel.uiState
+    if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
+        viewModel.getRoutineOverview(routineId)
+    }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
             topAppBar = {
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
-                    title = "TODO",
+                    title = stringResource(id = R.string.routine_review),
                     viewRatingNavigation = viewRatingNavigation
                 )
             }
         )
     )
-
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        Congratulations(routineId)
-        Spacer(modifier = Modifier.height(20.dp))
-        Valoration()
-        Spacer(modifier = Modifier.height(20.dp))
-        ShareURL(routineId = routineId)
-        Spacer(modifier = Modifier.height(20.dp))
-        ButtonSide(viewRatingNavigation, routineId)
+    if(uiState.isFetching){
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            CircularProgressIndicator()
+        }
+    }else{
+        if(uiState.routine!=null){
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                Congratulations(
+                    routineName = uiState.routine.name,
+                    imageUrl = uiState.routine.imageUrl?:""
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                Valoration()
+                Spacer(modifier = Modifier.height(20.dp))
+                ShareURL(routineId = routineId)
+                Spacer(modifier = Modifier.height(20.dp))
+                ButtonSide(
+                    viewRatingNavigation = viewRatingNavigation,
+                    routineId = routineId,
+                    onClickSave = {
+                        viewModel.ratingRoutine(routineId)
+                        viewRatingNavigation.getHomeScreen().invoke() }
+                )
+            }
+        }else if(uiState.message!=null){
+            //TODO: cambiar
+            Text(text = uiState.message)
+        }
     }
+    
 }
 
 @Composable
@@ -87,7 +116,7 @@ private fun ShareURL(
             horizontalAlignment = Alignment.CenterHorizontally,) {
 
         Text(
-            text = "Comparti esta Rutina",
+            text = stringResource(id = R.string.share_this_routine),
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
@@ -115,25 +144,26 @@ private fun ShareURL(
 
 @Composable
 private fun Congratulations(
-    routineId: Int
+    imageUrl: String,
+    routineName: String
 ){
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
-            model = "routine.imageUrl",
+            model = imageUrl,
             contentDescription = "Rutina",
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Felicitaciones!",
+            text = stringResource(id = R.string.congratulations),
             style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
             color = Color.Black
         )
         Text(
-            text = "Completaste la rutina ${"name"}",
+            text = "${stringResource(id = R.string.you_finished_the_routine)} $routineName",
             color = Color.Black
         )
     }
@@ -147,7 +177,7 @@ private fun Valoration(){
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Dejanos tu valoracion de los ejercicios",
+            text = stringResource(id = R.string.leave_your_review),
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
@@ -162,7 +192,7 @@ private fun Valoration(){
 private fun ButtonSide(
     viewRatingNavigation: ViewRatingNavigation,
     routineId : Int,
-    viewModel: RatingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
+    onClickSave: ()->Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -174,16 +204,14 @@ private fun ButtonSide(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = FitiGreenButton,
             ),
-            onClick = {
-                viewModel.ratingRoutine(routineId)
-                viewRatingNavigation.getHomeScreen().invoke() },
+            onClick = onClickSave,
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .height(50.dp)
                 .width(150.dp)
         ) {
             Text(
-                text = "Guardar",
+                text = stringResource(id = R.string.save),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h4,
                 color = Color.White
@@ -202,7 +230,7 @@ private fun ButtonSide(
                 .width(150.dp)
         ) {
             Text(
-                text = "Ahora No",
+                text = stringResource(id = R.string.not_now),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h4,
                 color = Color.White

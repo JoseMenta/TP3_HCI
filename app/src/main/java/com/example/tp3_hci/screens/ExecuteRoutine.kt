@@ -259,7 +259,7 @@ fun ExecuteRoutine(
 ){
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
-        viewModel.getRoutine(12)
+        viewModel.getRoutine(routineId)
     }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(

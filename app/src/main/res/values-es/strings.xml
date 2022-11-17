@@ -55,4 +55,11 @@
     <string name="search_routines">Buscar rutinas</string>
     <string name="delete_text">Borrar el texto</string>
     <string name="results_title">Resultados encontrados para: \"%1$s\"</string>
+    <string name="congratulations">Felicitaciones</string>
+    <string name="routine_review">Valoración de rutina</string>
+    <string name="you_finished_the_routine">Terminaste la rutina </string>
+    <string name="save">Guardar</string>
+    <string name="not_now">Ahora no</string>
+    <string name="share_this_routine">Compartir esta rutina</string>
+    <string name="leave_your_review">Dejanos tu opinión</string>
 </resources>

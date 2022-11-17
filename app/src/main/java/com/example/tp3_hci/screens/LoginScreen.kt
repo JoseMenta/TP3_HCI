@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -175,7 +176,17 @@ private fun BLockLogin(
                 onValueChange = { password.value = it },
                 placeholder = { Text("Password") },
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,imeAction = ImeAction.Go),
+                keyboardActions = KeyboardActions(onGo = {
+                    required.value = true;
+                    viewModel.login(username = username.value.text, password = password.value.text)
+                    //while(viewModel.uiState.isFetching == true){ }
+                    //viewModel.login(username = "bb@mail.com", password = "1234")
+                    //if( UiState.isAuthenticated == true){
+                    //    loginNavigation.getOnLoginScreen().invoke()
+                    //}
+                    textError.value = "Loding..."
+                }),
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = FitiGreyInputText
