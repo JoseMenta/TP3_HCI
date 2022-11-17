@@ -6,6 +6,7 @@ import com.example.tp3_hci.data.network.RoutineRemoteDataSource
 import com.example.tp3_hci.data.network.UserRemoteDataSource
 import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
+import com.example.tp3_hci.util.PreferencesManager
 import com.example.tp3_hci.util.SessionManager
 
 class MyApplication: Application() {
@@ -15,6 +16,8 @@ class MyApplication: Application() {
         get() = RoutineRemoteDataSource(RetrofitClient.getApiRoutineService(this))
     val sessionManager: SessionManager
         get() = SessionManager(this)
+    val preferencesManager: PreferencesManager
+        get() = PreferencesManager(this)
     val userRepository: UserRepository
         get() = UserRepository(userRemoteDataSource)
     val routineRepository: RoutineRepository

@@ -15,11 +15,13 @@ import com.example.tp3_hci.data.repository.OrderDirection
 import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.data.ui_state.FavoritesScreenUiState
+import com.example.tp3_hci.util.PreferencesManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class FavoritesScreenViewModel(
-    private val routineRepository: RoutineRepository
+    private val routineRepository: RoutineRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     var favoritesScreenUiState by mutableStateOf(
@@ -39,6 +41,15 @@ class FavoritesScreenViewModel(
     init {
         getFavoriteRoutines()
     }
+
+    fun getSimplify() : Boolean {
+        return preferencesManager.getSimplify()
+    }
+
+    fun changeSimplify() {
+         preferencesManager.changeSimplify()
+    }
+
 
     // Actualiza el contenido de la pantalla de favoritos
     fun reloadFavoritesScreenContent(){

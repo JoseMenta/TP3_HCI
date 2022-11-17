@@ -10,7 +10,8 @@ import com.example.tp3_hci.MyApplication
 fun getViewModelFactory (defaultArgs: Bundle? = null) : ViewModelFactory{
     val application = (LocalContext.current.applicationContext as MyApplication)
     val sessionManager = application.sessionManager
+    val preferencesManager = application.preferencesManager
     val userRepository = application.userRepository
     val routineRepository = application.routineRepository
-    return ViewModelFactory(sessionManager,userRepository,routineRepository,LocalSavedStateRegistryOwner.current,defaultArgs)
+    return ViewModelFactory(sessionManager,preferencesManager, userRepository,routineRepository,LocalSavedStateRegistryOwner.current,defaultArgs)
 }

@@ -12,12 +12,14 @@ import com.example.tp3_hci.data.repository.OrderDirection
 import com.example.tp3_hci.data.repository.RoutineRepository
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.data.ui_state.MainScreenUiState
+import com.example.tp3_hci.util.PreferencesManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainScreenViewModel(
     private val routineRepository: RoutineRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     var mainScreenUiState by mutableStateOf(
@@ -38,6 +40,15 @@ class MainScreenViewModel(
     // Se ejecuta al crear una instancia de la clase
     init {
         reloadMainScreenContent()
+    }
+
+
+    fun getSimplify() : Boolean {
+        return preferencesManager.getSimplify()
+    }
+
+    fun changeSimplify() {
+        preferencesManager.changeSimplify()
     }
 
     fun reloadMainScreenContent(){

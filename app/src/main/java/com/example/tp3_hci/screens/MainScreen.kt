@@ -63,7 +63,7 @@ fun MainScreen(
         mainScreenViewModel = mainScreenViewModel,
         scrollBehavior = scrollBehavior!!,
         scaffoldState = scaffoldState,
-        simplify = true
+        simplify = mainScreenViewModel.getSimplify()
     )
 }
 

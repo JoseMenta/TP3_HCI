@@ -58,7 +58,7 @@ fun FavoritesScreen(
         favoritesScreenViewModel = favoritesScreenViewModel,
         scrollBehavior = scrollBehavior!!,
         scaffoldState = scaffoldState,
-        simplify = true,
+        simplify = favoritesScreenViewModel.getSimplify(),
     )
 }
 

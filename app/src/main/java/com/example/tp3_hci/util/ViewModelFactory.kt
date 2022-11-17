@@ -14,6 +14,7 @@ import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 
 class ViewModelFactory constructor(
     private val sessionManager: SessionManager,
+    private val preferencesManager: PreferencesManager,
     private val userRepository: UserRepository,
     private val routineRepository: RoutineRepository,
     owner: SavedStateRegistryOwner,
@@ -31,7 +32,7 @@ class ViewModelFactory constructor(
             isAssignableFrom(LoginViewModel::class.java)->
                 LoginViewModel(sessionManager, userRepository)
             isAssignableFrom(ProfileViewModel::class.java)->
-                ProfileViewModel(sessionManager, userRepository)
+                ProfileViewModel(sessionManager, userRepository, preferencesManager = preferencesManager)
             isAssignableFrom(RoutineDetailViewModel::class.java) ->
                 RoutineDetailViewModel(routineRepository)
             isAssignableFrom(RatingViewModel::class.java) ->
@@ -41,11 +42,13 @@ class ViewModelFactory constructor(
             isAssignableFrom(MainScreenViewModel::class.java) ->
                 MainScreenViewModel(
                     routineRepository = routineRepository,
-                    userRepository = userRepository
+                    userRepository = userRepository,
+                    preferencesManager = preferencesManager
                 )
             isAssignableFrom(FavoritesScreenViewModel::class.java) ->
                 FavoritesScreenViewModel(
-                    routineRepository = routineRepository
+                    routineRepository = routineRepository,
+                    preferencesManager = preferencesManager
                 )
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
