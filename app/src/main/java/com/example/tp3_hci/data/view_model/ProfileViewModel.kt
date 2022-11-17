@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.data.ui_state.ProfileUiState
+import com.example.tp3_hci.util.PreferencesManager
 import com.example.tp3_hci.util.SessionManager
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
+    private val preferencesManager : PreferencesManager
 ) : ViewModel() {
 
     var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -57,6 +59,14 @@ class ProfileViewModel(
                 message = e.message,
                 isFetching = false)
         }
+    }
+
+    fun getSimplify() : Boolean {
+        return preferencesManager.getSimplify()
+    }
+
+    fun changeSimplify() {
+        preferencesManager.changeSimplify()
     }
 
 }

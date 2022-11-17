@@ -1,6 +1,7 @@
 package com.example.tp3_hci.components.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.*
@@ -44,7 +45,8 @@ fun TopNavigationBar(
                     painter = painterResource(id = R.drawable.fiti),
                     contentDescription = stringResource(id = R.string.fiti_logo),
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(55.dp)
+                        .padding(start = 10.dp)
                 )
             }
         },

@@ -3,9 +3,11 @@ package com.example.tp3_hci.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -27,6 +29,8 @@ import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.LoginNavigation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.MainViewModel
+import com.example.tp3_hci.utilities.WindowInfo
+import com.example.tp3_hci.utilities.rememberWindowInfo
 
 @Composable
 fun LoginView(
@@ -41,17 +45,31 @@ fun LoginView(
 
     Column(
         //modifier = Modifier.verticalScroll().fillMaxHeight(),
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        AsyncImage(
-            model = "https://cdn.discordapp.com/attachments/1008117588762579067/1024756087825645669/fiti-logo.png",
-            contentDescription = "Logo",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, start = 40.dp, end = 40.dp)
-        )
+        val windowInfo = rememberWindowInfo()
+
+        if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
+            windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
+            AsyncImage(
+                model = "https://cdn.discordapp.com/attachments/1008117588762579067/1024756087825645669/fiti-logo.png",
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, start = 40.dp, end = 40.dp)
+            )
+        }
+        else{
+            AsyncImage(
+                model = "https://cdn.discordapp.com/attachments/1008117588762579067/1024756087825645669/fiti-logo.png",
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(top = 10.dp, start = 40.dp, end = 40.dp)
+            )
+        }
         BLockLogin(loginNavigation)
         BLockRegister()
     }

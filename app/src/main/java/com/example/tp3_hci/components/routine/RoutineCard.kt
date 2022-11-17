@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -24,11 +25,11 @@ import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 
 @Composable
-fun RoutineCard(
-    routine : RoutineOverview,
+fun FullRoutineCard(
+    routine : MutableState<RoutineOverview>,
     modifier: Modifier = Modifier,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ){
     Card(
         elevation = 10.dp,
@@ -42,12 +43,12 @@ fun RoutineCard(
         ) {
             Button(
                 onClick = {
-                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.id}")
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.value.id }")
                 },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                if(routine.imageUrl == null){
+                if(routine.value.imageUrl == null){
                     Image(
                         painter = painterResource(id = R.drawable.image_placeholder),
                         contentDescription = stringResource(id = R.string.routine_no_image),
@@ -58,7 +59,7 @@ fun RoutineCard(
                     )
                 } else {
                     AsyncImage(
-                        model = routine.imageUrl,
+                        model = routine.value.imageUrl,
                         contentDescription = stringResource(id = R.string.routine_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -81,7 +82,7 @@ fun RoutineCard(
                     padding(top = 5.dp)
                 ) {
                     Text(
-                        text = routine.name,
+                        text = routine.value.name,
                         style = MaterialTheme.typography.h3.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
@@ -97,7 +98,7 @@ fun RoutineCard(
                         onClick = { onFavoriteChange(routine) },
                         modifier = Modifier.size(20.dp)
                     ) {
-                        if(routine.isFavourite){
+                        if(routine.value.isFavourite){
                             Icon(
                                 imageVector = Icons.Outlined.Favorite,
                                 contentDescription = stringResource(id = R.string.routine_is_favorite),
@@ -125,8 +126,8 @@ fun RoutineCard(
                     var tagsPrinted : Int = 0
                     var tagsNotPrinted : Int = 0
 
-                    if (routine.tags != null) {
-                        for(tag in routine.tags){
+                    if (routine.value.tags != null) {
+                        for(tag in routine.value.tags!!){
                             if(tag.length + tagsLengthUsed < maxTagsLength && tagsPrinted < maxTagsPrinted){
                                 tagsLengthUsed += tag.length
                                 tagsPrinted++
@@ -147,7 +148,7 @@ fun RoutineCard(
                     Spacer(modifier = Modifier.weight(1f))
 
                     RatingStars(
-                        rating = routine.score,
+                        rating = routine.value.score,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -155,6 +156,125 @@ fun RoutineCard(
         }
     }
 }
+
+
+@Composable
+fun RoutineCard(
+    routine : MutableState<RoutineOverview>,
+    modifier: Modifier = Modifier,
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit,
+    simplify: Boolean
+){
+    if(simplify){
+        SimplyRoutineCard(
+            routine = routine,
+            modifier = modifier,
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange,
+        )
+    }else{
+        FullRoutineCard(
+            routine = routine,
+            modifier = modifier,
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange,
+        )
+    }
+}
+
+
+@Composable
+fun SimplyRoutineCard(
+    routine : MutableState<RoutineOverview>,
+    modifier: Modifier = Modifier,
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
+){
+    Card(
+        elevation = 5.dp,
+        shape = Shapes.medium,
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .heightIn(max = 180.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Button(
+                onClick = {
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.value.id}")
+                },
+                modifier = Modifier.weight(0.6f),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.4f)
+                        .background(FitiGreyImage)
+                        .padding(horizontal = 10.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.
+                        padding(top = 5.dp)
+                    ) {
+                        Column(){
+                            Text(
+                                text = routine.value.name,
+                                style = MaterialTheme.typography.h3.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp
+                                ),
+                                color = FitiBlueText,
+                                modifier = Modifier.padding(bottom =  10.dp)
+                            )
+                            Row(
+                                modifier = Modifier.padding(bottom =  10.dp)
+                            ){
+                                RatingStars(
+                                    rating = routine.value.score,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+
+                        }
+
+                        Spacer(
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        IconButton(
+                            onClick = { onFavoriteChange(routine) },
+                            modifier = Modifier.size(30.dp)
+                        ) {
+                            if(routine.value.isFavourite){
+                                Icon(
+                                    imageVector = Icons.Outlined.Favorite,
+                                    contentDescription = stringResource(id = R.string.routine_is_favorite),
+                                    tint = FitiBlueFill,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    contentDescription = stringResource(id = R.string.routine_is_not_favorite),
+                                    tint = FitiBlueFill,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 
 /*
 @Preview(showBackground = true)

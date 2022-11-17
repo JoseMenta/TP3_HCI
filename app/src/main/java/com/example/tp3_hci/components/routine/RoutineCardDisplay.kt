@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.data.model.RoutineOverview
@@ -23,11 +24,12 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 @Composable
 fun RoutineCardDisplay(
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit,
+    simplify : Boolean
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -37,7 +39,8 @@ fun RoutineCardDisplay(
             header = header,
             footer = footer,
             routineCardNavigation = routineCardNavigation,
-            onFavoriteChange = onFavoriteChange
+            onFavoriteChange = onFavoriteChange,
+            simplify =  simplify
         )
     }
     else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
@@ -49,7 +52,8 @@ fun RoutineCardDisplay(
             header = header,
             footer = footer,
             routineCardNavigation = routineCardNavigation,
-            onFavoriteChange = onFavoriteChange
+            onFavoriteChange = onFavoriteChange,
+            simplify =  simplify
         )
     } else {
         RoutineCardLazyGrid(
@@ -59,7 +63,8 @@ fun RoutineCardDisplay(
             header = header,
             footer = footer,
             routineCardNavigation = routineCardNavigation,
-            onFavoriteChange = onFavoriteChange
+            onFavoriteChange = onFavoriteChange,
+            simplify =  simplify
         )
     }
 }
@@ -68,16 +73,17 @@ fun RoutineCardDisplay(
 private fun RoutineCardLazyGrid(
     itemsPerGrid: Int,
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit,
+    simplify : Boolean
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
         if(header != null){
@@ -95,7 +101,8 @@ private fun RoutineCardLazyGrid(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
                     routineCardNavigation = routineCardNavigation,
-                    onFavoriteChange = onFavoriteChange
+                    onFavoriteChange = onFavoriteChange,
+                    simplify =  simplify
                 )
             }
         }
@@ -114,14 +121,15 @@ private fun RoutineCardLazyGrid(
 @Composable
 private fun RoutineCardLazyList(
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit,
+    simplify : Boolean
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
         if(header != null){
@@ -137,7 +145,8 @@ private fun RoutineCardLazyList(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
                     routineCardNavigation = routineCardNavigation,
-                    onFavoriteChange = onFavoriteChange
+                    onFavoriteChange = onFavoriteChange,
+                    simplify = simplify,
                 )
             }
         }

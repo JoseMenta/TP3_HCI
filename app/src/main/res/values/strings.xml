@@ -69,4 +69,6 @@
     <string name="not_now">Not now</string>
     <string name="share_this_routine">Share this routine</string>
     <string name="leave_your_review">Leave us your review</string>
+
+    <string name="snackbar_dismiss">Dismiss</string>
 </resources>
