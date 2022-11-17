@@ -27,7 +27,7 @@ class NetworkUser (
     @SerializedName("metadata")
     var metadata: String? = null,
     @SerializedName("date")
-    var date: Long?,
+    var date: Date?,
     @SerializedName("lastActivity")
     var lastActivity: Date? = null,
     @SerializedName("verified")

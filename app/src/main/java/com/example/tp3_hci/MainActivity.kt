@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         //Controler()
-//                        MainScreen()
+                        //MainScreen()
                         MyNavHost()
                         /*
                         RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))
@@ -99,7 +99,7 @@ fun MainScreen(
             ActionButton(
                 text = "login",
                 onClick = {
-                    viewModel.login("test", "1234")
+                    viewModel.login("user3@mail.com", "1234")
                 })
         } else {
             ActionButton(
@@ -147,6 +147,9 @@ fun MainScreen(
                 }
             }else{
                 Text("no estan disponibles las rutinas ")
+                if(uiState.message!=null){
+                    Text(text = uiState.message)
+                }
             }
             if(uiState.detailedRoutine!=null){
                 Text(uiState.detailedRoutine.name)

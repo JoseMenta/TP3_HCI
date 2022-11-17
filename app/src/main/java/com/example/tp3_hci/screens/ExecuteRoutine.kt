@@ -30,8 +30,6 @@ import coil.compose.AsyncImage
 import com.example.tp3_hci.ExerciseCardStatus
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
-import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.state_holders.RoutineDetail.ExecuteRoutineViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
@@ -59,6 +57,9 @@ private fun CountdownTimer(
     var minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
     var seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
     var display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
+//    LaunchedEffect(key1 = time){
+//        currentTime = time
+//    }
     LaunchedEffect(value) {
         animateFloat.animateTo(
             targetValue = value,
@@ -144,7 +145,7 @@ private fun ExecutionControls(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             if(time!=null){
-                CountdownTimer(time = time, paused = paused, onTimeFinished = {onNextTouched()})
+                CountdownTimer(time = time+1, paused = paused, onTimeFinished = {onNextTouched()})
             }
             if(repetitions!=null){
                 CountdownRepetitions(repetitions = repetitions)
@@ -159,7 +160,7 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { onPrevTouched }
+                onClick = onPrevTouched
             ) {
                 Icon( Icons.Outlined.SkipPrevious, contentDescription = "previous", tint = Color.White)
             }
@@ -257,6 +258,9 @@ fun ExecuteRoutine(
     viewModel: ExecuteRoutineViewModel = viewModel(factory = getViewModelFactory())
 ){
     val uiState = viewModel.uiState
+    if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
+        viewModel.getRoutine(12)
+    }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
@@ -267,8 +271,6 @@ fun ExecuteRoutine(
             ) }
         )
     )
-
-    val nroExercise = 1
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -322,7 +324,7 @@ fun ExecuteRoutine(
                                 onNextTouched = {
                                     if (!viewModel.hasNextExercise()) {
                                         executeRoutineNavigation.getRateRoutineScreen()
-                                            .invoke("${uiState.routine?.id ?: 0}")
+                                            .invoke("$routineId")
                                     } else {
                                         viewModel.nextExercise()
                                     }

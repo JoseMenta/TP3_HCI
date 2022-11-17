@@ -1,3 +1,4 @@
+/*
 package com.example.tp3_hci.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -199,4 +200,4 @@ private fun SearchResultsScreenPreview(){
         )
     }
 }
- */
+*/ */

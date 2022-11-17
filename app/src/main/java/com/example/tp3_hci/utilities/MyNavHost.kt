@@ -29,7 +29,7 @@ import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
+
 import com.example.tp3_hci.screens.*
 import com.example.tp3_hci.utilities.navigation.*
 
@@ -105,6 +105,7 @@ fun scaf(
     navController : NavHostController,
     startDestination : String
 ){
+    val scaffoldState = rememberScaffoldState()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
@@ -173,28 +174,27 @@ fun scaf(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    lastRoutineDone = Routines,
-                    createdRoutines = Routines
+                    scaffoldState = scaffoldState
                 )
             }
-            composable("Favorites"){
-                FavoritesScreen(
-                    favoritesNavigation = FavoritesNavigation(
-                        routineCardNavigation = RoutineCardNavigation {
-                                routine -> navController.navigate("RoutineDetails/${routine}") {
-                            launchSingleTop = true
-                        }
-                        },
-                        searchNavigation = SearchNavigation {
-                                search -> navController.navigate("SearchResults/${search}") {
-                            launchSingleTop = true
-                        }
-                        }
-                    ),
-                    setTopAppBar = changeTopAppBarType,
-                    favoriteRoutines = Routines
-                )
-            }
+//            composable("Favorites"){
+//                FavoritesScreen(
+//                    favoritesNavigation = FavoritesNavigation(
+//                        routineCardNavigation = RoutineCardNavigation {
+//                                routine -> navController.navigate("RoutineDetails/${routine}") {
+//                                    launchSingleTop = true
+//                                }
+//                        },
+//                        searchNavigation = SearchNavigation {
+//                                search -> navController.navigate("SearchResults/${search}") {
+//                                    launchSingleTop = true
+//                                }
+//                        }
+//                    ),
+//                    setTopAppBar = changeTopAppBarType,
+//                    favoriteRoutines = Routines
+//                )
+//            }
             composable("Profile"){
                 ProfileScreen(
                     profileNavigation = profileNavigation(
@@ -263,7 +263,7 @@ fun scaf(
             composable("RatingRoutine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
-                val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
+
                 RatingView(
                     viewRatingNavigation = ViewRatingNavigation(
                         homeScreen = {
@@ -276,34 +276,34 @@ fun scaf(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    routine = aux
+                    routineId = it.arguments?.getInt("id")!!
                 )
             }
-            composable("SearchResults/{search}",
-                arguments = listOf(
-                    navArgument("search") { type = NavType.StringType }
-                )
-            ){
-
-                SearchResultsScreen(
-                    stringSearched = it.arguments?.getString("search")!! ,
-                    routinesFound = Routines,
-                    setTopAppBar = changeTopAppBarType,
-                    searchResultsNavigation = SearchResultsNavigation(
-                        previousScreen = {
-                            navController.navigateUp()
-                        },
-                        searchNavigation = SearchNavigation {
-                                search -> navController.navigate("SearchResults/${search}")
-                        },
-                        routineCardNavigation = RoutineCardNavigation {
-                                routine -> navController.navigate("RoutineDetails/${routine}") {
-                            launchSingleTop = true
-                        }
-                        }
-                    )
-                )
-            }
+//            composable("SearchResults/{search}",
+//                arguments = listOf(
+//                    navArgument("search") { type = NavType.StringType }
+//                )
+//            ){
+//
+//                SearchResultsScreen(
+//                    stringSearched = it.arguments?.getString("search")!! ,
+//                    routinesFound = Routines,
+//                    setTopAppBar = changeTopAppBarType,
+//                    searchResultsNavigation = SearchResultsNavigation(
+//                        previousScreen = {
+//                            navController.navigateUp()
+//                        },
+//                        searchNavigation = SearchNavigation {
+//                            search -> navController.navigate("SearchResults/${search}")
+//                        },
+//                        routineCardNavigation = RoutineCardNavigation {
+//                            routine -> navController.navigate("RoutineDetails/${routine}") {
+//                                launchSingleTop = true
+//                            }
+//                        }
+//                    )
+//                )
+//            }
         }
     }
 }

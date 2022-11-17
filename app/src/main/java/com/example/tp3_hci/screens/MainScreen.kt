@@ -17,26 +17,30 @@ import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.data.model.RoutineOverview
+import com.example.tp3_hci.data.view_model.MainScreenViewModel
+import com.example.tp3_hci.util.ViewModelFactory
+import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.*
 import com.example.tp3_hci.utilities.navigation.MainScreenNavigation
 import kotlin.math.min
 
-val Routines = listOf(
-    RoutineCardUiState(1,"Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
-    RoutineCardUiState(2,"Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
-    RoutineCardUiState(3,"Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
-    RoutineCardUiState(4,"Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
-    RoutineCardUiState(5,"Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
-)
+//val Routines = listOf(
+//    RoutineCardUiState(1,"Fuerza", true, 4, listOf("Brazos", "Piernas", "Mancuernas", "Esfuerzo"), "https://cdn.vox-cdn.com/thumbor/XSW5TTZRjsqJgUeBu46g2zmn4uE=/0x0:5472x3648/1200x800/filters:focal(1554x1539:2428x2413)/cdn.vox-cdn.com/uploads/chorus_image/image/67453937/1224663515.jpg.0.jpg"),
+//    RoutineCardUiState(2,"Yoga", true, 3, listOf("Espalda", "Piernas", "Estiramiento"), "https://www.cnet.com/a/img/resize/cf54eb3b6a32bf47369ab771584cbefeeb4479cd/hub/2022/02/02/f80a19b8-42a5-4c71-afa2-cb9d5df312cd/gettyimages-1291740163.jpg?auto=webp&width=1200"),
+//    RoutineCardUiState(3,"Abdominales", true, 5, listOf("Abdominales"), "https://www.verywellfit.com/thmb/Cx-pCfa8rUDPfc9Nwg-JPx5xh44=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/91107761-56a2b58f3df78cf77279080c.jpg"),
+//    RoutineCardUiState(4,"Velocidad", true, 2, listOf("Piernas", "Gemelos"), "https://wpassets.trainingpeaks.com/wp-content/uploads/2019/08/08162909/marathon-workout-blog-1200x675.jpg"),
+//    RoutineCardUiState(5,"Atletismo", true, 1, listOf("Piernas", "Exigente", "Cinta", "Bicicleta"), "https://concepto.de/wp-content/uploads/2015/03/atletismo-e1550017721661.jpg")
+//)
 
 
 @Composable
 fun MainScreen(
     mainScreenNavigation: MainScreenNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    lastRoutineDone : List<RoutineCardUiState>? = null,
-    createdRoutines : List<RoutineCardUiState>? = null
+    mainScreenViewModel : MainScreenViewModel = viewModel(factory = getViewModelFactory()),
+    scaffoldState: ScaffoldState
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -44,16 +48,16 @@ fun MainScreen(
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
         MainScreenMobile(
             mainScreenNavigation = mainScreenNavigation,
-            lastRoutineDone = lastRoutineDone,
-            createdRoutines = createdRoutines,
-            setTopAppBar = setTopAppBar
+            mainScreenViewModel = mainScreenViewModel,
+            setTopAppBar = setTopAppBar,
+            scaffoldState = scaffoldState
         )
     } else {
         MainScreenTablet(
             mainScreenNavigation = mainScreenNavigation,
-            lastRoutineDone = lastRoutineDone,
-            createdRoutines = createdRoutines,
-            setTopAppBar = setTopAppBar
+            mainScreenViewModel = mainScreenViewModel,
+            setTopAppBar = setTopAppBar,
+            scaffoldState = scaffoldState
         )
     }
 }
@@ -63,9 +67,9 @@ fun MainScreen(
 @Composable
 private fun MainScreenTablet(
     mainScreenNavigation: MainScreenNavigation,
-    lastRoutineDone : List<RoutineCardUiState>? = null,
-    createdRoutines : List<RoutineCardUiState>? = null,
+    mainScreenViewModel : MainScreenViewModel,
     setTopAppBar : ((TopAppBarType)->Unit),
+    scaffoldState: ScaffoldState
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var topAppBarState by remember {
@@ -84,35 +88,82 @@ private fun MainScreenTablet(
         }
     )
 
-    RegularTabletDisplay(
-        content = {
-            RoutineCardDisplay(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                routines = createdRoutines,
-                header = {
-                    Column(
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                            LastRoutineDoneDisplay(
-                                lastRoutineDone = lastRoutineDone,
-                                mainScreenNavigation = mainScreenNavigation
+    val mainScreenUiState = mainScreenViewModel.mainScreenUiState
+    if(!mainScreenUiState.isFetched){
+        if(mainScreenUiState.createdRoutines == null){
+            mainScreenViewModel.getCreatedRoutines()
+        }
+        if(mainScreenUiState.lastRoutinesExecuted == null){
+            mainScreenViewModel.getLastExecutionRoutines()
+        }
+    }
+
+    if(!mainScreenUiState.isLoading){
+        RegularMobileDisplay(
+            content = {
+                RoutineCardDisplay(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    routines = mainScreenUiState.createdRoutines,
+                    header = {
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (mainScreenUiState.lastRoutinesExecuted != null && mainScreenUiState.lastRoutinesExecuted.isNotEmpty()) {
+                                LastRoutineDoneDisplay(
+                                    lastRoutineDone = mainScreenUiState.lastRoutinesExecuted,
+                                    mainScreenNavigation = mainScreenNavigation,
+                                    onFavoriteChange = {
+                                            routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
+                                    }
+                                )
+                            }
+
+                            Text(
+                                text = stringResource(id = R.string.created_routined),
+                                style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+                                color = FitiBlueText,
+                                modifier = Modifier.padding(vertical = 10.dp)
+                            )
+
+                            RoutineOrderDropDown(
+                                modifier = Modifier.padding(bottom = 10.dp),
+                                onOrderByChange = { orderByItem -> mainScreenViewModel.setOrderByItem(orderByItem) },
+                                onOrderTypeChange = { orderTypeItem -> mainScreenViewModel.setOrderTypeItem(orderTypeItem) }
                             )
                         }
-
-                        Text(
-                            text = stringResource(id = R.string.created_routined),
-                            style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
-                            color = FitiBlueText,
-                            modifier = Modifier.padding(vertical = 10.dp)
-                        )
+                    },
+                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
+                    onFavoriteChange = {
+                            routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
                     }
-                },
-                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
+                )
+            },
+            topAppBarState = topAppBarState
+        )
+    } else {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ){
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp)
             )
-        },
-        topAppBarState = topAppBarState
-    )
+        }
+    }
+
+    // Muestra un snackbar en caso de error
+    if(mainScreenUiState.hasError()){
+        LaunchedEffect(scaffoldState.snackbarHostState){
+            val result = scaffoldState.snackbarHostState.showSnackbar(
+                message = mainScreenUiState.message!!,
+                actionLabel = "Cerrar"
+            )
+            when (result) {
+                SnackbarResult.Dismissed -> mainScreenViewModel.dismissMessage()
+                SnackbarResult.ActionPerformed -> mainScreenViewModel.dismissMessage()
+            }
+        }
+    }
 }
 
 
@@ -120,9 +171,9 @@ private fun MainScreenTablet(
 @Composable
 private fun MainScreenMobile(
     mainScreenNavigation: MainScreenNavigation,
-    lastRoutineDone : List<RoutineCardUiState>? = null,
-    createdRoutines : List<RoutineCardUiState>? = null,
+    mainScreenViewModel : MainScreenViewModel,
     setTopAppBar : ((TopAppBarType)->Unit),
+    scaffoldState: ScaffoldState
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var topAppBarState by remember {
@@ -141,35 +192,83 @@ private fun MainScreenMobile(
         }
     )
 
-    RegularMobileDisplay(
-        content = {
-            RoutineCardDisplay(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                routines = createdRoutines,
-                header = {
-                    Column(
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        if (lastRoutineDone != null && lastRoutineDone.isNotEmpty()) {
-                            LastRoutineDoneDisplay(
-                                lastRoutineDone = lastRoutineDone,
-                                mainScreenNavigation = mainScreenNavigation
+    val mainScreenUiState = mainScreenViewModel.mainScreenUiState
+    if(!mainScreenUiState.isFetched){
+        if(mainScreenUiState.createdRoutines == null){
+            mainScreenViewModel.getCreatedRoutines()
+        }
+        if(mainScreenUiState.lastRoutinesExecuted == null){
+            mainScreenViewModel.getLastExecutionRoutines()
+        }
+    }
+
+    if(!mainScreenUiState.isLoading){
+        RegularMobileDisplay(
+            content = {
+                RoutineCardDisplay(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    routines = mainScreenUiState.createdRoutines,
+                    header = {
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (mainScreenUiState.lastRoutinesExecuted != null && mainScreenUiState.lastRoutinesExecuted.isNotEmpty()) {
+                                LastRoutineDoneDisplay(
+                                    lastRoutineDone = mainScreenUiState.lastRoutinesExecuted,
+                                    mainScreenNavigation = mainScreenNavigation,
+                                    onFavoriteChange = {
+                                        routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
+                                    }
+                                )
+                            }
+
+                            Text(
+                                text = stringResource(id = R.string.created_routined),
+                                style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+                                color = FitiBlueText,
+                                modifier = Modifier.padding(vertical = 10.dp)
+                            )
+
+                            RoutineOrderDropDown(
+                                modifier = Modifier.padding(bottom = 10.dp),
+                                onOrderByChange = { orderByItem -> mainScreenViewModel.setOrderByItem(orderByItem) },
+                                onOrderTypeChange = { orderTypeItem -> mainScreenViewModel.setOrderTypeItem(orderTypeItem) }
                             )
                         }
-
-                        Text(
-                            text = stringResource(id = R.string.created_routined),
-                            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-                            color = FitiBlueText,
-                            modifier = Modifier.padding(vertical = 10.dp)
-                        )
+                    },
+                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
+                    onFavoriteChange = {
+                        routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
                     }
-                },
-                routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
+                )
+            },
+            topAppBarState = topAppBarState
+        )
+    } else {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ){
+            CircularProgressIndicator(
+                modifier = Modifier.size(50.dp)
             )
-        },
-        topAppBarState = topAppBarState
-    )
+        }
+    }
+
+
+    // Muestra un snackbar en caso de error
+    if(mainScreenUiState.hasError()){
+        LaunchedEffect(scaffoldState.snackbarHostState){
+            val result = scaffoldState.snackbarHostState.showSnackbar(
+                message = mainScreenUiState.message!!,
+                actionLabel = "Cerrar"
+            )
+            when (result) {
+                SnackbarResult.Dismissed -> mainScreenViewModel.dismissMessage()
+                SnackbarResult.ActionPerformed -> mainScreenViewModel.dismissMessage()
+            }
+        }
+    }
 }
 
 
@@ -178,8 +277,9 @@ private fun MainScreenMobile(
 
 @Composable
 private fun LastRoutineDoneDisplay(
-    lastRoutineDone : List<RoutineCardUiState>,
+    lastRoutineDone : List<RoutineOverview>,
     mainScreenNavigation: MainScreenNavigation,
+    onFavoriteChange: (RoutineOverview)->Unit
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -194,7 +294,8 @@ private fun LastRoutineDoneDisplay(
         RoutineCard(
             routine = lastRoutineDone[0],
             modifier = Modifier.padding(bottom = 20.dp),
-            routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
+            routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
+            onFavoriteChange = onFavoriteChange
         )
     } else {
         Text(
@@ -214,7 +315,8 @@ private fun LastRoutineDoneDisplay(
                     routine = lastRoutineDone[i-1],
                     modifier = Modifier
                         .weight(1f),
-                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation()
+                    routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
+                    onFavoriteChange = onFavoriteChange
                 )
             }
         }

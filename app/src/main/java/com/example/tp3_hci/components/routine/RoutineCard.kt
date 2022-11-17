@@ -14,24 +14,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ui.theme.*
 import com.example.tp3_hci.R
-import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import com.example.tp3_hci.data.model.RoutineOverview
 import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 
 @Composable
 fun RoutineCard(
-    routine : RoutineCardUiState,
+    routine : RoutineOverview,
     modifier: Modifier = Modifier,
-    routineCardNavigation: RoutineCardNavigation
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit
 ){
-    var favoriteState by remember { mutableStateOf(routine.isFavourite) }
-
     Card(
         elevation = 10.dp,
         shape = Shapes.medium,
@@ -96,12 +94,10 @@ fun RoutineCard(
                     )
 
                     IconButton(
-                        onClick = {
-                            favoriteState = !favoriteState
-                        },
+                        onClick = { onFavoriteChange(routine) },
                         modifier = Modifier.size(20.dp)
                     ) {
-                        if(favoriteState){
+                        if(routine.isFavourite){
                             Icon(
                                 imageVector = Icons.Outlined.Favorite,
                                 contentDescription = stringResource(id = R.string.routine_is_favorite),

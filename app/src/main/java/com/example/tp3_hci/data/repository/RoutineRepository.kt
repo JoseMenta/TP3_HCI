@@ -3,6 +3,7 @@ package com.example.tp3_hci.data.repository
 import com.example.api_fiti.data.network.model.NetworkPagedContent
 import com.example.tp3_hci.data.model.*
 import com.example.tp3_hci.data.network.RoutineRemoteDataSource
+import com.example.tp3_hci.data.network.model.NetworkRoutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*
@@ -33,23 +34,26 @@ class RoutineRepository(
         }
         return result.content
     }
+    private fun networkRoutineToRoutineOverview(networkRoutine: NetworkRoutine):RoutineOverview{
+        return RoutineOverview(
+            id = networkRoutine.id,
+            name = networkRoutine.name,
+            score = networkRoutine.score,
+            creationDate = networkRoutine.date?:Date(),
+            difficulty = difficultyToInt[networkRoutine.difficulty] ?:1,
+            category = networkRoutine.category?.toCategory()?: Category(1,"Full body"),
+            tags = networkRoutine.metadata?.tags?: emptyList(),
+            imageUrl = networkRoutine.metadata?.image?:"",
+            isFavourite = favouriteRoutinesOverviews.any { other -> other.id==networkRoutine.id }
+        )
+    }
     suspend fun getCurrentUserRoutineOverviews(refresh: Boolean = false, orderCriteria: OrderCriteria = OrderCriteria.Name,orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>{
         if(refresh || routineOverviews.isEmpty()|| favouriteRoutinesOverviews.isEmpty()){
-            getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
+            getFavouritesOverviews(orderCriteria = orderCriteria, orderDirection = orderDirection)//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
             val result = getAll {   remoteDataSource.getCurrentUserRoutines(it,orderCriteria.apiName, orderDirection.apiName) }
             routineMutex.withLock {
                 routineOverviews = result.map {
-                    RoutineOverview(
-                        id = it.id,
-                        name = it.name,
-                        score = it.score,
-                        creationDate = it.date?:Date(),
-                        difficulty = difficultyToInt.get(it.difficulty)?:1,
-                        category = it.category?.toCategory()?: Category(1,"Full body"),
-                        tags = it.metadata?.tags?: emptyList(),
-                        imageUrl = it.metadata?.image?:"",
-                        isFavourite = favouriteRoutinesOverviews.any { other -> other.id==it.id }
-                    )
+                    networkRoutineToRoutineOverview(it)
                 }
             }
         }
@@ -57,31 +61,34 @@ class RoutineRepository(
     }
 
     suspend fun getFilteredRoutineOverviews(
-        categoryId: Int?,
-        userId: Int?,
-        score: Int?,
-        difficulty: String?,
-        search: String?,
-        orderCriteria: String?,
-        orderDirection: String?){
-
+        categoryId: Int? = null,
+        userId: Int? = null,
+        score: Int? = null,
+        difficulty: Int? = null,
+        search: String? = null,
+        orderCriteria: OrderCriteria = OrderCriteria.Name,
+        orderDirection: OrderDirection = OrderDirection.Asc):List<RoutineOverview>
+    {
+        getFavouritesOverviews(orderCriteria = orderCriteria, orderDirection = orderDirection)
+        val result = getAll { remoteDataSource.getFilteredRoutines(
+                page = it,
+                categoryId = categoryId,
+                userId = userId,
+                score = score,
+                difficulty = difficultyToStrig[difficulty],
+                search = search,
+                orderCriteria = orderCriteria.apiName,
+                orderDirection = orderDirection.apiName)  }
+        return result.map {
+            networkRoutineToRoutineOverview(it)
+        }
     }
-    suspend fun getFavouritesOverviews(refresh: Boolean = false): List<RoutineOverview>{
+    suspend fun getFavouritesOverviews(refresh: Boolean = false, orderCriteria: OrderCriteria = OrderCriteria.Name, orderDirection: OrderDirection = OrderDirection.Asc): List<RoutineOverview>{
         if(refresh || favouriteRoutinesOverviews.isEmpty()){
-            val result = getAll { remoteDataSource.getCurrentUserFavouriteRoutines(it) }
+            val result = getAll { remoteDataSource.getCurrentUserFavouriteRoutines(it, orderCriteria.apiName, orderDirection.apiName) }
             routineMutex.withLock {
                 favouriteRoutinesOverviews = result.map {
-                    RoutineOverview(
-                        id = it.id,
-                        name = it.name,
-                        score = it.score,
-                        creationDate = it.date?:Date(),
-                        difficulty = difficultyToInt.get(it.difficulty)?:1,
-                        category = it.category?.toCategory()?: Category(1,"Full body"),
-                        tags = it.metadata?.tags?: emptyList(),
-                        imageUrl = it.metadata?.image?:"",
-                        isFavourite = true
-                    )
+                    networkRoutineToRoutineOverview(it)
                 }
             }
         }
@@ -104,17 +111,7 @@ class RoutineRepository(
     suspend fun getRoutineOverview(routineId: Int): RoutineOverview{
         getFavouritesOverviews();//si se cambio, entonces las vuelvo a buscar
         val result = remoteDataSource.getRoutineById(routineId)
-        return RoutineOverview(
-            id = result.id,
-            name = result.name,
-            isFavourite = favouriteRoutinesOverviews.any{ it.id == result.id},
-            creationDate = result.date?:Date(),
-            difficulty = difficultyToInt.get(result.difficulty)?:1,
-            category = result.category?.toCategory()?: Category(1,"Full body"),
-            score = result.score,
-            tags = result.metadata?.tags?: emptyList(),
-            imageUrl = result.metadata?.image?:""
-        )
+        return networkRoutineToRoutineOverview(result)
     }
     //crea una rutina, con los ciclos y los ejercicios adentro
     suspend fun getRoutineDetails(routineId: Int): RoutineDetail{
@@ -151,25 +148,15 @@ class RoutineRepository(
         }
     }
 
-    suspend fun getCurrentUserExecutions():List<Execution>{
-        val result = getAll { remoteDataSource.getCurrentUserExecutions(it) }
+    suspend fun getCurrentUserExecutions(orderCriteria: OrderCriteria, orderDirection: OrderDirection):List<Execution>{
+        val result = getAll { remoteDataSource.getCurrentUserExecutions(it, orderCriteria.apiName, orderDirection.apiName) }
         return result.map {
             Execution(
                 id = it.id,
                 date = it.date?: Date(),
                 duration = it.duration,
                 wasModified = it.wasModified,
-                routineOverview = RoutineOverview(
-                    id = it.routine.id,
-                    name = it.routine.name,
-                    score = it.routine.score,
-                    creationDate = it.routine.date?:Date(),
-                    difficulty = difficultyToInt[it.routine.difficulty] ?:1,
-                    category = it.routine.category?.toCategory()?: Category(1,"Full body"),
-                    tags = it.routine.metadata?.tags?: emptyList(),
-                    imageUrl = it.routine.metadata?.image?:"",
-                    isFavourite = favouriteRoutinesOverviews.any { other-> other.id==it.routine.id }
-                )
+                routineOverview = networkRoutineToRoutineOverview(it.routine)
             )
         }
     }

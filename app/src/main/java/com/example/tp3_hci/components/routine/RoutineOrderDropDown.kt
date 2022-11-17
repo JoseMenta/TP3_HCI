@@ -212,16 +212,10 @@ private fun getOrderTypeString(
     val windowInfo = rememberWindowInfo()
 
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
-        return when(orderType){
-            is OrderTypeItem.Descending -> stringResource(id = R.string.descending_abrev)
-            else -> stringResource(id = R.string.ascending_abrev)
-        }
+        return stringResource(id = orderType.stringIdAbrev)
     }
 
-    return when(orderType){
-        is OrderTypeItem.Descending -> stringResource(id = R.string.descending)
-        else -> stringResource(id = R.string.ascending)
-    }
+    return stringResource(id = orderType.stringId)
 }
 
 

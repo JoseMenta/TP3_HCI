@@ -33,7 +33,6 @@ import com.example.tp3_hci.components.exercise.DialogRepetitions
 import com.example.tp3_hci.components.exercise.DialogTime
 import com.example.tp3_hci.data.model.CycleExercise
 import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.Shapes

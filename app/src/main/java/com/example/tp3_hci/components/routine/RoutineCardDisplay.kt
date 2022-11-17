@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+import com.example.tp3_hci.data.model.RoutineOverview
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 import com.example.tp3_hci.utilities.rememberWindowInfo
@@ -23,10 +23,11 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 @Composable
 fun RoutineCardDisplay(
     modifier: Modifier = Modifier,
-    routines: List<RoutineCardUiState>? = null,
+    routines: List<RoutineOverview>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    routineCardNavigation: RoutineCardNavigation
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -35,7 +36,8 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            routineCardNavigation = routineCardNavigation
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange
         )
     }
     else if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded &&
@@ -46,7 +48,8 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            routineCardNavigation = routineCardNavigation
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange
         )
     } else {
         RoutineCardLazyGrid(
@@ -55,7 +58,8 @@ fun RoutineCardDisplay(
             routines = routines,
             header = header,
             footer = footer,
-            routineCardNavigation = routineCardNavigation
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange
         )
     }
 }
@@ -64,10 +68,11 @@ fun RoutineCardDisplay(
 private fun RoutineCardLazyGrid(
     itemsPerGrid: Int,
     modifier: Modifier = Modifier,
-    routines: List<RoutineCardUiState>? = null,
+    routines: List<RoutineOverview>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    routineCardNavigation: RoutineCardNavigation
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -83,21 +88,14 @@ private fun RoutineCardLazyGrid(
             }
         }
 
-        item (
-            span = { GridItemSpan(itemsPerGrid) }
-        ) {
-            RoutineOrderDropDown(
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-        }
-
         // RoutineCardGrid
         if(routines != null){
             items(routines) { routine ->
                 RoutineCard(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
-                    routineCardNavigation = routineCardNavigation
+                    routineCardNavigation = routineCardNavigation,
+                    onFavoriteChange = onFavoriteChange
                 )
             }
         }
@@ -116,10 +114,11 @@ private fun RoutineCardLazyGrid(
 @Composable
 private fun RoutineCardLazyList(
     modifier: Modifier = Modifier,
-    routines: List<RoutineCardUiState>? = null,
+    routines: List<RoutineOverview>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
-    routineCardNavigation: RoutineCardNavigation
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,
@@ -131,19 +130,14 @@ private fun RoutineCardLazyList(
             }
         }
 
-        item {
-            RoutineOrderDropDown(
-                modifier = Modifier.padding(bottom = 10.dp)
-            )
-        }
-
         // RoutineCardList
         if(routines != null){
             items(routines){ routine ->
                 RoutineCard(
                     routine = routine,
                     modifier = Modifier.padding(vertical = 10.dp),
-                    routineCardNavigation = routineCardNavigation
+                    routineCardNavigation = routineCardNavigation,
+                    onFavoriteChange = onFavoriteChange
                 )
             }
         }

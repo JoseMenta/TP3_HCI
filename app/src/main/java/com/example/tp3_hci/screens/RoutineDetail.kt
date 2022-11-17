@@ -32,8 +32,7 @@ import com.example.tp3_hci.components.routine.RatingStars
 import com.example.tp3_hci.components.routine.RoutineImage
 import com.example.tp3_hci.components.routine.RoutineTag
 import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
-import com.example.tp3_hci.data.ui_state.RoutineCycleUiState
+
 import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
@@ -45,18 +44,18 @@ import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
 
 
-val exercises = listOf(
-    ExerciseCardUiState("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
-    ExerciseCardUiState("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
-    ExerciseCardUiState("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
-    ExerciseCardUiState("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
-)
-val cycles = listOf(
-    RoutineCycleUiState("Calentamiento",2, exercises),
-    RoutineCycleUiState("Ciclo 1",4, exercises),
-    RoutineCycleUiState("Ciclo 2",3, exercises),
-    RoutineCycleUiState("Enfriamiento",3, exercises)
-)
+//val exercises = listOf(
+//    ExerciseCardUiState("Cardio","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",10,20),
+//    ExerciseCardUiState("Running","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",100,30),
+//    ExerciseCardUiState("Abdominales","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,40),
+//    ExerciseCardUiState("Pecho plano","https://e00-ar-marca.uecdn.es/claro/assets/multimedia/imagenes/2022/10/08/16652315741032.jpg",0,20)
+//)
+//val cycles = listOf(
+//    RoutineCycleUiState("Calentamiento",2, exercises),
+//    RoutineCycleUiState("Ciclo 1",4, exercises),
+//    RoutineCycleUiState("Ciclo 2",3, exercises),
+//    RoutineCycleUiState("Enfriamiento",3, exercises)
+//)
 
 @Composable
 private fun RoutineData(
@@ -154,7 +153,9 @@ fun RoutineDetail(
     viewModel: RoutineDetailViewModel = viewModel(factory = getViewModelFactory() )
 ){
     val uiState = viewModel.uiState
-    viewModel.getRoutineDetails(routineId)
+    if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
+        viewModel.getRoutineDetails(12)
+    }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
@@ -191,7 +192,7 @@ fun RoutineDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ){
-                CircularProgressIndicator()
+//                CircularProgressIndicator()
             }
         } else {
             if (uiState.routine != null) {

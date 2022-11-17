@@ -6,5 +6,5 @@ data class CycleExercise(
     val order: Int,
     val time:Int,
     val repetitions: Int,
-    var isSelected: Boolean = true
+    var isSelected: Boolean = false
 )

@@ -4,26 +4,54 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.tp3_hci.R
+import com.example.tp3_hci.data.model.RoutineOverview
+import com.example.tp3_hci.data.repository.OrderCriteria
+import com.example.tp3_hci.data.repository.OrderDirection
 
 // Formas de ordenar las rutinas
 sealed class OrderByItem(
-    @StringRes val stringId: Int
+    @StringRes val stringId: Int,
+    val criteria : OrderCriteria
 ){
-    object Name: OrderByItem(stringId = R.string.name)
-    object CreationDate: OrderByItem(stringId = R.string.creation_date)
-    object Rating: OrderByItem(stringId = R.string.rating)
-    object Difficulty: OrderByItem(stringId = R.string.difficulty)
-    object Category: OrderByItem(stringId = R.string.category)
+    object Name: OrderByItem(
+        stringId = R.string.name,
+        criteria = OrderCriteria.Name
+    )
+    object CreationDate: OrderByItem(
+        stringId = R.string.creation_date,
+        criteria = OrderCriteria.CreationDate
+    )
+    object Rating: OrderByItem(
+        stringId = R.string.rating,
+        criteria = OrderCriteria.Score
+    )
+    object Difficulty: OrderByItem(
+        stringId = R.string.difficulty,
+        criteria = OrderCriteria.Difficulty
+    )
+    object Category: OrderByItem(
+        stringId = R.string.category,
+        criteria = OrderCriteria.Category
+    )
 }
 
 // Formas de definir el sentido del orden
 sealed class OrderTypeItem(
-    @StringRes val stringId: Int
+    @StringRes val stringIdAbrev: Int,
+    @StringRes val stringId: Int,
+    val orderDirection: OrderDirection
 ){
-    object Descending: OrderTypeItem(stringId = R.string.descending)
-    object Ascending: OrderTypeItem(stringId = R.string.ascending)
+    object Descending: OrderTypeItem(
+        stringId = R.string.descending,
+        stringIdAbrev = R.string.descending_abrev,
+        orderDirection = OrderDirection.Desc
+    )
+    object Ascending: OrderTypeItem(
+        stringId = R.string.ascending,
+        stringIdAbrev = R.string.ascending_abrev,
+        orderDirection = OrderDirection.Asc
+    )
 }
-
 
 
 
