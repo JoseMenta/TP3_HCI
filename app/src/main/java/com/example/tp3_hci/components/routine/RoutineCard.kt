@@ -26,10 +26,10 @@ import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 @Composable
 fun FullRoutineCard(
-    routine : RoutineOverview,
+    routine : MutableState<RoutineOverview>,
     modifier: Modifier = Modifier,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ){
     Card(
         elevation = 10.dp,
@@ -43,12 +43,12 @@ fun FullRoutineCard(
         ) {
             Button(
                 onClick = {
-                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.id}")
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.value.id }")
                 },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                if(routine.imageUrl == null){
+                if(routine.value.imageUrl == null){
                     Image(
                         painter = painterResource(id = R.drawable.image_placeholder),
                         contentDescription = stringResource(id = R.string.routine_no_image),
@@ -59,7 +59,7 @@ fun FullRoutineCard(
                     )
                 } else {
                     AsyncImage(
-                        model = routine.imageUrl,
+                        model = routine.value.imageUrl,
                         contentDescription = stringResource(id = R.string.routine_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -82,7 +82,7 @@ fun FullRoutineCard(
                     padding(top = 5.dp)
                 ) {
                     Text(
-                        text = routine.name,
+                        text = routine.value.name,
                         style = MaterialTheme.typography.h3.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
@@ -98,7 +98,7 @@ fun FullRoutineCard(
                         onClick = { onFavoriteChange(routine) },
                         modifier = Modifier.size(20.dp)
                     ) {
-                        if(routine.isFavourite){
+                        if(routine.value.isFavourite){
                             Icon(
                                 imageVector = Icons.Outlined.Favorite,
                                 contentDescription = stringResource(id = R.string.routine_is_favorite),
@@ -126,8 +126,8 @@ fun FullRoutineCard(
                     var tagsPrinted : Int = 0
                     var tagsNotPrinted : Int = 0
 
-                    if (routine.tags != null) {
-                        for(tag in routine.tags){
+                    if (routine.value.tags != null) {
+                        for(tag in routine.value.tags!!){
                             if(tag.length + tagsLengthUsed < maxTagsLength && tagsPrinted < maxTagsPrinted){
                                 tagsLengthUsed += tag.length
                                 tagsPrinted++
@@ -148,7 +148,7 @@ fun FullRoutineCard(
                     Spacer(modifier = Modifier.weight(1f))
 
                     RatingStars(
-                        rating = routine.score,
+                        rating = routine.value.score,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -160,10 +160,10 @@ fun FullRoutineCard(
 
 @Composable
 fun RoutineCard(
-    routine : RoutineOverview,
+    routine : MutableState<RoutineOverview>,
     modifier: Modifier = Modifier,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit,
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit,
     simplify: Boolean
 ){
     if(simplify){
@@ -186,10 +186,10 @@ fun RoutineCard(
 
 @Composable
 fun SimplyRoutineCard(
-    routine : RoutineOverview,
+    routine : MutableState<RoutineOverview>,
     modifier: Modifier = Modifier,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ){
     Card(
         elevation = 5.dp,
@@ -203,7 +203,7 @@ fun SimplyRoutineCard(
         ) {
             Button(
                 onClick = {
-                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.id}")
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.value.id}")
                 },
                 modifier = Modifier.weight(0.6f),
                 contentPadding = PaddingValues(0.dp)
@@ -223,7 +223,7 @@ fun SimplyRoutineCard(
                     ) {
                         Column(){
                             Text(
-                                text = routine.name,
+                                text = routine.value.name,
                                 style = MaterialTheme.typography.h3.copy(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 24.sp
@@ -235,7 +235,7 @@ fun SimplyRoutineCard(
                                 modifier = Modifier.padding(bottom =  10.dp)
                             ){
                                 RatingStars(
-                                    rating = routine.score,
+                                    rating = routine.value.score,
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -250,7 +250,7 @@ fun SimplyRoutineCard(
                             onClick = { onFavoriteChange(routine) },
                             modifier = Modifier.size(30.dp)
                         ) {
-                            if(routine.isFavourite){
+                            if(routine.value.isFavourite){
                                 Icon(
                                     imageVector = Icons.Outlined.Favorite,
                                     contentDescription = stringResource(id = R.string.routine_is_favorite),

@@ -43,9 +43,9 @@ class RoutineRemoteDataSource(
             apiRoutineService.unmarkRoutineAsFavourite(routineId)
         }
     }
-    suspend fun getCurrentUserFavouriteRoutines(page: Int, orderCriteria: String, orderDirection: String):NetworkPagedContent<NetworkRoutine>{
+    suspend fun getCurrentUserFavouriteRoutines(page: Int):NetworkPagedContent<NetworkRoutine>{
         return handleApiResponse {
-            apiRoutineService.getCurrentUserFavouriteRoutines(page, orderCriteria, orderDirection)
+            apiRoutineService.getCurrentUserFavouriteRoutines(page)
         }
     }
     suspend fun getAllRoutines(page: Int): NetworkPagedContent<NetworkRoutine>{

@@ -26,9 +26,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.*
+import com.example.tp3_hci.components.navigation.BottomNavigationBar
+import com.example.tp3_hci.components.navigation.NavigationDrawer
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 
 import com.example.tp3_hci.screens.*
+import com.example.tp3_hci.ui.theme.FitiBlue
+import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.navigation.*
 
 @Preview
@@ -119,7 +123,7 @@ fun MyNavHost(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun scaf(
+private fun scaf(
     restarSelectedNavigation: Boolean,
     uri : String,
     changeTopAppBarType : (TopAppBarType) -> Unit,
@@ -131,6 +135,7 @@ fun scaf(
     startDestination : String
 ){
     val scaffoldState = rememberScaffoldState()
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
@@ -168,7 +173,14 @@ fun scaf(
                     topAppBar.getTopAppBar()!!.invoke()
                 }
             }
-        }
+        },
+        scaffoldState = scaffoldState,
+        snackbarHost = { snackbarHostState -> SnackbarHost(
+            hostState = snackbarHostState,
+            snackbar = {
+                AppSnackBar(it)
+            }
+        ) }
     ){innerPadding ->
         NavHost(
             navController = navController,
@@ -203,24 +215,24 @@ fun scaf(
                     scaffoldState = scaffoldState
                 )
             }
-//            composable("Favorites"){
-//                FavoritesScreen(
-//                    favoritesNavigation = FavoritesNavigation(
-//                        routineCardNavigation = RoutineCardNavigation {
-//                                routine -> navController.navigate("RoutineDetails/${routine}") {
-//                                    launchSingleTop = true
-//                                }
-//                        },
-//                        searchNavigation = SearchNavigation {
-//                                search -> navController.navigate("SearchResults/${search}") {
-//                                    launchSingleTop = true
-//                                }
-//                        }
-//                    ),
-//                    setTopAppBar = changeTopAppBarType,
-//                    favoriteRoutines = Routines
-//                )
-//            }
+            composable("Favorites"){
+                FavoritesScreen(
+                    favoritesNavigation = FavoritesNavigation(
+                        routineCardNavigation = RoutineCardNavigation {
+                                routine -> navController.navigate("RoutineDetails/${routine}") {
+                                    launchSingleTop = true
+                                }
+                        },
+                        searchNavigation = SearchNavigation {
+                                search -> navController.navigate("SearchResults/${search}") {
+                                    launchSingleTop = true
+                                }
+                        }
+                    ),
+                    setTopAppBar = changeTopAppBarType,
+                    scaffoldState = scaffoldState
+                )
+            }
             composable("Profile"){
                 ProfileScreen(
                     profileNavigation = profileNavigation(
@@ -332,6 +344,20 @@ fun scaf(
 //            }
         }
     }
+}
+
+
+@Composable
+private fun AppSnackBar(
+    content: SnackbarData
+){
+    Snackbar(
+        shape = MaterialTheme.shapes.small,
+        backgroundColor = FitiBlue,
+        contentColor = FitiWhiteText,
+        snackbarData = content,
+        actionColor = FitiWhiteText
+    )
 }
 
 
