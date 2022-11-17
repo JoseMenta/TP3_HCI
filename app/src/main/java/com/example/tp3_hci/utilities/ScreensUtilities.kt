@@ -36,7 +36,7 @@ sealed class TopAppBarState(){
 
 
 @Composable
-fun RegularMobileDisplay(
+fun RegularDisplay(
     content: @Composable ()->Unit,
     topAppBarState: TopAppBarState
 ){
@@ -53,31 +53,6 @@ fun RegularMobileDisplay(
             exit = shrinkVertically(
                 shrinkTowards = Alignment.Top
             ) + fadeOut()
-        ) {
-            SearchFiltersSurface()
-        }
-    }
-}
-
-
-@Composable
-fun RegularTabletDisplay(
-    content: @Composable ()->Unit,
-    topAppBarState: TopAppBarState
-){
-    Box(
-        contentAlignment = Alignment.Center
-    ){
-        content()
-
-        AnimatedVisibility(
-            visible = (topAppBarState is TopAppBarState.Search),
-            enter = expandVertically(
-                expandFrom = Alignment.Top
-            ),
-            exit = shrinkVertically(
-                shrinkTowards = Alignment.Top
-            )
         ) {
             SearchFiltersSurface()
         }

@@ -62,4 +62,5 @@
     <string name="not_now">Ahora no</string>
     <string name="share_this_routine">Compartir esta rutina</string>
     <string name="leave_your_review">Dejanos tu opinión</string>
+    <string name="snackbar_dismiss">Cerrar</string>
 </resources>

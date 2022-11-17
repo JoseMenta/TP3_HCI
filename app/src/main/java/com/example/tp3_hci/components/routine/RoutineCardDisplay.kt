@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.data.model.RoutineOverview
@@ -23,11 +24,11 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 @Composable
 fun RoutineCardDisplay(
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ){
     val windowInfo = rememberWindowInfo()
     if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
@@ -68,11 +69,11 @@ fun RoutineCardDisplay(
 private fun RoutineCardLazyGrid(
     itemsPerGrid: Int,
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(itemsPerGrid),
@@ -114,11 +115,11 @@ private fun RoutineCardLazyGrid(
 @Composable
 private fun RoutineCardLazyList(
     modifier: Modifier = Modifier,
-    routines: List<RoutineOverview>? = null,
+    routines: List<MutableState<RoutineOverview>>? = null,
     header: (@Composable ()->Unit)? = null,
     footer: (@Composable ()->Unit)? = null,
     routineCardNavigation: RoutineCardNavigation,
-    onFavoriteChange : (RoutineOverview)->Unit
+    onFavoriteChange : (MutableState<RoutineOverview>)->Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.Center,

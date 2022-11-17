@@ -36,7 +36,9 @@ private val roundBorderValue = 4.dp
 fun RoutineOrderDropDown(
     modifier: Modifier = Modifier,
     onOrderByChange: ((OrderByItem) -> Unit)? = null,
-    onOrderTypeChange: ((OrderTypeItem) -> Unit)? = null
+    onOrderTypeChange: ((OrderTypeItem) -> Unit)? = null,
+    orderByItem: OrderByItem,
+    orderTypeItem: OrderTypeItem
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
@@ -44,9 +46,6 @@ fun RoutineOrderDropDown(
         modifier = modifier
     ) {
         var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember {
-            mutableStateOf(OrderByItem.Name as OrderByItem)
-        }
 
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -59,10 +58,10 @@ fun RoutineOrderDropDown(
             OutlinedTextField(
                 singleLine = true,
                 readOnly = true,
-                value = stringResource(id = selectedOptionText.stringId),
+                value = stringResource(id = orderByItem.stringId),
                 onValueChange = {
                     if(onOrderByChange != null){
-                        onOrderByChange(selectedOptionText)
+                        onOrderByChange(orderByItem)
                     }
                 },
                 label = {
@@ -104,7 +103,9 @@ fun RoutineOrderDropDown(
                 OrderByItem::class.sealedSubclasses.forEach { selectedOption ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = selectedOption.objectInstance as OrderByItem
+                            if(onOrderByChange != null){
+                                onOrderByChange(selectedOption.objectInstance as OrderByItem)
+                            }
                             expanded = false
                         }
                     ) {
@@ -121,7 +122,8 @@ fun RoutineOrderDropDown(
 
         OrderTypeDropDown(
             onOrderTypeChange = onOrderTypeChange,
-            modifier = Modifier.weight(getDropDownWeight().orderTypeWeight)
+            modifier = Modifier.weight(getDropDownWeight().orderTypeWeight),
+            orderTypeItem = orderTypeItem
         )
     }
 
@@ -133,12 +135,9 @@ fun RoutineOrderDropDown(
 private fun OrderTypeDropDown(
     modifier: Modifier = Modifier,
     onOrderTypeChange: ((OrderTypeItem) -> Unit)? = null,
+    orderTypeItem: OrderTypeItem
 ){
-
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember {
-        mutableStateOf(OrderTypeItem.Descending as OrderTypeItem)
-    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -150,10 +149,10 @@ private fun OrderTypeDropDown(
         OutlinedTextField(
             singleLine = true,
             readOnly = true,
-            value = getOrderTypeString(orderType = selectedOptionText),
+            value = getOrderTypeString(orderType = orderTypeItem),
             onValueChange = {
                 if(onOrderTypeChange != null){
-                    onOrderTypeChange(selectedOptionText)
+                    onOrderTypeChange(orderTypeItem)
                 }
             },
             trailingIcon = {
@@ -188,7 +187,9 @@ private fun OrderTypeDropDown(
             OrderTypeItem::class.sealedSubclasses.forEach { selectedOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectedOption.objectInstance as OrderTypeItem
+                        if(onOrderTypeChange != null){
+                            onOrderTypeChange(selectedOption.objectInstance as OrderTypeItem)
+                        }
                         expanded = false
                     }
                 ) {
@@ -229,7 +230,7 @@ private fun getDropDownWeight(): DropDownWeight{
 }
 
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun DropDownPreview(){
@@ -241,3 +242,4 @@ fun DropDownPreview(){
     }
 
 }
+ */

@@ -23,14 +23,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.tp3_hci.R
-import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.NavigationDrawer
-import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 
 import com.example.tp3_hci.screens.*
+import com.example.tp3_hci.ui.theme.FitiBlue
+import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.navigation.*
 
 @Preview
@@ -63,7 +62,7 @@ fun MyNavHost(
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact
     ) {
-        scaf(
+        Scaf(
             uri = uri,
             changeTopAppBarType = changeTopAppBarType,
             modifier = modifier,
@@ -76,7 +75,7 @@ fun MyNavHost(
     } else {
         NavigationDrawer(
             content = {
-                scaf(
+                Scaf(
                     uri = uri,
                     changeTopAppBarType = changeTopAppBarType,
                     modifier = modifier,
@@ -95,7 +94,7 @@ fun MyNavHost(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun scaf(
+private fun Scaf(
     uri : String,
     changeTopAppBarType : (TopAppBarType) -> Unit,
     modifier: Modifier = Modifier,
@@ -106,6 +105,7 @@ fun scaf(
     startDestination : String
 ){
     val scaffoldState = rememberScaffoldState()
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = {
@@ -142,7 +142,14 @@ fun scaf(
                     topAppBar.getTopAppBar()!!.invoke()
                 }
             }
-        }
+        },
+        scaffoldState = scaffoldState,
+        snackbarHost = { snackbarHostState -> SnackbarHost(
+            hostState = snackbarHostState,
+            snackbar = {
+                AppSnackBar(it)
+            }
+        ) }
     ){innerPadding ->
         NavHost(
             navController = navController,
@@ -306,6 +313,20 @@ fun scaf(
 //            }
         }
     }
+}
+
+
+@Composable
+private fun AppSnackBar(
+    content: SnackbarData
+){
+    Snackbar(
+        shape = MaterialTheme.shapes.small,
+        backgroundColor = FitiBlue,
+        contentColor = FitiWhiteText,
+        snackbarData = content,
+        actionColor = FitiWhiteText
+    )
 }
 
 

@@ -42,7 +42,10 @@ class ViewModelFactory constructor(
             isAssignableFrom(ExecuteRoutineViewModel::class.java) ->
                 ExecuteRoutineViewModel(routineRepository)
             isAssignableFrom(MainScreenViewModel::class.java) ->
-                MainScreenViewModel(routineRepository)
+                MainScreenViewModel(
+                    routineRepository = routineRepository,
+                    userRepository = userRepository
+                )
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
