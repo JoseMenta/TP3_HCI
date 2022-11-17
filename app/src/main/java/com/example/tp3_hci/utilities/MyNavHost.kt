@@ -26,7 +26,7 @@ import com.example.tp3_hci.components.navigation.BottomNavItem
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
+
 import com.example.tp3_hci.screens.*
 import com.example.tp3_hci.utilities.navigation.*
 
@@ -213,7 +213,7 @@ fun MyNavHost(
             composable("RatingRoutine/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.IntType })){
 
-                val aux = Routines.filter { routine -> routine.id == it.arguments?.getInt("id")!! }.first()
+
                 RatingView(
                     viewRatingNavigation = ViewRatingNavigation(
                         homeScreen = {
@@ -226,7 +226,7 @@ fun MyNavHost(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    routine = aux
+                    routineId = it.arguments?.getInt("id")!!
                 )
             }
 //            composable("SearchResults/{search}",

@@ -30,8 +30,6 @@ import coil.compose.AsyncImage
 import com.example.tp3_hci.ExerciseCardStatus
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
-import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
-import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
 import com.example.tp3_hci.state_holders.RoutineDetail.ExecuteRoutineViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes

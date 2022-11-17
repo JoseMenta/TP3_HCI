@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.review.RatingBar
-import com.example.tp3_hci.data.ui_state.RoutineCardUiState
+
 import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiGreenButton
@@ -40,7 +40,7 @@ import com.example.tp3_hci.utilities.navigation.ViewRatingNavigation
 fun RatingView(
     viewRatingNavigation: ViewRatingNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    routine: RoutineCardUiState
+    routineId: Int
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
@@ -48,7 +48,7 @@ fun RatingView(
             topAppBar = {
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
-                    title = routine.name,
+                    title = "TODO",
                     viewRatingNavigation = viewRatingNavigation
                 )
             }
@@ -62,11 +62,11 @@ fun RatingView(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        Congratulations(routine)
+        Congratulations(routineId)
         Spacer(modifier = Modifier.height(20.dp))
         Valoration()
         Spacer(modifier = Modifier.height(20.dp))
-        ShareURL(routine = routine)
+        ShareURL(routineId = routineId)
         Spacer(modifier = Modifier.height(20.dp))
         ButtonSide(viewRatingNavigation)
     }
@@ -74,7 +74,7 @@ fun RatingView(
 
 @Composable
 private fun ShareURL(
-    routine : RoutineCardUiState
+    routineId : Int
 ) {
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
         LocalClipboardManager.current
@@ -93,7 +93,7 @@ private fun ShareURL(
             backgroundColor = Color.White
         ) {
             Row( verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 10.dp) ) {
-                val route = "https://fiti.com/Routine/${routine.id}"
+                val route = "https://fiti.com/Routine/${routineId}"
                 Text(
                     text = route,
                     fontWeight = FontWeight.Bold,
@@ -112,14 +112,14 @@ private fun ShareURL(
 
 @Composable
 private fun Congratulations(
-    routine: RoutineCardUiState
+    routineId: Int
 ){
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
-            model = routine.imageUrl,
+            model = "routine.imageUrl",
             contentDescription = "Rutina",
             modifier = Modifier.fillMaxWidth()
         )
@@ -130,7 +130,7 @@ private fun Congratulations(
             color = Color.Black
         )
         Text(
-            text = "Completaste la rutina ${routine.name}",
+            text = "Completaste la rutina ${"name"}",
             color = Color.Black
         )
     }
