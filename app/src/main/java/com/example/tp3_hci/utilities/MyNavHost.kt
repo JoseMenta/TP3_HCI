@@ -184,24 +184,24 @@ private fun Scaf(
                     scaffoldState = scaffoldState
                 )
             }
-//            composable("Favorites"){
-//                FavoritesScreen(
-//                    favoritesNavigation = FavoritesNavigation(
-//                        routineCardNavigation = RoutineCardNavigation {
-//                                routine -> navController.navigate("RoutineDetails/${routine}") {
-//                                    launchSingleTop = true
-//                                }
-//                        },
-//                        searchNavigation = SearchNavigation {
-//                                search -> navController.navigate("SearchResults/${search}") {
-//                                    launchSingleTop = true
-//                                }
-//                        }
-//                    ),
-//                    setTopAppBar = changeTopAppBarType,
-//                    favoriteRoutines = Routines
-//                )
-//            }
+            composable("Favorites"){
+                FavoritesScreen(
+                    favoritesNavigation = FavoritesNavigation(
+                        routineCardNavigation = RoutineCardNavigation {
+                                routine -> navController.navigate("RoutineDetails/${routine}") {
+                                    launchSingleTop = true
+                                }
+                        },
+                        searchNavigation = SearchNavigation {
+                                search -> navController.navigate("SearchResults/${search}") {
+                                    launchSingleTop = true
+                                }
+                        }
+                    ),
+                    setTopAppBar = changeTopAppBarType,
+                    scaffoldState = scaffoldState
+                )
+            }
             composable("Profile"){
                 ProfileScreen(
                     profileNavigation = profileNavigation(

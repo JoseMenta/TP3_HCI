@@ -16,8 +16,12 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.search.SearchFiltersSurface
 import com.example.tp3_hci.components.search.SearchTopBar
+import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.navigation.SearchNavigation
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
 class TopAppBarType(
@@ -38,23 +42,49 @@ sealed class TopAppBarState(){
 @Composable
 fun RegularDisplay(
     content: @Composable ()->Unit,
-    topAppBarState: TopAppBarState
+    topAppBarState: TopAppBarState,
+    hasSearch : Boolean = false,
+    hasSwipeRefresh : Boolean = false,
+    isRefreshing : Boolean = false,
+    onRefreshSwipe : ()->Unit = {}
 ){
     Box(
         contentAlignment = Alignment.Center
     ){
-        content()
+        if(hasSwipeRefresh){
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
+                onRefresh = {
+                    onRefreshSwipe()
+                },
+                indicator = { state, refreshTrigger ->
+                    SwipeRefreshIndicator(
+                        state = state,
+                        refreshTriggerDistance = refreshTrigger,
+                        contentColor = FitiWhiteText,
+                        backgroundColor = FitiBlue
+                    )
+                }
+            ){
+                content()
+            }
+        } else {
+            content()
+        }
 
-        AnimatedVisibility(
-            visible = (topAppBarState is TopAppBarState.Search),
-            enter = expandVertically(
-                expandFrom = Alignment.Top
-            ) + fadeIn(),
-            exit = shrinkVertically(
-                shrinkTowards = Alignment.Top
-            ) + fadeOut()
-        ) {
-            SearchFiltersSurface()
+
+        if(hasSearch){
+            AnimatedVisibility(
+                visible = (topAppBarState is TopAppBarState.Search),
+                enter = expandVertically(
+                    expandFrom = Alignment.Top
+                ) + fadeIn(),
+                exit = shrinkVertically(
+                    shrinkTowards = Alignment.Top
+                ) + fadeOut()
+            ) {
+                SearchFiltersSurface()
+            }
         }
     }
 }
@@ -122,6 +152,29 @@ fun RegularTopAppBar(
                 },
                 leftIcon = leftIcon
             )
+        }
+    }
+}
+
+
+@Composable
+fun ErrorSnackBar(
+    scaffoldState : ScaffoldState,
+    message : String,
+    onActionLabelClicked: ()->Unit
+){
+    val dismissString = stringResource(id = R.string.snackbar_dismiss)
+
+    // Muestra un snackbar
+    LaunchedEffect(scaffoldState.snackbarHostState){
+        val result = scaffoldState.snackbarHostState.showSnackbar(
+            message = message,
+            actionLabel = dismissString,
+            duration = SnackbarDuration.Indefinite
+        )
+        when (result) {
+            SnackbarResult.Dismissed -> onActionLabelClicked()
+            SnackbarResult.ActionPerformed -> onActionLabelClicked()
         }
     }
 }
