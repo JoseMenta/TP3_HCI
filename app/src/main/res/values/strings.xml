@@ -35,7 +35,6 @@
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_favorites">Favorites</string>
     <string name="bottom_nav_profile">Profile</string>
-
     <string name="nav_drawer_home">Home</string>
     <string name="nav_drawer_home_cd">Go to home screen</string>
     <string name="nav_drawer_favorites">Favorites</string>
@@ -71,4 +70,13 @@
     <string name="leave_your_review">Leave us your review</string>
 
     <string name="snackbar_dismiss">Dismiss</string>
+
+    <string name="email_type">Email: </string>
+    <string name="name_type">Nombre: </string>
+    <string name="surname_type">Apellido: </string>
+    <string name="birthday_type">Cumpleaños: </string>
+    <string name="preferencies">Preferencias</string>
+    <string name="simplify">Vista Simplificada: </string>
+
+
 </resources>

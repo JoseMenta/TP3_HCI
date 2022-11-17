@@ -63,4 +63,11 @@
     <string name="share_this_routine">Compartir esta rutina</string>
     <string name="leave_your_review">Dejanos tu opinión</string>
     <string name="snackbar_dismiss">Cerrar</string>
+    <string name="email_type">Email: </string>
+    <string name="name_type">Nombre: </string>
+    <string name="surname_type">Apellido: </string>
+    <string name="birthday_type">Cumpleaños: </string>
+    <string name="preferencies">Preferencias</string>
+    <string name="simplify">Vista Simplificada: </string>
+
 </resources>

@@ -135,6 +135,7 @@ private fun scaf(
     startDestination : String
 ){
     val scaffoldState = rememberScaffoldState()
+    var prevRoute = navController.previousBackStackEntry
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -269,7 +270,13 @@ private fun scaf(
                 RoutineDetail(
                     routineDetailNavigation = RoutineDetailNavigation(
                         previousScreen = {
-                            navController.navigateUp()
+                            if(prevRoute == null || prevRoute.destination.route == "Routine/{id}") {
+                                navController.navigate("MainScreen") {
+                                    launchSingleTop = true
+                                }
+                            }else{
+                                navController.navigateUp()
+                            }
                         },
                         executeRoutineScreen = {
                                 routine -> navController.navigate("MakeRoutine/${routine}") {

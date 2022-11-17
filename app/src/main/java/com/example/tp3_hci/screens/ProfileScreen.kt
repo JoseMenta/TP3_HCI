@@ -88,7 +88,7 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(30.dp))
                 Divider(color = FitiBlue, thickness = 1.dp)
                 Spacer(modifier = Modifier.height(10.dp))
-                dataUser(Type= "Email: " ,data = UiState.currentUser?.email)
+                dataUser(Type= stringResource(id = R.string.email_type) ,data = UiState.currentUser?.email)
                 dataUser(Type= "Nombre: " ,data = UiState.currentUser?.firstName)
                 dataUser(Type= "Apellido: " ,data = UiState.currentUser?.lastName)
                 dataUser(Type= "Cumpleaños: " ,data = UiState.currentUser?.birthdate.toString())
@@ -110,7 +110,6 @@ fun ProfileScreen(
                     Spacer(
                         modifier = Modifier.weight(1f)
                     )
-
                     Switch(
                         checked = viewModel.getSimplify(),
                         onCheckedChange = { viewModel.changeSimplify() },
