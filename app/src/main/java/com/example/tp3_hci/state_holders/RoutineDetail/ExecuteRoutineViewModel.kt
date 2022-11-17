@@ -33,9 +33,9 @@ class ExecuteRoutineViewModel(
                 uiState = uiState.copy(
                     isFetching = false,
                     routine = it,
-                    selectedExercise =  getFirstExercise(it)
+                    selectedExercise = getFirstExercise(it)
                 )
-                it.cycles[0].exercises[0].isSelected = true
+                it.cycles[0].exercises[0].isSelected.value = true
             }.onFailure { e ->
                 uiState = uiState.copy(
                     message = e.message,
@@ -57,7 +57,7 @@ class ExecuteRoutineViewModel(
     }
     fun nextExercise(){
         if (uiState.routine != null) {
-            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = false
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = false
             if(exerciseIndex == uiState.routine!!.cycles[cycleIndex].exercises.size-1){
                 cycleReps-=1
                 if(cycleReps==0){
@@ -77,7 +77,7 @@ class ExecuteRoutineViewModel(
             }else{
                 exerciseIndex+=1
             }
-            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = true
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = true
             uiState = uiState.copy(
                 selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
             )
@@ -89,7 +89,7 @@ class ExecuteRoutineViewModel(
     }
     fun prevExercise(){
         if(uiState.routine!=null){
-            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = false
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = false
             if(exerciseIndex==0){
                 if(cycleReps == uiState.routine!!.cycles[cycleIndex].repetitions){
                     if(cycleIndex==0){
@@ -106,7 +106,7 @@ class ExecuteRoutineViewModel(
                 exerciseIndex-=1
             }
             //restart timer
-            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected = true
+            uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = true
             uiState = uiState.copy(
                 selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
             )
@@ -118,5 +118,17 @@ class ExecuteRoutineViewModel(
             return false
         }
         return true
+//        val routine = uiState.routine
+//        if(routine!=null) {
+//            while (cycleIndex<routine.cycles.size){
+//                val cycle = routine.cycles[cycleIndex]
+//                if(exerciseIndex<cycle.exercises.size){
+//                    return true
+//                }
+//                exerciseIndex = 0
+//            }
+//            return false
+//        }
+//        return false
     }
 }

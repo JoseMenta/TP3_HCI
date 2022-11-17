@@ -123,7 +123,6 @@ fun RoutineCycle(
                     modifier = Modifier.padding(8.dp,0.dp),
                     elevation = 4.dp,
                     background = MaterialTheme.colors.background,
-                    status = status,
                     exercise = exercise
                 )
             }

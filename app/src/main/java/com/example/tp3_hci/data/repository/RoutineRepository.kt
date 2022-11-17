@@ -1,5 +1,6 @@
 package com.example.tp3_hci.data.repository
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.api_fiti.data.network.model.NetworkPagedContent
 import com.example.tp3_hci.data.model.*
 import com.example.tp3_hci.data.network.RoutineRemoteDataSource
@@ -22,6 +23,7 @@ class RoutineRepository(
 
     private val difficultyToStrig: HashMap<Int, String> = hashMapOf(Pair(1,"rookie"),Pair(2,"beginner"),Pair(3,"intermediate"),Pair(4,"advanced"),Pair(5,"expert"))
 
+    //todo: cache del detalle de la rutina
     private suspend fun<T:Any> getAll(execute: suspend (page:Int)->NetworkPagedContent<T>):List<T>{
         var i = 0
         val result = execute(i)

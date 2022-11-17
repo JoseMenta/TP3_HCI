@@ -61,7 +61,7 @@ fun ExerciseCard(
     var checked by remember { mutableStateOf(true) }
     var repeat by remember { mutableStateOf(exercise.repetitions) }
     val sizeEditable = if (!expandedState) 272.dp else 362.dp
-    val backgroundColor= backgroundColorCard(exercise.isSelected, checkedState )
+    val backgroundColor= backgroundColorCard(exercise.isSelected.value, checkedState )
     var time  by remember { mutableStateOf(exercise.time)}
     val minutes = if(time/60>=10){"${time/60}"}else{"0${time/60}"}
     val seconds = if(time%60>=10){"${time%60}"}else{"0${time%60}"}
@@ -233,6 +233,6 @@ fun IconInfoExercise(   modifier: Modifier=Modifier,
 @Composable
 fun ExerciseCardPreview() {
     TP3_HCITheme {
-        ExerciseCard(exercise = CycleExercise(1,"Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
+//        ExerciseCard(exercise = CycleExercise("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
     }
 }

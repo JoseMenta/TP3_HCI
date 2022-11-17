@@ -164,15 +164,15 @@ fun MainScreen(
                         Text(it.name.toString())
                         Text(it.order.toString())
                         Text(it.repetitions.toString())
-                        Column() {
-                            for(exercise in it.exercises){
-                                Text(exercise.name)
-                                Text(exercise.order.toString())
-                                Text(exercise.time.toString())
-                                Text(exercise.repetitions.toString())
-                                Text(exercise.image)
-                            }
-                        }
+//                        Column() {
+//                            for(exercise in it.exercises){
+//                                Text(exercise.name)
+//                                Text(exercise.order.toString())
+//                                Text(exercise.time.toString())
+//                                Text(exercise.repetitions.toString())
+//                                Text(exercise.image)
+//                            }
+//                        }
                     }
                 }
             }else{
