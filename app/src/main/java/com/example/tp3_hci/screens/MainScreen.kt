@@ -50,14 +50,16 @@ fun MainScreen(
             mainScreenNavigation = mainScreenNavigation,
             mainScreenViewModel = mainScreenViewModel,
             setTopAppBar = setTopAppBar,
-            scaffoldState = scaffoldState
+            scaffoldState = scaffoldState,
+            simplify = false
         )
     } else {
         MainScreenTablet(
             mainScreenNavigation = mainScreenNavigation,
             mainScreenViewModel = mainScreenViewModel,
             setTopAppBar = setTopAppBar,
-            scaffoldState = scaffoldState
+            scaffoldState = scaffoldState,
+            simplify = false
         )
     }
 }
@@ -69,7 +71,8 @@ private fun MainScreenTablet(
     mainScreenNavigation: MainScreenNavigation,
     mainScreenViewModel : MainScreenViewModel,
     setTopAppBar : ((TopAppBarType)->Unit),
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    simplify : Boolean
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var topAppBarState by remember {
@@ -114,7 +117,8 @@ private fun MainScreenTablet(
                                     mainScreenNavigation = mainScreenNavigation,
                                     onFavoriteChange = {
                                             routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
-                                    }
+                                    },
+                                    simplify = simplify
                                 )
                             }
 
@@ -135,7 +139,8 @@ private fun MainScreenTablet(
                     routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
                     onFavoriteChange = {
                             routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
-                    }
+                    },
+                    simplify = simplify
                 )
             },
             topAppBarState = topAppBarState
@@ -173,7 +178,8 @@ private fun MainScreenMobile(
     mainScreenNavigation: MainScreenNavigation,
     mainScreenViewModel : MainScreenViewModel,
     setTopAppBar : ((TopAppBarType)->Unit),
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    simplify : Boolean
 ){
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var topAppBarState by remember {
@@ -218,7 +224,8 @@ private fun MainScreenMobile(
                                     mainScreenNavigation = mainScreenNavigation,
                                     onFavoriteChange = {
                                         routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
-                                    }
+                                    },
+                                    simplify = simplify
                                 )
                             }
 
@@ -239,7 +246,8 @@ private fun MainScreenMobile(
                     routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
                     onFavoriteChange = {
                         routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
-                    }
+                    },
+                    simplify =  simplify
                 )
             },
             topAppBarState = topAppBarState
@@ -279,7 +287,8 @@ private fun MainScreenMobile(
 private fun LastRoutineDoneDisplay(
     lastRoutineDone : List<RoutineOverview>,
     mainScreenNavigation: MainScreenNavigation,
-    onFavoriteChange: (RoutineOverview)->Unit
+    onFavoriteChange: (RoutineOverview)->Unit,
+    simplify : Boolean
 ){
     val windowInfo = rememberWindowInfo()
 
@@ -295,7 +304,8 @@ private fun LastRoutineDoneDisplay(
             routine = lastRoutineDone[0],
             modifier = Modifier.padding(bottom = 20.dp),
             routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
-            onFavoriteChange = onFavoriteChange
+            onFavoriteChange = onFavoriteChange,
+            simplify  = simplify
         )
     } else {
         Text(
@@ -316,7 +326,8 @@ private fun LastRoutineDoneDisplay(
                     modifier = Modifier
                         .weight(1f),
                     routineCardNavigation = mainScreenNavigation.getRoutineCardNavigation(),
-                    onFavoriteChange = onFavoriteChange
+                    onFavoriteChange = onFavoriteChange,
+                    simplify = simplify
                 )
             }
         }

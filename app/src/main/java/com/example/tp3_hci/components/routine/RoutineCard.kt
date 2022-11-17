@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -24,7 +25,7 @@ import com.example.tp3_hci.utilities.navigation.RoutineCardNavigation
 
 
 @Composable
-fun RoutineCard(
+fun FullRoutineCard(
     routine : RoutineOverview,
     modifier: Modifier = Modifier,
     routineCardNavigation: RoutineCardNavigation,
@@ -155,6 +156,125 @@ fun RoutineCard(
         }
     }
 }
+
+
+@Composable
+fun RoutineCard(
+    routine : RoutineOverview,
+    modifier: Modifier = Modifier,
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit,
+    simplify: Boolean
+){
+    if(simplify){
+        SimplyRoutineCard(
+            routine = routine,
+            modifier = modifier,
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange,
+        )
+    }else{
+        FullRoutineCard(
+            routine = routine,
+            modifier = modifier,
+            routineCardNavigation = routineCardNavigation,
+            onFavoriteChange = onFavoriteChange,
+        )
+    }
+}
+
+
+@Composable
+fun SimplyRoutineCard(
+    routine : RoutineOverview,
+    modifier: Modifier = Modifier,
+    routineCardNavigation: RoutineCardNavigation,
+    onFavoriteChange : (RoutineOverview)->Unit
+){
+    Card(
+        elevation = 5.dp,
+        shape = Shapes.medium,
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .heightIn(max = 180.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Button(
+                onClick = {
+                    routineCardNavigation.getRoutineDetailScreen().invoke("${routine.id}")
+                },
+                modifier = Modifier.weight(0.6f),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.4f)
+                        .background(FitiGreyImage)
+                        .padding(horizontal = 10.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.
+                        padding(top = 5.dp)
+                    ) {
+                        Column(){
+                            Text(
+                                text = routine.name,
+                                style = MaterialTheme.typography.h3.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp
+                                ),
+                                color = FitiBlueText,
+                                modifier = Modifier.padding(bottom =  10.dp)
+                            )
+                            Row(
+                                modifier = Modifier.padding(bottom =  10.dp)
+                            ){
+                                RatingStars(
+                                    rating = routine.score,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+
+                        }
+
+                        Spacer(
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        IconButton(
+                            onClick = { onFavoriteChange(routine) },
+                            modifier = Modifier.size(30.dp)
+                        ) {
+                            if(routine.isFavourite){
+                                Icon(
+                                    imageVector = Icons.Outlined.Favorite,
+                                    contentDescription = stringResource(id = R.string.routine_is_favorite),
+                                    tint = FitiBlueFill,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.FavoriteBorder,
+                                    contentDescription = stringResource(id = R.string.routine_is_not_favorite),
+                                    tint = FitiBlueFill,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 
 /*
 @Preview(showBackground = true)

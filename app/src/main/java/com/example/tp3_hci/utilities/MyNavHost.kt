@@ -1,5 +1,6 @@
 package com.example.tp3_hci.utilities
 
+import android.app.TaskStackBuilder
 import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding

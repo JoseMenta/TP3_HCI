@@ -69,7 +69,7 @@ fun BottomNavigationBar(
             for(icon in items){
                 icon.selected=false
             }
-            items[0].selected=true
+            items[1].selected=true
         }
         items.forEach { item ->
             BottomNavigationItem(
