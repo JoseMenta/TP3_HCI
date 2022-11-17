@@ -5,9 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -16,7 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -24,10 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tp3_hci.R
-import com.example.tp3_hci.components.navigation.BottomNavItem
-import com.example.tp3_hci.components.navigation.BottomNavigationBar
-import com.example.tp3_hci.components.navigation.NavigationDrawer
-import com.example.tp3_hci.components.navigation.RegularBottomNavItem
+import com.example.tp3_hci.components.navigation.*
 import com.example.tp3_hci.components.navigation.RegularBottomNavItem.Favorite.getBottomNavItems
 
 import com.example.tp3_hci.screens.*
@@ -59,11 +56,15 @@ fun MyNavHost(
     } != null)
 
     val windowInfo = rememberWindowInfo()
-
+    var restarSelectedNavigation = false
+    if((navBackStackEntry?.destination?.route) == "MainScreen"){
+        restarSelectedNavigation = true
+    }
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact
     ) {
         scaf(
+            restarSelectedNavigation = restarSelectedNavigation,
             uri = uri,
             changeTopAppBarType = changeTopAppBarType,
             modifier = modifier,
@@ -74,20 +75,42 @@ fun MyNavHost(
             startDestination = startDestination
         )
     } else {
-        NavigationDrawer(
-            content = {
-                scaf(
-                    uri = uri,
-                    changeTopAppBarType = changeTopAppBarType,
-                    modifier = modifier,
-                    scrollBehavior = scrollBehavior,
-                    showBottomBar = showBottomBar,
-                    topAppBar = topAppBar,
-                    navController = navController,
-                    startDestination = startDestination
-                )
-            }
-        )
+        showBottomBar = false
+        if( (navBackStackEntry?.destination?.route) == "Login" ){
+
+            scaf(
+                restarSelectedNavigation = restarSelectedNavigation,
+                uri = uri,
+                changeTopAppBarType = changeTopAppBarType,
+                modifier = modifier,
+                scrollBehavior = scrollBehavior,
+                showBottomBar = showBottomBar,
+                topAppBar = topAppBar,
+                navController = navController,
+                startDestination = startDestination
+            )
+        }
+        else{
+            NavigationDrawer(
+                content = {
+                    scaf(
+                        restarSelectedNavigation = restarSelectedNavigation,
+                        uri = uri,
+                        changeTopAppBarType = changeTopAppBarType,
+                        modifier = modifier,
+                        scrollBehavior = scrollBehavior,
+                        showBottomBar = showBottomBar,
+                        topAppBar = topAppBar,
+                        navController = navController,
+                        startDestination = startDestination
+                    )
+                },
+                actions = {
+                    navBarItem -> navController.navigate(navBarItem.route)
+                },
+                restarSelectedNavigation = restarSelectedNavigation
+            )
+        }
     }
 }
 
@@ -96,6 +119,7 @@ fun MyNavHost(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun scaf(
+    restarSelectedNavigation: Boolean,
     uri : String,
     changeTopAppBarType : (TopAppBarType) -> Unit,
     modifier: Modifier = Modifier,
@@ -119,6 +143,7 @@ fun scaf(
                 ) + fadeOut()
             ) {
                 BottomNavigationBar(
+                    restarSelectedNavigation = restarSelectedNavigation,
                     items = getBottomNavItems(),
                     bottomBarNavigation = BottomBarNavigation {
                             route -> navController.navigate(route) {

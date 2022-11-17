@@ -23,22 +23,25 @@ import com.example.tp3_hci.utilities.navigation.BottomBarNavigation
 open class BottomNavItem(
     open val nameId: Int,
     open val route: String,
-    open val icon: ImageVector
+    open val icon: ImageVector,
+    open var selected: Boolean
 )
 
 sealed class RegularBottomNavItem(
     override val nameId: Int,
     override val route: String,
-    override val icon: ImageVector
+    override val icon: ImageVector,
+    override var selected: Boolean
 ): BottomNavItem(
     nameId = nameId,
     route = route,
-    icon = icon
+    icon = icon,
+    selected = selected
 ){
     // TODO: Cambiar la ruta de Profile
-    object Favorite : RegularBottomNavItem(R.string.bottom_nav_favorites, "Favorites", Icons.Filled.Favorite)
-    object Home: RegularBottomNavItem(R.string.bottom_nav_home, "MainScreen", Icons.Filled.Home)
-    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Profile", Icons.Filled.Person)
+    object Favorite : RegularBottomNavItem(R.string.bottom_nav_favorites, "Favorites", Icons.Filled.Favorite, true)
+    object Home: RegularBottomNavItem(R.string.bottom_nav_home, "MainScreen", Icons.Filled.Home, false)
+    object Profile : RegularBottomNavItem(R.string.bottom_nav_profile, "Profile", Icons.Filled.Person, false)
 
     fun getBottomNavItems(): List<BottomNavItem>{
         return RegularBottomNavItem::class.sealedSubclasses.map{
@@ -52,6 +55,7 @@ sealed class RegularBottomNavItem(
 // -------------------------------------------------------------------------
 @Composable
 fun BottomNavigationBar(
+    restarSelectedNavigation : Boolean,
     bottomBarNavigation: BottomBarNavigation,
     items : List<BottomNavItem>,
     modifier: Modifier = Modifier
@@ -61,11 +65,20 @@ fun BottomNavigationBar(
         backgroundColor = FitiBlue,
         elevation = 10.dp
     ) {
+        if(restarSelectedNavigation){
+            for(icon in items){
+                icon.selected=false
+            }
+            items[0].selected=true
+        }
         items.forEach { item ->
-            val selected = (stringResource(id = item.nameId) == "Inicio")
             BottomNavigationItem(
-                selected = selected,
+                selected = item.selected,
                 onClick = {
+                    for(icon in items){
+                        icon.selected=false
+                    }
+                    item.selected =true
                     bottomBarNavigation.getItemScreen().invoke(item.route)
                 },
                 selectedContentColor = FitiGreenButton,

@@ -24,23 +24,25 @@ import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.*
 
+
 sealed class NavDrawerItem(
     val id: Int,
     val route: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    var selected: Boolean
 ) {
-    object Home : NavDrawerItem(0,"/home", Icons.Filled.Home)
-    object Favorites: NavDrawerItem(1,"/favorites", Icons.Filled.Favorite)
-    object Profile: NavDrawerItem(2,"/profile", Icons.Filled.Person)
-    object Settings: NavDrawerItem(3, "/settings", Icons.Filled.Settings)
-    object SignOut: NavDrawerItem(4,"/login", Icons.Filled.Logout)
+    object Home : NavDrawerItem(0,"MainScreen", Icons.Filled.Home, true)
+    object Favorites: NavDrawerItem(1,"Favorites", Icons.Filled.Favorite, false)
+    object Profile: NavDrawerItem(2,"Profile", Icons.Filled.Person, false)
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(
-    content: (@Composable ()->Unit)? = null
+    content: (@Composable ()->Unit)? = null,
+    actions: (NavDrawerItem) ->Unit,
+    restarSelectedNavigation: Boolean
 ) {
     PermanentNavigationDrawer(
         drawerContent = {
@@ -52,7 +54,9 @@ fun NavigationDrawer(
             ) {
                 DrawerHeader()
                 DrawerBody(
-                    onItemClick = { /*TODO*/ }
+                    restarSelectedNavigation = restarSelectedNavigation,
+                    onItemClick = { /*TODO*/ },
+                    actions = actions
                 )
             }
 
@@ -85,20 +89,27 @@ private fun DrawerHeader() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DrawerBody(
+    restarSelectedNavigation : Boolean,
     modifier: Modifier = Modifier,
-    onItemClick: (NavDrawerItem) -> Unit
+    onItemClick: (NavDrawerItem) -> Unit,
+    actions : (NavDrawerItem) ->Unit
 ) {
     val primaryItems = listOf(NavDrawerItem.Home, NavDrawerItem.Favorites, NavDrawerItem.Profile)
-    val secondaryItems = listOf(NavDrawerItem.Settings, NavDrawerItem.SignOut)
 
     // val backStackEntry by navController.currentBackStackEntryAsState()
 
     LazyColumn(
         modifier = modifier
     ){
+        if(restarSelectedNavigation){
+            for(icon in primaryItems){
+                icon.selected=false
+            }
+            primaryItems[0].selected=true
+        }
         items(primaryItems){ item ->
             // val selected = (item.route == backStackEntry?.destination?.route)
-            val selected = (item.id == NavDrawerItem.Home.id)
+            //val selected = (item.id == NavDrawerItem.Home.id)
 
             NavigationDrawerItem(
                 label = {
@@ -115,10 +126,14 @@ private fun DrawerBody(
                         tint = FitiWhiteText
                     )
                 },
-                selected = selected,
+                selected = item.selected,
                 modifier = Modifier.padding(horizontal = 10.dp),
                 onClick = {
-                    onItemClick(item)
+                    for(items in primaryItems){
+                        items.selected=false
+                    }
+                    item.selected =true
+                    actions(item)
                 },
                 colors = NavigationDrawerItemDefaults.colors(
                     selectedContainerColor = FitiDarkBlue,
@@ -138,41 +153,6 @@ private fun DrawerBody(
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)
             )
         }
-
-        items(secondaryItems){ item ->
-            // val selected = (item.route == backStackEntry?.destination?.route)
-            val selected = (item.id == NavDrawerItem.Home.id)
-
-            NavigationDrawerItem(
-                label = {
-                    Text(
-                        text = getTitleString(item = item),
-                        style = MaterialTheme.typography.button.copy(fontWeight = FontWeight.Bold),
-                        color = FitiWhiteText
-                    )
-                },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = getContentDescriptionString(item = item),
-                        tint = FitiWhiteText
-                    )
-                },
-                selected = selected,
-                modifier = Modifier.padding(horizontal = 15.dp),
-                onClick = {
-                    onItemClick(item)
-                },
-                colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor = FitiDarkBlue,
-                    unselectedContainerColor = FitiBlue,
-                    selectedIconColor = FitiWhiteText,
-                    unselectedIconColor = FitiWhiteText,
-                    selectedTextColor = FitiWhiteText,
-                    unselectedTextColor = FitiWhiteText,
-                )
-            )
-        }
     }
 }
 
@@ -185,7 +165,6 @@ private fun getTitleString(
         is NavDrawerItem.Home -> stringResource(R.string.nav_drawer_home)
         is NavDrawerItem.Favorites -> stringResource(id = R.string.nav_drawer_favorites)
         is NavDrawerItem.Profile -> stringResource(id = R.string.nav_drawer_profile)
-        is NavDrawerItem.Settings -> stringResource(id = R.string.nav_drawer_settings)
         else -> stringResource(id = R.string.nav_drawer_signout)
     }
 }
@@ -198,12 +177,11 @@ private fun getContentDescriptionString(
         is NavDrawerItem.Home -> stringResource(R.string.nav_drawer_home_cd)
         is NavDrawerItem.Favorites -> stringResource(id = R.string.nav_drawer_favorites_cd)
         is NavDrawerItem.Profile -> stringResource(id = R.string.nav_drawer_profile_cd)
-        is NavDrawerItem.Settings -> stringResource(id = R.string.nav_drawer_settings_cd)
         else -> stringResource(id = R.string.nav_drawer_signout_cd)
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun NavigationDrawerPreview(){
@@ -212,3 +190,5 @@ fun NavigationDrawerPreview(){
 
     }
 }
+
+ */
