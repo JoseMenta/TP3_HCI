@@ -2,7 +2,7 @@
     <string name="app_name">TP3_HCI</string>
     <string name="fiti">FITI</string>
     <string name="fiti_logo">FITI Logo</string>
-
+    <string name="congratulations">Congratulations</string>
     <string name="name">Name</string>
     <string name="creation_date">Creation date</string>
     <string name="rating">Rating</string>
@@ -63,4 +63,10 @@
     <string name="delete_text">Delete text</string>
 
     <string name="results_title">Results found for: \"%1$s\"</string>
+    <string name="routine_review">Routine review</string>
+    <string name="you_finished_the_routine">You have finished the routine</string>
+    <string name="save">Save</string>
+    <string name="not_now">Not now</string>
+    <string name="share_this_routine">Share this routine</string>
+    <string name="leave_your_review">Leave us your review</string>
 </resources>
