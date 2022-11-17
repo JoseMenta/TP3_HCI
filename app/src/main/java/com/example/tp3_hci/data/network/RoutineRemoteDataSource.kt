@@ -1,13 +1,15 @@
 package com.example.tp3_hci.data.network
 
 import com.example.api_fiti.data.network.model.NetworkPagedContent
+import com.example.tp3_hci.data.network.api.ApiCategoryService
 import com.example.tp3_hci.data.network.api.ApiRoutineService
 import com.example.tp3_hci.data.network.model.*
 import com.example.tp3_hci.data.repository.OrderCriteria
 import com.example.tp3_hci.data.repository.OrderDirection
 
 class RoutineRemoteDataSource(
-    private val apiRoutineService: ApiRoutineService
+    private val apiRoutineService: ApiRoutineService,
+    private val apiCategoryService: ApiCategoryService
 ): RemoteDataSource() {
     suspend fun getCurrentUserRoutines(page: Int, orderCriteria: String? = null, orderDirection: String? = null): NetworkPagedContent<NetworkRoutine>{
         return handleApiResponse {
@@ -26,6 +28,11 @@ class RoutineRemoteDataSource(
     ):NetworkPagedContent<NetworkRoutine>{
         return handleApiResponse {
             apiRoutineService.filterAllRoutines(page,categoryId,userId,difficulty,score,search,orderCriteria,orderDirection)
+        }
+    }
+    suspend fun getCategories(page: Int, search: String? = null): NetworkPagedContent<NetworkCategory>{
+        return handleApiResponse {
+            apiCategoryService.getCategories(page,search)
         }
     }
     suspend fun getCurrentUserExecutions(page: Int, orderCriteria: String, orderDirection: String): NetworkPagedContent<NetworkExecution>{

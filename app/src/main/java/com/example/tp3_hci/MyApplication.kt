@@ -13,7 +13,7 @@ class MyApplication: Application() {
     private val userRemoteDataSource: UserRemoteDataSource
         get() = UserRemoteDataSource(sessionManager,RetrofitClient.getApiUserService(this))
     private val routineRemoteDataSource: RoutineRemoteDataSource
-        get() = RoutineRemoteDataSource(RetrofitClient.getApiRoutineService(this))
+        get() = RoutineRemoteDataSource(RetrofitClient.getApiRoutineService(this),RetrofitClient.getApiCategoryService(this))
     val sessionManager: SessionManager
         get() = SessionManager(this)
     val preferencesManager: PreferencesManager

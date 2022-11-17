@@ -61,7 +61,10 @@ class RoutineRepository(
         }
         return routineMutex.withLock{ this.routineOverviews}
     }
-
+    suspend fun getCategories(search: String? = null):List<Category>{
+        val result = getAll { remoteDataSource.getCategories(it,search) }
+        return result.map { it.toCategory() }
+    }
     suspend fun getFilteredRoutineOverviews(
         categoryId: Int? = null,
         userId: Int? = null,
