@@ -61,8 +61,7 @@ class FavoritesScreenViewModel(
         fetchFavoriteRoutines = viewModelScope.launch {
             dismissMessage()
             favoritesScreenUiState = favoritesScreenUiState.copy(
-                isLoading = true,
-                favoriteRoutines = null
+                isLoading = true
             )
             kotlin.runCatching {
                 routineRepository.getFilteredRoutineOverviews(

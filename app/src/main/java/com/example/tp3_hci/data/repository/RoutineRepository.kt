@@ -149,6 +149,7 @@ class RoutineRepository(
     }
 
     suspend fun getCurrentUserExecutions(orderCriteria: OrderCriteria, orderDirection: OrderDirection):List<Execution>{
+        getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
         val result = getAll { remoteDataSource.getCurrentUserExecutions(it, orderCriteria.apiName, orderDirection.apiName) }
         return result.map {
             Execution(
