@@ -27,13 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.components.exercise.DialogRepetitions
 import com.example.tp3_hci.components.exercise.DialogTime
 import com.example.tp3_hci.data.model.CycleExercise
-import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
-import com.example.tp3_hci.ui.theme.FitiBlack
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
@@ -61,7 +58,7 @@ fun ExerciseCard(
     var checked by remember { mutableStateOf(true) }
     var repeat by remember { mutableStateOf(exercise.repetitions) }
     val sizeEditable = if (!expandedState) 272.dp else 362.dp
-    val backgroundColor= backgroundColorCard(exercise.isSelected, checkedState )
+    val backgroundColor= backgroundColorCard(exercise.isSelected.value, checkedState )
     var time  by remember { mutableStateOf(exercise.time)}
     val minutes = if(time/60>=10){"${time/60}"}else{"0${time/60}"}
     val seconds = if(time%60>=10){"${time%60}"}else{"0${time%60}"}
@@ -233,6 +230,6 @@ fun IconInfoExercise(   modifier: Modifier=Modifier,
 @Composable
 fun ExerciseCardPreview() {
     TP3_HCITheme {
-        ExerciseCard(exercise = CycleExercise("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
+//        ExerciseCard(exercise = CycleExercise("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
     }
 }

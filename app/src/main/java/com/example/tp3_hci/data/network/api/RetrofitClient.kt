@@ -2,10 +2,7 @@ package com.example.api_fiti.data.network.api
 
 import android.content.Context
 import com.example.tp3_hci.BuildConfig
-import com.example.tp3_hci.data.network.api.ApiDateTypeAdapter
-import com.example.tp3_hci.data.network.api.ApiExerciseService
-import com.example.tp3_hci.data.network.api.ApiRoutineService
-import com.example.tp3_hci.data.network.api.AuthInterceptor
+import com.example.tp3_hci.data.network.api.*
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,6 +44,9 @@ object RetrofitClient {
     }
     fun getApiRoutineService(context: Context): ApiRoutineService{
         return getInstance(context).create(ApiRoutineService::class.java)
+    }
+    fun getApiCategoryService(context: Context): ApiCategoryService {
+        return getInstance(context).create(ApiCategoryService::class.java)
     }
     fun getApiExerciseService(context: Context): ApiExerciseService{
         return getInstance(context).create(ApiExerciseService::class.java)

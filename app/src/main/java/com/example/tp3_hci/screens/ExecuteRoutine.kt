@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.animation.core.Animatable
+
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,9 +23,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+
 import androidx.compose.ui.graphics.Color
+
 import androidx.compose.ui.layout.ContentScale
+
 import androidx.compose.ui.res.stringResource
+
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tp3_hci.ExerciseCardStatus
@@ -41,25 +46,34 @@ import com.example.tp3_hci.data.model.CycleExercise
 import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.util.getViewModelFactory
 import kotlinx.coroutines.launch
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+
 
 
 @Composable
 private fun CountdownTimer(
-    time: Long,
+    exercise: MutableState<CycleExercise>,
     modifier: Modifier = Modifier,
     paused : Boolean,
-    onTimeFinished: ()->Unit
+    num: MutableState<Int>,
+    onTimeFinished: ()->Unit,
 ){
     var paused_curr = paused
     var value by remember { mutableStateOf(1f) }
-    var currentTime by remember { mutableStateOf(time) }
+    var currentTime by remember { mutableStateOf(exercise.value.time) }
     val animateFloat = remember { Animatable(1f) }
     var minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
     var seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
     var display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
-//    LaunchedEffect(key1 = time){
-//        currentTime = time
-//    }
+    LaunchedEffect(key1 = exercise.value, key2 = num.value){
+        value = 1f
+        currentTime = exercise.value.time
+    }
     LaunchedEffect(value) {
         animateFloat.animateTo(
             targetValue = value,
@@ -70,11 +84,11 @@ private fun CountdownTimer(
         if(currentTime>0 && !paused_curr){
             delay(1000L)
             currentTime-=1
-            value = currentTime/time.toFloat()
+            value = currentTime/exercise.value.time.toFloat()
             minutes = if(currentTime/60>=10){"${currentTime/60}"}else{"0${currentTime/60}"}
             seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
             display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
-            if(currentTime==0L){
+            if(currentTime==0){
                 onTimeFinished()
             }
         }
@@ -84,7 +98,7 @@ private fun CountdownTimer(
             .clip(CircleShape)
             .size(100.dp)
             .clickable(
-                onClick = { paused_curr = !paused_curr }
+                onClick = { }
             ),
         contentAlignment = Alignment.Center
     ){
@@ -94,7 +108,6 @@ private fun CountdownTimer(
                 .clip(CircleShape)
                 .background(MaterialTheme.colors.primaryVariant)
         ) {
-            // Start at 12 O'clock
             drawArc(
                 color = Color(0xFF00909E),
                 startAngle = -90f,
@@ -131,12 +144,16 @@ private fun CountdownRepetitions(
 @Composable
 private fun ExecutionControls(
     executeRoutineNavigation: ExecuteRoutineNavigation,
-    time:Long?,
-    repetitions: Int?,
+//    time:Long?,
+//    id: Int,
+//    repetitions: Int?,
     onPrevTouched: ()->Unit,
-    onNextTouched: ()->Unit
+    onNextTouched: ()->Unit,
+    exercise: MutableState<CycleExercise>,
+    exerciseNumber: MutableState<Int>,
 ){
     var paused by remember { mutableStateOf(false) }
+    var num by remember { mutableStateOf(0) }
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -144,11 +161,11 @@ private fun ExecutionControls(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
-            if(time!=null){
-                CountdownTimer(time = time+1, paused = paused, onTimeFinished = {onNextTouched()})
+            if(exercise.value.time!=0){
+                CountdownTimer(paused = paused, onTimeFinished = onNextTouched, exercise = exercise,num = exerciseNumber)
             }
-            if(repetitions!=null){
-                CountdownRepetitions(repetitions = repetitions)
+            if(exercise.value.repetitions!=0){
+                CountdownRepetitions(repetitions = exercise.value.repetitions)
             }
         }
         Row(
@@ -191,11 +208,11 @@ private fun ExecutionControls(
 @Composable
 private fun ExecuteRoutineExerciseDetail(
     executeRoutineNavigation: ExecuteRoutineNavigation,
-    routine: RoutineDetail,
-    exercise: CycleExercise,
+    exercise: MutableState<CycleExercise>,
     expanded: Boolean = true,
     onNextTouched: () -> Unit,
-    onPrevTouched: () -> Unit
+    onPrevTouched: () -> Unit,
+    exerciseNumber: MutableState<Int>
 ){
     Column (
         modifier = Modifier
@@ -210,10 +227,10 @@ private fun ExecuteRoutineExerciseDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ){
-                Text(exercise.name)
+                Text(exercise.value.name)
             }
             AsyncImage(
-                model = exercise.image,
+                model = exercise.value.image,
                 contentDescription = "exercise image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -223,11 +240,11 @@ private fun ExecuteRoutineExerciseDetail(
             Spacer(modifier = Modifier.size(20.dp))
         }
         ExecutionControls(
-            time = exercise.time.toLong(),
-            repetitions = exercise.repetitions,
+            exercise = exercise,
             executeRoutineNavigation = executeRoutineNavigation,
             onNextTouched = onNextTouched,
             onPrevTouched = onPrevTouched,
+            exerciseNumber = exerciseNumber
         )
     }
 }
@@ -260,17 +277,18 @@ fun ExecuteRoutine(
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutine(routineId)
-    }
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = { TopAppBar(
-                scrollBehavior = scrollBehavior,
-                title = uiState.routine?.name?: stringResource(id = R.string.loading),
-                executeRoutineNavigation = executeRoutineNavigation
-            ) }
+        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = { TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = uiState.routine?.name?: stringResource(id = R.string.loading),
+                    executeRoutineNavigation = executeRoutineNavigation
+                ) }
+            )
         )
-    )
+    }
+
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -330,7 +348,7 @@ fun ExecuteRoutine(
                                     }
                                 },
                                 executeRoutineNavigation = executeRoutineNavigation,
-                                routine = uiState.routine
+                                exerciseNumber = uiState.exerciseNumber
                             )
                         }
                     }

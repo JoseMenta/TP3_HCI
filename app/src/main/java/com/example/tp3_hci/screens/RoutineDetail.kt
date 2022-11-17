@@ -31,7 +31,6 @@ import com.example.tp3_hci.components.routine.DifficultyIcons
 import com.example.tp3_hci.components.routine.RatingStars
 import com.example.tp3_hci.components.routine.RoutineImage
 import com.example.tp3_hci.components.routine.RoutineTag
-import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
 
 import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
@@ -123,7 +122,6 @@ fun RoutineCycle(
                     modifier = Modifier.padding(8.dp,0.dp),
                     elevation = 4.dp,
                     background = MaterialTheme.colors.background,
-                    status = status,
                     exercise = exercise
                 )
             }

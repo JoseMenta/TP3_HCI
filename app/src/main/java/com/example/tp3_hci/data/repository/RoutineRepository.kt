@@ -1,5 +1,6 @@
 package com.example.tp3_hci.data.repository
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.api_fiti.data.network.model.NetworkPagedContent
 import com.example.tp3_hci.data.model.*
 import com.example.tp3_hci.data.network.RoutineRemoteDataSource
@@ -22,6 +23,7 @@ class RoutineRepository(
 
     private val difficultyToStrig: HashMap<Int, String> = hashMapOf(Pair(1,"rookie"),Pair(2,"beginner"),Pair(3,"intermediate"),Pair(4,"advanced"),Pair(5,"expert"))
 
+    //todo: cache del detalle de la rutina
     private suspend fun<T:Any> getAll(execute: suspend (page:Int)->NetworkPagedContent<T>):List<T>{
         var i = 0
         val result = execute(i)
@@ -59,7 +61,10 @@ class RoutineRepository(
         }
         return routineMutex.withLock{ this.routineOverviews}
     }
-
+    suspend fun getCategories(search: String? = null):List<Category>{
+        val result = getAll { remoteDataSource.getCategories(it,search) }
+        return result.map { it.toCategory() }
+    }
     suspend fun getFilteredRoutineOverviews(
         categoryId: Int? = null,
         userId: Int? = null,
@@ -149,6 +154,7 @@ class RoutineRepository(
     }
 
     suspend fun getCurrentUserExecutions(orderCriteria: OrderCriteria, orderDirection: OrderDirection):List<Execution>{
+        getFavouritesOverviews()//tenemos que volver a buscar las favoritas para saber si esta entre ellas si se cambiaron
         val result = getAll { remoteDataSource.getCurrentUserExecutions(it, orderCriteria.apiName, orderDirection.apiName) }
         return result.map {
             Execution(
