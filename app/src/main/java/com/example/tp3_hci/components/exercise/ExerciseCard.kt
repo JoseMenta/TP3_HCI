@@ -233,6 +233,6 @@ fun IconInfoExercise(   modifier: Modifier=Modifier,
 @Composable
 fun ExerciseCardPreview() {
     TP3_HCITheme {
-        ExerciseCard(exercise = CycleExercise("Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
+        ExerciseCard(exercise = CycleExercise(1,"Abdominales","https://media.tycsports.com/files/2022/09/28/484810/messi-vs-jamaica-foto-elsagetty-images_862x485.webp?v=1",120,30,0), status = ExerciseCardStatus.EDITABLE)
     }
 }

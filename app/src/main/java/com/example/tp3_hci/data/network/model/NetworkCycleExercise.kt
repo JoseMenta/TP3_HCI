@@ -13,6 +13,7 @@ data class NetworkCycleExercise(
 ){
     fun toCycleExercise():CycleExercise{
         return CycleExercise(
+            id = exercise.id!!,
             name = exercise.name,
             image = exercise.metadata?.url?:"",
             order = order,

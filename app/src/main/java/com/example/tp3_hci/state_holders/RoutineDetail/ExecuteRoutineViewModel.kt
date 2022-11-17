@@ -33,7 +33,7 @@ class ExecuteRoutineViewModel(
                 uiState = uiState.copy(
                     isFetching = false,
                     routine = it,
-                    selectedExercise = getFirstExercise(it)
+                    selectedExercise =  getFirstExercise(it)
                 )
                 it.cycles[0].exercises[0].isSelected = true
             }.onFailure { e ->
@@ -118,17 +118,5 @@ class ExecuteRoutineViewModel(
             return false
         }
         return true
-//        val routine = uiState.routine
-//        if(routine!=null) {
-//            while (cycleIndex<routine.cycles.size){
-//                val cycle = routine.cycles[cycleIndex]
-//                if(exerciseIndex<cycle.exercises.size){
-//                    return true
-//                }
-//                exerciseIndex = 0
-//            }
-//            return false
-//        }
-//        return false
     }
 }
