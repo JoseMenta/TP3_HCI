@@ -20,7 +20,7 @@
     <string name="search_by">Search by</string>
     <string name="routine_name">Routine name</string>
     <string name="creator_name">Creator name</string>
-
+    <string name="loading">Loading</string>
     <string name="time">Time</string>
     <string name="repetitions">Repetitions</string>
 

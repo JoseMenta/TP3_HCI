@@ -5,6 +5,7 @@
     <string name="created_by">Creado por</string>
     <string name="start">Empezar</string>
     <string name="time">Tiempo</string>
+    <string name="loading">Cargando</string>
     <string name="repetitions">Repetitions</string>
     <string name="bottom_nav_home">Inicio</string>
     <string name="bottom_nav_favorites">Favoritos</string>

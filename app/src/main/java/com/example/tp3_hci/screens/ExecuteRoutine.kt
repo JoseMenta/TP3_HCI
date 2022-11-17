@@ -32,11 +32,16 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.data.ui_state.ExerciseCardUiState
 import com.example.tp3_hci.data.ui_state.RoutineDetailUiState
+import com.example.tp3_hci.state_holders.RoutineDetail.ExecuteRoutineViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
 import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.ExecuteRoutineNavigation
 import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.data.model.CycleExercise
+import com.example.tp3_hci.data.model.RoutineDetail
+import com.example.tp3_hci.util.getViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -44,7 +49,8 @@ import kotlinx.coroutines.launch
 private fun CountdownTimer(
     time: Long,
     modifier: Modifier = Modifier,
-    paused : Boolean
+    paused : Boolean,
+    onTimeFinished: ()->Unit
 ){
     var paused_curr = paused
     var value by remember { mutableStateOf(1f) }
@@ -68,7 +74,7 @@ private fun CountdownTimer(
             seconds = if(currentTime%60>=10){"${currentTime%60}"}else{"0${currentTime%60}"}
             display_time = if(currentTime>60){"$minutes:$seconds"}else{"00:$seconds"}
             if(currentTime==0L){
-                //TODO: cambiar e ir a la siguiente
+                onTimeFinished()
             }
         }
     }
@@ -124,9 +130,10 @@ private fun CountdownRepetitions(
 @Composable
 private fun ExecutionControls(
     executeRoutineNavigation: ExecuteRoutineNavigation,
-    routine: RoutineDetailUiState,
     time:Long?,
-    repetitions: Int?
+    repetitions: Int?,
+    onPrevTouched: ()->Unit,
+    onNextTouched: ()->Unit
 ){
     var paused by remember { mutableStateOf(false) }
     Column(
@@ -137,7 +144,7 @@ private fun ExecutionControls(
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
             if(time!=null){
-                CountdownTimer(time = time, paused = paused)
+                CountdownTimer(time = time, paused = paused, onTimeFinished = {onNextTouched()})
             }
             if(repetitions!=null){
                 CountdownRepetitions(repetitions = repetitions)
@@ -152,7 +159,7 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = { /*TODO*/ }
+                onClick = { onPrevTouched }
             ) {
                 Icon( Icons.Outlined.SkipPrevious, contentDescription = "previous", tint = Color.White)
             }
@@ -172,9 +179,7 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = {
-                    executeRoutineNavigation.getRateRoutineScreen().invoke("${routine.id}")
-                }
+                onClick = onNextTouched
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
@@ -185,9 +190,11 @@ private fun ExecutionControls(
 @Composable
 private fun ExecuteRoutineExerciseDetail(
     executeRoutineNavigation: ExecuteRoutineNavigation,
-    routine: RoutineDetailUiState,
-    exercise: ExerciseCardUiState,
-    expanded: Boolean = true
+    routine: RoutineDetail,
+    exercise: CycleExercise,
+    expanded: Boolean = true,
+    onNextTouched: () -> Unit,
+    onPrevTouched: () -> Unit
 ){
     Column (
         modifier = Modifier
@@ -197,6 +204,13 @@ private fun ExecuteRoutineExerciseDetail(
         verticalArrangement = Arrangement.Top
     ){
         if(expanded) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ){
+                Text(exercise.name)
+            }
             AsyncImage(
                 model = exercise.image,
                 contentDescription = "exercise image",
@@ -211,17 +225,17 @@ private fun ExecuteRoutineExerciseDetail(
             time = exercise.time.toLong(),
             repetitions = exercise.repetitions,
             executeRoutineNavigation = executeRoutineNavigation,
-            routine = routine
+            onNextTouched = onNextTouched,
+            onPrevTouched = onPrevTouched,
         )
     }
 }
 
 @Composable
 private fun ExecuteRoutineGlobal(
-    routine: RoutineDetailUiState,
+    routine: RoutineDetail,
     modifier: Modifier = Modifier
 ){
-    val selectedExercise: ExerciseCardUiState = routine.cycles[0].exercises[0]
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ){
@@ -239,21 +253,22 @@ private fun ExecuteRoutineGlobal(
 fun ExecuteRoutine(
     executeRoutineNavigation: ExecuteRoutineNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    routine: RoutineDetailUiState
+    routineId: Int,
+    viewModel: ExecuteRoutineViewModel = viewModel(factory = getViewModelFactory())
 ){
+    val uiState = viewModel.uiState
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
             topAppBar = { TopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = routine.name,
+                title = uiState.routine?.name?: stringResource(id = R.string.loading),
                 executeRoutineNavigation = executeRoutineNavigation
             ) }
         )
     )
 
     val nroExercise = 1
-    val selectedExercise: ExerciseCardUiState = routine.cycles[0].exercises[nroExercise]
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -262,52 +277,84 @@ fun ExecuteRoutine(
             || (sheetState.progress.from==BottomSheetValue.Collapsed && sheetState.progress.fraction<=0.4)
             || (sheetState.progress.from==BottomSheetValue.Expanded && sheetState.progress.fraction>0.6 && sheetState.progress.fraction!=1f))
     val scope = rememberCoroutineScope()
-    BottomSheetScaffold(
-        sheetContent = {
-            //contenido de la vista de abajo
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ){
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(
-                        onClick = {
-                            scope.launch {
+    if(!uiState.isFetching) {
+        if(uiState.routine!=null && uiState.selectedExercise!=null) {
+            BottomSheetScaffold(
+                sheetContent = {
+                    //contenido de la vista de abajo
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        if (sheetState.isCollapsed) {
+                                            sheetState.expand()
+                                        } else {
+                                            sheetState.collapse()
+                                        }
+                                    }
+                                },
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+                            ) {
                                 if (sheetState.isCollapsed) {
-                                    sheetState.expand()
+                                    Icon(
+                                        Icons.Outlined.ExpandLess,
+                                        contentDescription = "open detail"
+                                    )
                                 } else {
-                                    sheetState.collapse()
+                                    Icon(
+                                        Icons.Outlined.ExpandMore,
+                                        contentDescription = "close detail"
+                                    )
                                 }
                             }
-                        },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
-                    ) {
-                        if (sheetState.isCollapsed) {
-                            Icon(Icons.Outlined.ExpandLess, contentDescription = "open detail")
-                        } else {
-                            Icon(Icons.Outlined.ExpandMore, contentDescription = "close detail")
+                            ExecuteRoutineExerciseDetail(
+                                exercise = uiState.selectedExercise,
+                                expanded = !compressed,
+                                onPrevTouched = { viewModel.prevExercise() },
+                                onNextTouched = {
+                                    if (!viewModel.hasNextExercise()) {
+                                        executeRoutineNavigation.getRateRoutineScreen()
+                                            .invoke("${uiState.routine?.id ?: 0}")
+                                    } else {
+                                        viewModel.nextExercise()
+                                    }
+                                },
+                                executeRoutineNavigation = executeRoutineNavigation,
+                                routine = uiState.routine
+                            )
                         }
                     }
-                    ExecuteRoutineExerciseDetail(
-                        exercise = selectedExercise,
-                        expanded = !compressed,
-                        executeRoutineNavigation = executeRoutineNavigation,
-                        routine = routine
-                    )
-                }
+                },
+                sheetShape = MaterialTheme.shapes.large,
+                scaffoldState = scaffoldState,
+                sheetPeekHeight = 250.dp
+            ) {
+                //contenido de la pantalla
+                ExecuteRoutineGlobal(
+                    routine = uiState.routine,
+                    modifier = Modifier.padding(it)
+                )
             }
-        },
-        sheetShape = MaterialTheme.shapes.large,
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 250.dp
-    ) {
-        //contenido de la pantalla
-        ExecuteRoutineGlobal(routine = routine,
-        modifier = Modifier.padding(it))
+        }else{
+            Text(uiState.message?:"Error")
+        }
+    }else{
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            CircularProgressIndicator()
+        }
     }
 }
 
