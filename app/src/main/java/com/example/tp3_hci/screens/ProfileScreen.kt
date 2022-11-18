@@ -40,7 +40,8 @@ import java.text.SimpleDateFormat
 fun ProfileScreen(
     profileNavigation: profileNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
-    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory()),
+    scaffoldState: ScaffoldState
 ){
     val UiState = viewModel.uiState
     var topAppBarState by remember {
@@ -67,63 +68,93 @@ fun ProfileScreen(
 
     RegularDisplay(
         content = {
-            LazyColumn(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-            ) {
-                item{
-                    Column() {
-                        var imgSrc = UiState.currentUser?.avatarUrl
-                        ProfileAvatar(
-                            imageUrl = imgSrc,
-                            modifier = Modifier
-                                .padding(top = 20.dp, bottom = 10.dp, start = 70.dp, end = 70.dp),
-                            onImageUrlChange = null
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth()
+            if(!UiState.isFetching){
+                if(UiState.currentUser!=null) {
+                    LazyColumn(
+                        modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                     ) {
-                        UiState.currentUser?.username?.let {
+                        item {
+                            Column() {
+                                var imgSrc = UiState.currentUser?.avatarUrl
+                                ProfileAvatar(
+                                    imageUrl = imgSrc,
+                                    modifier = Modifier
+                                        .padding(
+                                            top = 20.dp,
+                                            bottom = 10.dp,
+                                            start = 70.dp,
+                                            end = 70.dp
+                                        ),
+                                    onImageUrlChange = null
+                                )
+                            }
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                UiState.currentUser?.username?.let {
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                                        color = FitiBlue,
+                                        modifier = Modifier
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Divider(color = FitiBlue, thickness = 1.dp)
+                            Spacer(modifier = Modifier.height(10.dp))
+                            dataUser(
+                                Type = stringResource(id = R.string.email_type),
+                                data = UiState.currentUser?.email
+                            )
+                            dataUser(
+                                Type = stringResource(id = R.string.name_type),
+                                data = UiState.currentUser?.firstName
+                            )
+                            dataUser(
+                                Type = stringResource(id = R.string.surname_type),
+                                data = UiState.currentUser?.lastName
+                            )
+                            dataUser(
+                                Type = stringResource(id = R.string.birthday_type),
+                                data = UiState.currentUser?.birthdate?.let {
+                                    SimpleDateFormat("dd/MM/yyy").format(it)
+                                })
                             Text(
-                                text = it,
-                                style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
-                                color = FitiBlue,
+                                text = stringResource(id = R.string.preferencies),
+                                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+                                color = FitiBlueText,
                                 modifier = Modifier
                             )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.simplify),
+                                    style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                                    color = FitiBlueText,
+                                    modifier = Modifier
+                                )
+                                Spacer(
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Switch(
+                                    checked = viewModel.getSimplify(),
+                                    onCheckedChange = { viewModel.changeSimplify() },
+                                )
+                            }
                         }
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Divider(color = FitiBlue, thickness = 1.dp)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    dataUser(Type= stringResource(id = R.string.email_type) ,data = UiState.currentUser?.email)
-                    dataUser(Type= stringResource(id = R.string.name_type) ,data = UiState.currentUser?.firstName)
-                    dataUser(Type= stringResource(id = R.string.surname_type) ,data = UiState.currentUser?.lastName)
-                    dataUser(Type= stringResource(id = R.string.birthday_type) ,data = UiState.currentUser?.birthdate?.let {SimpleDateFormat("dd/MM/yyy").format(it)})
-                    Text(
-                        text = stringResource(id = R.string.preferencies),
-                        style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
-                        color = FitiBlueText,
-                        modifier = Modifier
+                }else if(UiState.message!=null){
+                    ErrorSnackBar(
+                        scaffoldState = scaffoldState ,
+                        message = stringResource(id = UiState.message),
+                        onActionLabelClicked = {viewModel.dismissMessage()}
                     )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = stringResource(id = R.string.simplify),
-                            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
-                            color = FitiBlueText,
-                            modifier = Modifier
-                        )
-                        Spacer(
-                            modifier = Modifier.weight(1f)
-                        )
-                        Switch(
-                            checked = viewModel.getSimplify(),
-                            onCheckedChange = { viewModel.changeSimplify() },
-                        )
-                    }
                 }
+            }else{
+                CircularProgressIndicator()
             }
         },
         topAppBarState = topAppBarState

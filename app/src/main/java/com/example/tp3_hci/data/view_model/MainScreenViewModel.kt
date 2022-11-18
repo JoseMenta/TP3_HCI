@@ -22,7 +22,7 @@ class MainScreenViewModel(
     private val userRepository: UserRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
-
+    private var isFirst = true
     var mainScreenUiState by mutableStateOf(
         MainScreenUiState(
             lastRoutinesExecuted = null,
@@ -43,7 +43,13 @@ class MainScreenViewModel(
         reloadMainScreenContent()
     }
 
-
+    fun getIsFirst():Boolean{
+        if(isFirst){
+            isFirst = false
+            return true
+        }
+        return false
+    }
     fun getSimplify() : Boolean {
         return preferencesManager.getSimplify()
     }

@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.data.CategoryItem.FullBody.getString
 import com.example.tp3_hci.data.model.Cycle
 import com.example.tp3_hci.util.getViewModelFactory
+import com.example.tp3_hci.utilities.ErrorSnackBar
 import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.RoutineDetailNavigation
 
@@ -141,13 +142,13 @@ fun RoutineDetail(
     routineDetailNavigation: RoutineDetailNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     routineId: Int,
+    scaffoldState: ScaffoldState,
     viewModel: RoutineDetailViewModel = viewModel(factory = getViewModelFactory() )
 ){
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutineDetails(routineId)
     }
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     setTopAppBar(
         TopAppBarType(
@@ -224,10 +225,14 @@ fun RoutineDetail(
                         RoutineCycle(it, status = ExerciseCardStatus.EDITABLE)
                     }
                 }
-            }else{
-                //TODO: seguir
-                Text("Ocurrio un error")
-                Text(text = uiState.message?:"")
+            }else if (uiState.message!=null){
+                ErrorSnackBar(
+                    scaffoldState = scaffoldState,
+                    message = stringResource(id = uiState.message),
+                    onActionLabelClicked = {
+                        viewModel.dismissMessage()
+                    }
+                )
             }
         }
     }

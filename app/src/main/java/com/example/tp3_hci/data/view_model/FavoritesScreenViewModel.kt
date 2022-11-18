@@ -24,7 +24,7 @@ class FavoritesScreenViewModel(
     private val routineRepository: RoutineRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
-
+    private var isFirst = false
     var favoritesScreenUiState by mutableStateOf(
         FavoritesScreenUiState(
             favoriteRoutines = null,
@@ -42,6 +42,13 @@ class FavoritesScreenViewModel(
         getFavoriteRoutines()
     }
 
+    fun getIsFirst():Boolean{
+        if(isFirst){
+            isFirst = false
+            return true
+        }
+        return isFirst
+    }
     fun getSimplify() : Boolean {
         return preferencesManager.getSimplify()
     }

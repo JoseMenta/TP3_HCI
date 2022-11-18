@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tp3_hci.R
 import com.example.tp3_hci.data.model.CycleExercise
 import com.example.tp3_hci.data.model.RoutineDetail
+import com.example.tp3_hci.data.network.DataSourceException
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -23,6 +25,15 @@ class ExecuteRoutineViewModel(
     private var cycleReps: Int = 0
     private var exerciseIndex: Int = 0
     private val startTime: Date = Date()
+    private var isFirst = true
+
+    fun getIsFirst():Boolean{
+        if(isFirst){
+            isFirst = false
+            return true
+        }
+        return isFirst
+    }
     fun getRoutine(routineId: Int) {
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
@@ -40,10 +51,17 @@ class ExecuteRoutineViewModel(
                 )
                 it.cycles[0].exercises[0].isSelected.value = true
             }.onFailure { e ->
-                uiState = uiState.copy(
-                    message = e.message,
-                    isFetching = false
-                )
+                if(e is DataSourceException){
+                    uiState = uiState.copy(
+                        message = e.stringResourceCode,
+                        isFetching = false
+                    )
+                }else{
+                    uiState = uiState.copy(
+                        message = R.string.unexpected_error,
+                        isFetching = false
+                    )
+                }
             }
         }
     }
@@ -129,5 +147,10 @@ class ExecuteRoutineViewModel(
         val currTime = Date()
         val diff: Int = ((currTime.time - startTime.time)/1000).toInt()
         viewModelScope.launch {  routineRepository.addRoutineExecution(routineId = routineId, duration = diff) }
+    }
+    fun dismissMessage(){
+        uiState = uiState.copy(
+            message = null
+        )
     }
 }

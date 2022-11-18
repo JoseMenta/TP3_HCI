@@ -15,7 +15,15 @@ class RatingViewModel(
 
     var uiState by mutableStateOf(RatingUiState())
         private set
+    private var isFirst = true
 
+    fun getIsFirst():Boolean{
+        if(isFirst){
+            isFirst = false
+            return true
+        }
+        return isFirst
+    }
     fun getRoutineOverview(routineId: Int) = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,

@@ -52,7 +52,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-
+import com.example.tp3_hci.utilities.ErrorSnackBar
 
 
 @Composable
@@ -230,7 +230,9 @@ private fun ExecuteRoutineExerciseDetail(
     ){
         if(expanded) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ){
@@ -288,15 +290,19 @@ fun ExecuteRoutine(
     }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = { TopAppBar(
-                scrollBehavior = scrollBehavior,
-                title = uiState.routine?.name?: stringResource(id = R.string.loading),
-                executeRoutineNavigation = executeRoutineNavigation
-            ) }
+    if(viewModel.getIsFirst()) {
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = {
+                    TopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        title = uiState.routine?.name ?: stringResource(id = R.string.loading),
+                        executeRoutineNavigation = executeRoutineNavigation
+                    )
+                }
+            )
         )
-    )
+    }
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -374,8 +380,25 @@ fun ExecuteRoutine(
                     modifier = Modifier.padding(it)
                 )
             }
-        }else{
-            Text(uiState.message?:"Error")
+        }else if(uiState.message!=null){
+            val dismissString = stringResource(id = R.string.snackbar_dismiss)
+            val message = stringResource(id = uiState.message)
+            // Muestra un snackbar
+            LaunchedEffect(scaffoldState.snackbarHostState){
+                val result = scaffoldState.snackbarHostState.showSnackbar(
+                    message = message,
+                    actionLabel = dismissString,
+                    duration = SnackbarDuration.Indefinite
+                )
+                when (result) {
+                    SnackbarResult.Dismissed -> {
+                        viewModel.dismissMessage()
+                    }
+                    SnackbarResult.ActionPerformed ->{
+                        viewModel.dismissMessage()
+                    }
+                }
+            }
         }
     }else{
         Row(

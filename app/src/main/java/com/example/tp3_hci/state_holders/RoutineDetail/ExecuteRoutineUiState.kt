@@ -9,7 +9,7 @@ data class ExecuteRoutineUiState(
     val isFetching: Boolean = false,
     val routine: RoutineDetail? = null,
     val selectedExercise: MutableState<CycleExercise>? = null,
-    val message: String? = null,
+    val message: Int? = null,
     val exerciseNumber: MutableState<Int>,
     val hasPrevExercise: Boolean = false
 )

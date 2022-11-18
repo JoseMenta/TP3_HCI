@@ -247,7 +247,8 @@ private fun scaf(
                             navController.navigateUp()
                         }
                     ),
-                    setTopAppBar = changeTopAppBarType
+                    setTopAppBar = changeTopAppBarType,
+                    scaffoldState = scaffoldState
                 )
             }
             composable("Routine/{id}",
@@ -286,7 +287,8 @@ private fun scaf(
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
-                    routineId = it.arguments?.getInt("id") ?: -1
+                    routineId = it.arguments?.getInt("id") ?: -1,
+                    scaffoldState = scaffoldState
                 )
             }
             composable("MakeRoutine/{id}",
