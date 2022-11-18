@@ -11,6 +11,7 @@ import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class ExecuteRoutineViewModel(
     private val routineRepository: RoutineRepository
@@ -21,6 +22,7 @@ class ExecuteRoutineViewModel(
     private var cycleIndex: Int = 0
     private var cycleReps: Int = 0
     private var exerciseIndex: Int = 0
+    private val startTime: Date = Date()
     fun getRoutine(routineId: Int) {
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
@@ -81,13 +83,9 @@ class ExecuteRoutineViewModel(
             uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = true
             uiState.selectedExercise!!.value = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
             uiState.exerciseNumber.value += 1
-//            copy(
-//                selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
-//            )
-//            uiState.routine!!.cycles[0].exercises[0].isSelected = false
-//            uiState = uiState.copy(
-//                selectedExercise = uiState.routine!!.cycles[0].exercises[1]
-//            )
+            uiState = uiState.copy(
+                hasPrevExercise = hasPrevExercise()
+            )
         }
     }
     fun prevExercise(){
@@ -112,9 +110,9 @@ class ExecuteRoutineViewModel(
             uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex].isSelected.value = true
             uiState.selectedExercise!!.value = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
             uiState.exerciseNumber.value += 1
-//            uiState = uiState.copy(
-//                selectedExercise = uiState.routine!!.cycles[cycleIndex].exercises[exerciseIndex]
-//            )
+            uiState = uiState.copy(
+                hasPrevExercise = hasPrevExercise()
+            )
         }
     }
     fun hasNextExercise():Boolean{
@@ -123,17 +121,13 @@ class ExecuteRoutineViewModel(
             return false
         }
         return true
-//        val routine = uiState.routine
-//        if(routine!=null) {
-//            while (cycleIndex<routine.cycles.size){
-//                val cycle = routine.cycles[cycleIndex]
-//                if(exerciseIndex<cycle.exercises.size){
-//                    return true
-//                }
-//                exerciseIndex = 0
-//            }
-//            return false
-//        }
-//        return false
+    }
+    fun hasPrevExercise():Boolean{
+        return !(exerciseIndex==0 && cycleIndex==0 && cycleReps == uiState.routine!!.cycles[cycleIndex].repetitions)
+    }
+    fun addRoutineExecution(routineId: Int){
+        val currTime = Date()
+        val diff: Int = ((currTime.time - startTime.time)/1000).toInt()
+        viewModelScope.launch {  routineRepository.addRoutineExecution(routineId = routineId, duration = diff) }
     }
 }

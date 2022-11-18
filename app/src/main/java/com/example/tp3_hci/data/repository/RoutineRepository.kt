@@ -201,6 +201,10 @@ class RoutineRepository(
             )
         }
     }
+
+    suspend fun addRoutineExecution(routineId: Int, duration: Int){
+        remoteDataSource.addRoutineExecution(routineId,duration)
+    }
 }
 
 enum class OrderCriteria(

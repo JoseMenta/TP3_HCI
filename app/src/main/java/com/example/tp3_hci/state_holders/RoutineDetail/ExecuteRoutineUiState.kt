@@ -11,4 +11,5 @@ data class ExecuteRoutineUiState(
     val selectedExercise: MutableState<CycleExercise>? = null,
     val message: String? = null,
     val exerciseNumber: MutableState<Int>,
+    val hasPrevExercise: Boolean = false
 )

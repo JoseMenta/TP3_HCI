@@ -47,7 +47,7 @@ interface ApiRoutineService {
     suspend fun getRoutineExecutions(@Path("routineId")routineId: Int, @Query("page")page: Int): Response<NetworkPagedContent<NetworkExecution>>
 
     @POST("executions/{routineId}")
-    suspend fun addRoutineExecution(@Path("RoutineId") routineId: Int,@Body execution: NetworkExecutionPost): Response<NetworkExecution>
+    suspend fun addRoutineExecution(@Path("routineId") routineId: Int,@Body execution: NetworkExecutionPost): Response<NetworkExecution>
 
     @GET("reviews/{routineId}")
     suspend fun getRoutineReviews(@Path("routineId") routineId: Int, @Query("page")page: Int): Response<NetworkPagedContent<NetworkReview>>
