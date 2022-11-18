@@ -93,7 +93,7 @@ class FavoritesScreenViewModel(
             }
         }.onSuccess {
             if(favoritesScreenUiState.favoriteRoutines != null){
-                val routines = favoritesScreenUiState.favoriteRoutines!!.filter { routine -> routine.value.id == routine.value.id }
+                val routines = favoritesScreenUiState.favoriteRoutines!!.filter { reoutineOverView -> reoutineOverView.value.id == routine.value.id }
                 routines.forEach { routine ->
                     routine.value.isFavourite = !routine.value.isFavourite
                 }
