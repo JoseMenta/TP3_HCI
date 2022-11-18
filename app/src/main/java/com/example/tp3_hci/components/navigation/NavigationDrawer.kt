@@ -42,7 +42,7 @@ sealed class NavDrawerItem(
 fun NavigationDrawer(
     content: (@Composable ()->Unit)? = null,
     actions: (NavDrawerItem) ->Unit,
-    restarSelectedNavigation: Boolean
+    restartSelectedNavigation: Boolean
 ) {
     PermanentNavigationDrawer(
         drawerContent = {
@@ -54,7 +54,7 @@ fun NavigationDrawer(
             ) {
                 DrawerHeader()
                 DrawerBody(
-                    restarSelectedNavigation = restarSelectedNavigation,
+                    restartSelectedNavigation = restartSelectedNavigation,
                     onItemClick = { /*TODO*/ },
                     actions = actions
                 )
@@ -89,7 +89,7 @@ private fun DrawerHeader() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DrawerBody(
-    restarSelectedNavigation : Boolean,
+    restartSelectedNavigation : Boolean,
     modifier: Modifier = Modifier,
     onItemClick: (NavDrawerItem) -> Unit,
     actions : (NavDrawerItem) ->Unit
@@ -101,7 +101,7 @@ private fun DrawerBody(
     LazyColumn(
         modifier = modifier
     ){
-        if(restarSelectedNavigation){
+        if(restartSelectedNavigation){
             for(icon in primaryItems){
                 icon.selected=false
             }

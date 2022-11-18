@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.data.model.RoutineOverview
 import com.example.tp3_hci.data.view_model.MainScreenViewModel
+import com.example.tp3_hci.data.view_model.OnSearchViewModel
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.*
 import com.example.tp3_hci.utilities.TopAppBarState
@@ -33,6 +34,7 @@ fun MainScreen(
     mainScreenNavigation: MainScreenNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     mainScreenViewModel : MainScreenViewModel = viewModel(factory = getViewModelFactory()),
+    onSearchViewModel: OnSearchViewModel = viewModel(factory = getViewModelFactory()),
     scaffoldState: ScaffoldState
 ){
     val windowInfo = rememberWindowInfo()
@@ -61,9 +63,9 @@ fun MainScreen(
         setTopAppBar = setTopAppBar,
         mainScreenNavigation = mainScreenNavigation,
         mainScreenViewModel = mainScreenViewModel,
+        onSearchViewModel = onSearchViewModel,
         scrollBehavior = scrollBehavior!!,
-        scaffoldState = scaffoldState,
-        simplify = mainScreenViewModel.getSimplify()
+        scaffoldState = scaffoldState
     )
 }
 
@@ -75,9 +77,9 @@ private fun MainScreenContent(
     setTopAppBar : ((TopAppBarType)->Unit),
     mainScreenNavigation : MainScreenNavigation,
     mainScreenViewModel : MainScreenViewModel,
+    onSearchViewModel: OnSearchViewModel,
     scrollBehavior: TopAppBarScrollBehavior,
-    scaffoldState: ScaffoldState,
-    simplify : Boolean
+    scaffoldState: ScaffoldState
 ){
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
@@ -96,7 +98,9 @@ private fun MainScreenContent(
                     onTopAppBarState = {
                         topAppBarState = it
                     },
-                    searchNavigation = mainScreenNavigation.getSearchNavigation()
+                    searchNavigation = mainScreenNavigation.getSearchNavigation(),
+                    onSearchViewModel = onSearchViewModel,
+                    onErrorSearch = { mainScreenViewModel.onErrorSearch() }
                 )
             }
         )
@@ -122,7 +126,7 @@ private fun MainScreenContent(
                                 onFavoriteChange = {
                                         routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
                                 },
-                                simplify = simplify
+                                simplify = mainScreenViewModel.getSimplify()
                             )
                         }
 
@@ -146,14 +150,15 @@ private fun MainScreenContent(
                 onFavoriteChange = {
                         routine -> mainScreenViewModel.toggleRoutineFavorite(routine)
                 },
-                simplify = simplify
+                simplify = mainScreenViewModel.getSimplify()
             )
         },
         topAppBarState = topAppBarState,
         hasSearch = true,
         hasSwipeRefresh = true,
         isRefreshing = mainScreenUiState.isLoading,
-        onRefreshSwipe = { mainScreenViewModel.reloadMainScreenContent() }
+        onRefreshSwipe = { mainScreenViewModel.reloadMainScreenContent() },
+        onSearchViewModel = onSearchViewModel
     )
 
     if(mainScreenUiState.hasError()){

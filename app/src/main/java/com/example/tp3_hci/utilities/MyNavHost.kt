@@ -1,11 +1,9 @@
 package com.example.tp3_hci.utilities
 
-import android.app.TaskStackBuilder
 import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
@@ -15,16 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.*
 import com.example.tp3_hci.components.navigation.BottomNavigationBar
 import com.example.tp3_hci.components.navigation.NavigationDrawer
@@ -61,15 +56,14 @@ fun MyNavHost(
     } != null)
 
     val windowInfo = rememberWindowInfo()
-    var restarSelectedNavigation = false
+    var restartSelectedNavigation = false
     if((navBackStackEntry?.destination?.route) == "MainScreen"){
-        restarSelectedNavigation = true
+        restartSelectedNavigation = true
     }
     if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
         windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact
     ) {
         scaf(
-            restarSelectedNavigation = restarSelectedNavigation,
             uri = uri,
             changeTopAppBarType = changeTopAppBarType,
             modifier = modifier,
@@ -84,7 +78,6 @@ fun MyNavHost(
         if( (navBackStackEntry?.destination?.route) == "Login" ){
 
             scaf(
-                restarSelectedNavigation = restarSelectedNavigation,
                 uri = uri,
                 changeTopAppBarType = changeTopAppBarType,
                 modifier = modifier,
@@ -99,7 +92,6 @@ fun MyNavHost(
             NavigationDrawer(
                 content = {
                     scaf(
-                        restarSelectedNavigation = restarSelectedNavigation,
                         uri = uri,
                         changeTopAppBarType = changeTopAppBarType,
                         modifier = modifier,
@@ -113,7 +105,7 @@ fun MyNavHost(
                 actions = {
                     navBarItem -> navController.navigate(navBarItem.route)
                 },
-                restarSelectedNavigation = restarSelectedNavigation
+                restartSelectedNavigation = restartSelectedNavigation
             )
         }
     }
@@ -124,7 +116,6 @@ fun MyNavHost(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun scaf(
-    restarSelectedNavigation: Boolean,
     uri : String,
     changeTopAppBarType : (TopAppBarType) -> Unit,
     modifier: Modifier = Modifier,
@@ -154,9 +145,9 @@ private fun scaf(
                     route = navBackStackEntry?.destination?.route,
                     items = getBottomNavItems(),
                     bottomBarNavigation = BottomBarNavigation {
-                            route -> navController.navigate(route) {
-                        launchSingleTop = true
-                    }
+                        route -> navController.navigate(route) {
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
@@ -208,7 +199,7 @@ private fun scaf(
                         }
                         },
                         searchNavigation = SearchNavigation {
-                                search -> navController.navigate("SearchResults/${search}") {
+                                search, searchingRoutineName, rating, difficulty, category -> navController.navigate("SearchResults/${search}/${searchingRoutineName}?rating=${rating}?difficulty=${difficulty}?category=${category}") {
                             launchSingleTop = true
                         }
                         }
@@ -226,9 +217,9 @@ private fun scaf(
                                 }
                         },
                         searchNavigation = SearchNavigation {
-                                search -> navController.navigate("SearchResults/${search}") {
-                                    launchSingleTop = true
-                                }
+                                search, searchingRoutineName, rating, difficulty, category -> navController.navigate("SearchResults/${search}/${searchingRoutineName}?rating=${rating}?difficulty=${difficulty}?category=${category}") {
+                            launchSingleTop = true
+                        }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
@@ -299,9 +290,9 @@ private fun scaf(
                             navController.navigateUp()
                         },
                         rateRoutineScreen = {
-                                routine -> navController.navigate("RatingRoutine/${routine}") {
-                            launchSingleTop = true
-                        }
+                            routine -> navController.navigate("RatingRoutine/${routine}") {
+                                launchSingleTop = true
+                            }
                         }
                     ),
                     setTopAppBar = changeTopAppBarType,
@@ -327,31 +318,45 @@ private fun scaf(
                     routineId = it.arguments?.getInt("id")!!
                 )
             }
-//            composable("SearchResults/{search}",
-//                arguments = listOf(
-//                    navArgument("search") { type = NavType.StringType }
-//                )
-//            ){
-//
-//                SearchResultsScreen(
-//                    stringSearched = it.arguments?.getString("search")!! ,
-//                    routinesFound = Routines,
-//                    setTopAppBar = changeTopAppBarType,
-//                    searchResultsNavigation = SearchResultsNavigation(
-//                        previousScreen = {
-//                            navController.navigateUp()
-//                        },
-//                        searchNavigation = SearchNavigation {
-//                            search -> navController.navigate("SearchResults/${search}")
-//                        },
-//                        routineCardNavigation = RoutineCardNavigation {
-//                            routine -> navController.navigate("RoutineDetails/${routine}") {
-//                                launchSingleTop = true
-//                            }
-//                        }
-//                    )
-//                )
-//            }
+            composable("SearchResults/{search}/{searchingRoutineName}?rating={rating}?difficulty={difficulty}?category={category}",
+                arguments = listOf(
+                    navArgument("search") { type = NavType.StringType },
+                    navArgument("searchingRoutineName") { type = NavType.BoolType },
+                    navArgument("rating") {
+                        type = NavType.IntType
+                    },
+                    navArgument("difficulty") {
+                        type = NavType.IntType
+                    },
+                    navArgument("category") {
+                        nullable = true
+                        type = NavType.StringType
+                    }
+                )
+            ){
+                SearchResultsScreen(
+                    stringSearched = it.arguments?.getString("search")!!,
+                    searchingRoutineName = it.arguments?.getBoolean("searchingRoutineName")!!,
+                    ratingSearched = if(it.arguments?.getInt("rating") == -1) null else it.arguments?.getInt("rating"),
+                    difficultySearched = if(it.arguments?.getInt("difficulty") == -1) null else it.arguments?.getInt("difficulty"),
+                    categorySearched = it.arguments?.getString("category"),
+                    setTopAppBar = changeTopAppBarType,
+                    scaffoldState = scaffoldState,
+                    searchResultsNavigation = SearchResultsNavigation(
+                        previousScreen = {
+                            navController.navigateUp()
+                        },
+                        searchNavigation = SearchNavigation {
+                                search, searchingRoutineName, rating, difficulty, category -> navController.navigate("SearchResults/${search}/${searchingRoutineName}?rating=${rating}?difficulty=${difficulty}?category=${category}")
+                        },
+                        routineCardNavigation = RoutineCardNavigation {
+                            routine -> navController.navigate("RoutineDetails/${routine}") {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                )
+            }
         }
     }
 }

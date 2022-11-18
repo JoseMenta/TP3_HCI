@@ -48,8 +48,10 @@ class MainScreenViewModel(
         return preferencesManager.getSimplify()
     }
 
-    fun changeSimplify() {
-        preferencesManager.changeSimplify()
+    fun onErrorSearch(){
+        mainScreenUiState = mainScreenUiState.copy(
+            message = R.string.string_search_too_short
+        )
     }
 
     fun reloadMainScreenContent(){

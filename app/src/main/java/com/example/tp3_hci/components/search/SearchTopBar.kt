@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,10 +42,10 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun SearchTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    input: String = "",
+    input: String,
     onCloseSearchBarState: (() -> Unit)? = null,
     onInputChange: ((String)->Unit)? = null,
-    onSearchClicked: ((String)->Unit)? = null
+    onSearchClicked: (()->Unit)? = null
 ) {
 
     // Recuerda si tiene permiso para usar el microfono
@@ -57,7 +58,7 @@ fun SearchTopBar(
             if(it != null && onInputChange != null){
                 onInputChange(it[0])
                 if (onSearchClicked != null) {
-                    onSearchClicked(it[0])
+                    onSearchClicked()
                 }
             }
         }
@@ -127,10 +128,12 @@ fun SearchTopBar(
 @Composable
 private fun SearchBox(
     modifier: Modifier = Modifier,
-    input: String = "",
+    input: String,
     onInputChange: ((String)->Unit)? = null,
-    onSearchClicked: ((String)->Unit)? = null
+    onSearchClicked: (()->Unit)? = null
 ){
+    val searchFocusManager = LocalFocusManager.current
+
     OutlinedTextField(
         value = input,
         onValueChange = {
@@ -177,8 +180,9 @@ private fun SearchBox(
         keyboardActions = KeyboardActions(
             onSearch = {
                 if(onSearchClicked != null){
-                    onSearchClicked(input)
+                    onSearchClicked()
                 }
+                searchFocusManager.clearFocus()
             }
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -215,8 +219,8 @@ fun SearchTopBarPreview(){
                     onInputChange = { newInput ->
                         input = newInput
                     },
-                    onSearchClicked = { inputSearched ->
-                        println("Se busco $inputSearched")
+                    onSearchClicked = {
+                        println("Se busco $input")
                     }
                 )
             }

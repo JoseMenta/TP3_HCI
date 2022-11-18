@@ -1,41 +1,33 @@
 package com.example.tp3_hci
 
-import android.content.Intent
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.tp3_hci.components.navigation.BottomNavItem
-import com.example.tp3_hci.components.navigation.BottomNavigationBar
-import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.data.model.RoutineOverview
-import com.example.tp3_hci.data.model.Sport
 import com.example.tp3_hci.data.model.User
-import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.MyNavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tp3_hci.data.CategoryItem
 import com.example.tp3_hci.data.model.RoutineDetail
-import kotlin.random.Random
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -49,20 +41,14 @@ class MainActivity : ComponentActivity() {
                         .width(400.dp)
                         .height(330.dp), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-
-                        //Controler()
+                        // Recuerda si tiene permiso para usar el microfono
+                        val permissionState = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
+                        // Solicita el permiso del microfono desde el inicio de la aplicacion
+                        SideEffect {
+                            permissionState.launchPermissionRequest()
+                        }
 //                        MainScreen()
                         MyNavHost()
-                        /*
-                        RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))
-                        ratingView(Routine("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles),
-                            "https://www.aquasportclubs.com/wp-content/uploads/2018/12/clase-dirigida-skillmill.jpg")
-                        ExerciseCard()
-                        LoginView()
-                        Spacer(modifier = Modifier.height(20.dp))
-                        ExerciseCard()
-                        Spacer(modifier = Modifier.height(20.dp))
-                        ExerciseCard()*/
                     }
                 }
             }

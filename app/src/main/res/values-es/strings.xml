@@ -92,5 +92,6 @@
     <string name="unauthorized">Ups! No estas autorizado para estar aquí. Por favor inicia sesión</string>
     <string name="email_verification_error">Ups! Tu email no esta verifcado. Por favor, verifícalo</string>
     <string name="forbidden_error">Ups! Parece haber un error interno</string>
+    <string name="string_search_too_short">La búsqueda es muy corta, debe tener al menos 3 letras</string>
 
 </resources>
