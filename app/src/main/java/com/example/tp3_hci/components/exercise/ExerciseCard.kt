@@ -100,16 +100,16 @@ fun ExerciseCard(
                         )
                         //if(status==ExerciseCardStatus.EDITABLE) {
                         if(!expandedState) {
-                            Switch(
-                                // (3)
-                                checked = checkedState,
-                                onCheckedChange = { checkedState = it }, // (4)
-                                enabled = true,
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = FitiBlue,
-                                    uncheckedThumbColor = Color(0xFF4E4E4E),
-                                )
-                            )
+//                            Switch(
+//                                // (3)
+//                                checked = checkedState,
+//                                onCheckedChange = { checkedState = it }, // (4)
+//                                enabled = true,
+//                                colors = SwitchDefaults.colors(
+//                                    checkedThumbColor = FitiBlue,
+//                                    uncheckedThumbColor = Color(0xFF4E4E4E),
+//                                )
+//                            )
                         }else{
                             IconButton(onClick = {expandedState=!expandedState}) {
                                 Icon(painter = rememberVectorPainter(Icons.Rounded.Check), contentDescription ="check" )
