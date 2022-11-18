@@ -349,6 +349,7 @@ fun ExecuteRoutine(
                                 onPrevTouched = { viewModel.prevExercise() },
                                 onNextTouched = {
                                     if (!viewModel.hasNextExercise()) {
+                                        viewModel.addRoutineExecution(routineId)
                                         executeRoutineNavigation.getRateRoutineScreen()
                                             .invoke("$routineId")
                                     } else {

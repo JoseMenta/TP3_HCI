@@ -11,6 +11,7 @@ import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class ExecuteRoutineViewModel(
     private val routineRepository: RoutineRepository
@@ -21,6 +22,7 @@ class ExecuteRoutineViewModel(
     private var cycleIndex: Int = 0
     private var cycleReps: Int = 0
     private var exerciseIndex: Int = 0
+    private val startTime: Date = Date()
     fun getRoutine(routineId: Int) {
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
@@ -122,5 +124,10 @@ class ExecuteRoutineViewModel(
     }
     fun hasPrevExercise():Boolean{
         return !(exerciseIndex==0 && cycleIndex==0 && cycleReps == uiState.routine!!.cycles[cycleIndex].repetitions)
+    }
+    fun addRoutineExecution(routineId: Int){
+        val currTime = Date()
+        val diff: Int = ((currTime.time - startTime.time)/1000).toInt()
+        viewModelScope.launch {  routineRepository.addRoutineExecution(routineId = routineId, duration = diff) }
     }
 }
