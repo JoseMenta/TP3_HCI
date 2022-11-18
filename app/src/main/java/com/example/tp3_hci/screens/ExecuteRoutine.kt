@@ -151,6 +151,7 @@ private fun ExecutionControls(
     onNextTouched: ()->Unit,
     exercise: MutableState<CycleExercise>,
     exerciseNumber: MutableState<Int>,
+    hasPrevExercise: Boolean = true
 ){
     var paused by remember { mutableStateOf(false) }
     var num by remember { mutableStateOf(0) }
@@ -176,8 +177,11 @@ private fun ExecutionControls(
             Button(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
-                    .size(50.dp),
-                onClick = onPrevTouched
+                    .size(50.dp)
+                    .background(MaterialTheme.colors.onPrimary),
+                onClick = onPrevTouched,
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
+                enabled = hasPrevExercise
             ) {
                 Icon( Icons.Outlined.SkipPrevious, contentDescription = "previous", tint = Color.White)
             }
@@ -185,7 +189,8 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(80.dp),
-                onClick = { paused = !paused }
+                onClick = { paused = !paused },
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary)
             ) {
                 if(!paused){
                     Icon(Icons.Outlined.Pause, contentDescription = "pause", tint = Color.White)
@@ -197,7 +202,8 @@ private fun ExecutionControls(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .size(50.dp),
-                onClick = onNextTouched
+                onClick = onNextTouched,
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary)
             ) {
                 Icon( Icons.Outlined.SkipNext, contentDescription = "next", tint = Color.White)
             }
@@ -212,7 +218,8 @@ private fun ExecuteRoutineExerciseDetail(
     expanded: Boolean = true,
     onNextTouched: () -> Unit,
     onPrevTouched: () -> Unit,
-    exerciseNumber: MutableState<Int>
+    exerciseNumber: MutableState<Int>,
+    hasPrevExercise: Boolean = true
 ){
     Column (
         modifier = Modifier
@@ -223,11 +230,11 @@ private fun ExecuteRoutineExerciseDetail(
     ){
         if(expanded) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ){
-                Text(exercise.value.name)
+                Text(exercise.value.name, style = MaterialTheme.typography.h1)
             }
             AsyncImage(
                 model = exercise.value.image,
@@ -244,7 +251,8 @@ private fun ExecuteRoutineExerciseDetail(
             executeRoutineNavigation = executeRoutineNavigation,
             onNextTouched = onNextTouched,
             onPrevTouched = onPrevTouched,
-            exerciseNumber = exerciseNumber
+            exerciseNumber = exerciseNumber,
+            hasPrevExercise = hasPrevExercise
         )
     }
 }
@@ -348,7 +356,8 @@ fun ExecuteRoutine(
                                     }
                                 },
                                 executeRoutineNavigation = executeRoutineNavigation,
-                                exerciseNumber = uiState.exerciseNumber
+                                exerciseNumber = uiState.exerciseNumber,
+                                hasPrevExercise = uiState.hasPrevExercise
                             )
                         }
                     }
