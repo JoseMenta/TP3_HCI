@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         //Controler()
-                        //MainScreen()
+//                        MainScreen()
                         MyNavHost()
                         /*
                         RoutineDetail(RoutineDetailUiState("Futbol",3,"Jose",3,120000, listOf("Hola","Como","estas", "buenas","tardes","Futbol","Scaloneta","Messi"),cycles))

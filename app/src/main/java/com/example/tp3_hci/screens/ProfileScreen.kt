@@ -39,25 +39,26 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = getViewModelFactory())
 ){
     val UiState = viewModel.uiState
-    if(!UiState.isFetching && UiState.currentUser==null && UiState.message==null){
-        viewModel.getCurrentUser()
-    }
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
-
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = {
-                TopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    profileNavigation = profileNavigation,
-                    viewModel = viewModel
-                )
-            }
+    if(!UiState.isFetching && UiState.currentUser==null && UiState.message==null){
+        viewModel.getCurrentUser()
+        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = {
+                    TopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        profileNavigation = profileNavigation,
+                        viewModel = viewModel
+                    )
+                }
+            )
         )
-    )
+    }
+
+
 
     RegularDisplay(
         content = {
