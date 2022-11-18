@@ -167,7 +167,7 @@ class RoutineRepository(
             votes = remoteDataSource.getRoutineReviews(routineId,0).totalCount,
             isFavourite = favouriteRoutinesOverviews.any{ it.id == routineId},
             tags = routine.metadata?.tags?: emptyList(),
-            cycles = cycles.map {
+            cycles = cycles.sortedBy { it.order }.map {
                 val exercises = getAll {page ->  remoteDataSource.getCycleExercises(it.id,page) }
                 Cycle(
                     name = it.name,
