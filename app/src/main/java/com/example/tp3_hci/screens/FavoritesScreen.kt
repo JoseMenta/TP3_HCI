@@ -243,7 +243,7 @@ private fun FavoritesScreenContent(
     if(favoritesScreenUiState.hasError()){
         ErrorSnackBar(
             scaffoldState = scaffoldState,
-            message = favoritesScreenUiState.message!!,
+            message = stringResource(id = favoritesScreenUiState.message?:R.string.unexpected_error),
             onActionLabelClicked = {
                 favoritesScreenViewModel.dismissMessage()
             }

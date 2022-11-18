@@ -10,7 +10,7 @@ data class FavoritesScreenUiState(
     val orderBy : OrderByItem,
     val orderType : OrderTypeItem,
     val isLoading : Boolean,
-    val message : String?
+    val message : Int?
 ){
     fun hasError() : Boolean{
         return message != null

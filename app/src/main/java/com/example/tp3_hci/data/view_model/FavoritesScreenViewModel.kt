@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tp3_hci.R
 import com.example.tp3_hci.data.OrderByItem
 import com.example.tp3_hci.data.OrderTypeItem
 import com.example.tp3_hci.data.model.RoutineOverview
@@ -74,10 +75,17 @@ class FavoritesScreenViewModel(
                     isLoading = false
                 )
             }.onFailure {
-                favoritesScreenUiState = favoritesScreenUiState.copy(
-                    isLoading = false,
-                    message = it.message
-                )
+                favoritesScreenUiState = if(it is DataSourceException){
+                    favoritesScreenUiState.copy(
+                        isLoading = false,
+                        message = it.stringResourceCode
+                    )
+                }else{
+                    favoritesScreenUiState.copy(
+                        isLoading = false,
+                        message = R.string.unexpected_error
+                    )
+                }
             }
         }
     }
@@ -99,9 +107,17 @@ class FavoritesScreenViewModel(
                 }
             }
         }.onFailure {
-            favoritesScreenUiState = favoritesScreenUiState.copy(
-                message = it.message
-            )
+            favoritesScreenUiState = if(it is DataSourceException){
+                favoritesScreenUiState.copy(
+                    isLoading = false,
+                    message = it.stringResourceCode
+                )
+            }else{
+                favoritesScreenUiState.copy(
+                    isLoading = false,
+                    message = R.string.unexpected_error
+                )
+            }
         }
     }
 
