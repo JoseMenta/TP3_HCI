@@ -87,5 +87,17 @@
     <string name="error_credentials">Invalid username and password</string>
     <string name="empty_field">Obligatory field</string>
 
+<!--    errores API-->
+    <string name="unexpected_error">Ups! An unexpected error occurred. Please try again</string>
+    <string name="no_connection_error">Ups! It appears you have no internet connection</string>
+    <string name="invalid_data_error">Ups! The provided data is invalid. Please try again</string>
+    <string name="data_constraint_error">Ups! There seems to be an internal error</string>
+    <string name="not_found_error">Ups! The content you requested was not found</string>
+    <string name="invalid_username_or_password">Ups! The username or password are invalid</string>
+    <string name="database_error">Ups! There seems to be an internal error</string>
+    <string name="invalid_request">Ups! There seems to be an internal error</string>
+    <string name="unauthorized">Ups! You are not authorized to be here. Please log in</string>
+    <string name="email_verification_error">Ups! Your email is not verified. Please verify it</string>
+    <string name="forbidden_error">Ups!There seems to be an internal error</string>
 
 </resources>

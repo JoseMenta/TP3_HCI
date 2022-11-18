@@ -103,7 +103,9 @@ private fun MainScreenContent(
     RegularDisplay(
         content = {
             RoutineCardDisplay(
-                modifier = Modifier.padding(horizontal = 20.dp).fillMaxHeight(),
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxHeight(),
                 routines = mainScreenUiState.createdRoutines,
                 header = {
                     Column(
@@ -153,7 +155,7 @@ private fun MainScreenContent(
     if(mainScreenUiState.hasError()){
         ErrorSnackBar(
             scaffoldState = scaffoldState,
-            message = mainScreenUiState.message!!,
+            message = stringResource(id = mainScreenUiState.message?:R.string.unexpected_error),
             onActionLabelClicked = { mainScreenViewModel.dismissMessage() }
         )
     }

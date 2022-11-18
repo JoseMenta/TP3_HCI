@@ -15,6 +15,7 @@ import com.example.tp3_hci.data.ui_state.MainScreenUiState
 import com.example.tp3_hci.util.PreferencesManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.example.tp3_hci.R
 
 class MainScreenViewModel(
     private val routineRepository: RoutineRepository,
@@ -76,7 +77,8 @@ class MainScreenViewModel(
                     throw DataSourceException(
                         code = 99,
                         message = "You are not logged in",
-                        details = null
+                        details = null,
+                        stringResourceCode = R.string.unauthorized
                     )
                 }
             }.onSuccess { response ->
@@ -85,10 +87,17 @@ class MainScreenViewModel(
                     isLoading = false
                 )
             }.onFailure {
-                mainScreenUiState = mainScreenUiState.copy(
-                    isLoading = false,
-                    message = it.message
-                )
+                mainScreenUiState = if(it is DataSourceException) {
+                    mainScreenUiState.copy(
+                        isLoading = false,
+                        message = it.stringResourceCode
+                    )
+                }else{
+                    mainScreenUiState.copy(
+                        isLoading = false,
+                        message = R.string.unexpected_error
+                    )
+                }
             }
         }
     }
@@ -110,10 +119,17 @@ class MainScreenViewModel(
                 isLoading = false
             )
         }.onFailure {
-            mainScreenUiState = mainScreenUiState.copy(
-                message = it.message,
-                isLoading = false
-            )
+            mainScreenUiState = if(it is DataSourceException) {
+                mainScreenUiState.copy(
+                    isLoading = false,
+                    message = it.stringResourceCode
+                )
+            }else{
+                mainScreenUiState.copy(
+                    isLoading = false,
+                    message = R.string.unexpected_error
+                )
+            }
         }
     }
 
@@ -140,9 +156,17 @@ class MainScreenViewModel(
                 }
             }
         }.onFailure {
-            mainScreenUiState = mainScreenUiState.copy(
-                message = it.message
-            )
+            mainScreenUiState = if(it is DataSourceException) {
+                mainScreenUiState.copy(
+                    isLoading = false,
+                    message = it.stringResourceCode
+                )
+            }else{
+                mainScreenUiState.copy(
+                    isLoading = false,
+                    message = R.string.unexpected_error
+                )
+            }
         }
     }
 

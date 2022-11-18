@@ -1,7 +1,8 @@
 package com.example.tp3_hci.data.network
 
 class DataSourceException(
-    code: Int,
+    val code: Int,
     message: String,
-    details: List<String>?
+    val details: List<String>?,
+    val stringResourceCode: Int
 ) : Exception(message)

@@ -80,5 +80,17 @@
     <string name="error_credentials">Usuario y contraseña invalidos</string>
     <string name="empty_field">Campo obligatorio</string>
 
+<!--    errores API-->
+    <string name="unexpected_error">Ups! Ocurrió un error inesperado. Por favor intente nuevamente</string>
+    <string name="no_connection_error">Ups! Parece que no tienes conexión a internet</string>
+    <string name="invalid_data_error">Ups! Los datos ingresados son invalidos. Por favor intente nuevamente</string>
+    <string name="data_constraint_error">Ups! Parece haber un error interno</string>
+    <string name="not_found_error">Ups! El contenido que buscabas no fue encontrad</string>
+    <string name="invalid_username_or_password">Ups! El ususario o la contrasña son incorrectos</string>
+    <string name="database_error">Ups! Parece haber un error interno</string>
+    <string name="invalid_request">Ups! There seems to be an internal error</string>
+    <string name="unauthorized">Ups! No estas autorizado para estar aquí. Por favor inicia sesión</string>
+    <string name="email_verification_error">Ups! Tu email no esta verifcado. Por favor, verifícalo</string>
+    <string name="forbidden_error">Ups! Parece haber un error interno</string>
 
 </resources>
