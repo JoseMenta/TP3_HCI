@@ -41,7 +41,9 @@ class NetworkUser (
             firstName = firstName,
             lastName = lastName,
             email = email,
-            lastActivity = lastActivity
+            lastActivity = lastActivity,
+            birthdate = birthdate,
+            avatarUrl = avatarUrl
         )
     }
 }

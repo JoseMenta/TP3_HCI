@@ -72,11 +72,20 @@
     <string name="snackbar_dismiss">Dismiss</string>
 
     <string name="email_type">Email: </string>
-    <string name="name_type">Nombre: </string>
-    <string name="surname_type">Apellido: </string>
-    <string name="birthday_type">Cumpleaños: </string>
-    <string name="preferencies">Preferencias</string>
-    <string name="simplify">Vista Simplificada: </string>
+    <string name="name_type">Name: </string>
+    <string name="surname_type">Surname: </string>
+    <string name="birthday_type">Date of birth: </string>
+    <string name="preferencies">Preferences</string>
+    <string name="simplify">Simplified View: </string>
+
+    <string name="question_log">Don\'t have an account?</string>
+    <string name="register">Join</string>
+    <string name="email">Username</string>
+    <string name="password">Password</string>
+    <string name="singIn">Sing in</string>
+    <string name="LogIn">Log in</string>
+    <string name="error_credentials">Invalid username and password</string>
+    <string name="empty_field">Obligatory field</string>
 
 
 </resources>

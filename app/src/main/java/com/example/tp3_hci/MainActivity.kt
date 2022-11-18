@@ -1,5 +1,6 @@
 package com.example.tp3_hci
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tp3_hci.components.navigation.BottomNavItem
@@ -28,6 +30,7 @@ import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.MyNavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.data.CategoryItem
 import com.example.tp3_hci.data.model.RoutineDetail
 import kotlin.random.Random
 

@@ -2,6 +2,7 @@ package com.example.tp3_hci.screens
 
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
@@ -29,6 +34,7 @@ import com.example.tp3_hci.utilities.TopAppBarType
 import com.example.tp3_hci.utilities.navigation.LoginNavigation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.MainViewModel
+import com.example.tp3_hci.R
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 
@@ -45,7 +51,7 @@ fun LoginView(
 
     Column(
         //modifier = Modifier.verticalScroll().fillMaxHeight(),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
@@ -53,8 +59,8 @@ fun LoginView(
 
         if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
             windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
-            AsyncImage(
-                model = "https://cdn.discordapp.com/attachments/1008117588762579067/1024756087825645669/fiti-logo.png",
+            Image(
+                painter = painterResource(id = R.drawable.fiti_logo),
                 contentDescription = "Logo",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,7 +69,7 @@ fun LoginView(
         }
         else{
             AsyncImage(
-                model = "https://cdn.discordapp.com/attachments/1008117588762579067/1024756087825645669/fiti-logo.png",
+                model = R.drawable.fiti_logo,
                 contentDescription = "Logo",
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
@@ -80,12 +86,12 @@ fun LoginView(
 @Composable
 private fun BLockRegister() {
     Column(
-            modifier = Modifier.padding(start = 40.dp, end = 40.dp, bottom = 10.dp),
+            modifier = Modifier.padding(bottom = 10.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
         Text(
-            text = "¿No tienes cuenta aún?",
+            text = stringResource(id = R.string.question_log),
             style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -97,9 +103,9 @@ private fun BLockRegister() {
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
+                .height(50.dp).padding(start = 20.dp, end= 20.dp)
         ) {
-            Text(text = "Registrate",
+            Text(text = stringResource(id = R.string.register),
                 style = MaterialTheme.typography.h4,
                 fontWeight = FontWeight.Bold,
                 color = White )
@@ -116,14 +122,15 @@ private fun BLockLogin(
     val UiState = viewModel.uiState
     var textError = remember { mutableStateOf("") }
     var required = remember { mutableStateOf(false) }
+    var loading = false
     if( UiState.isAuthenticated == true){
         loginNavigation.getOnLoginScreen().invoke()
     }
     else if(UiState.isFetching == true && required.value){
-        textError.value = "Loding..."
+        loading = true
     }
     else if(UiState.isAuthenticated == false && required.value){
-        textError.value = "Usuario y contraseña invalidos"
+        textError.value = stringResource(id = R.string.error_credentials)
     }
 
     Card(
@@ -138,7 +145,7 @@ private fun BLockLogin(
         ) {
 
             Text(
-                text = "Inicio de Sesion",
+                text = stringResource(id = R.string.LogIn),
                 style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
                 color = FitiBlueText
             )
@@ -152,13 +159,13 @@ private fun BLockLogin(
                 colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = FitiGreyInputText
                     ),
-                placeholder = { Text("Correo Electronico") },
+                placeholder = { Text(stringResource(id = R.string.email)) },
                 value = username.value,
                 onValueChange = { username.value = it },
                 isError = (required.value && username.value.text == ""))
             if (required.value && username.value.text == "") {
                 Text(
-                    text = "Campo obligatorio",
+                    text = stringResource(id = R.string.empty_field),
                     color = FitiRedError,
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier
@@ -174,18 +181,12 @@ private fun BLockLogin(
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
-                placeholder = { Text("Password") },
+                placeholder = { Text(stringResource(id = R.string.password)) },
                 visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,imeAction = ImeAction.Go),
                 keyboardActions = KeyboardActions(onGo = {
                     required.value = true;
                     viewModel.login(username = username.value.text, password = password.value.text)
-                    //while(viewModel.uiState.isFetching == true){ }
-                    //viewModel.login(username = "bb@mail.com", password = "1234")
-                    //if( UiState.isAuthenticated == true){
-                    //    loginNavigation.getOnLoginScreen().invoke()
-                    //}
-                    textError.value = "Loding..."
                 }),
                 shape = RoundedCornerShape(12.dp),
                 colors = TextFieldDefaults.textFieldColors(
@@ -207,7 +208,7 @@ private fun BLockLogin(
             )
             if (required.value && password.value.text == "") {
                 Text(
-                    text = "Campo obligatorio",
+                    text = stringResource(id = R.string.empty_field),
                     color = FitiRedError,
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier
@@ -230,25 +231,24 @@ private fun BLockLogin(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = FitiGreenButton,
                 ),
+                enabled = !loading,
                 onClick = {
                     required.value = true;
                     viewModel.login(username = username.value.text, password = password.value.text)
-                    //while(viewModel.uiState.isFetching == true){ }
-                    //viewModel.login(username = "bb@mail.com", password = "1234")
-                    //if( UiState.isAuthenticated == true){
-                    //    loginNavigation.getOnLoginScreen().invoke()
-                    //}
-                        textError.value = "Loding..."
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text(text = "Ingresar",
-                    style = MaterialTheme.typography.h4,
-                    fontWeight = FontWeight.Bold,
-                    color = White)
+                if(loading){
+                    CircularProgressIndicator()
+                }else{
+                    Text(text = stringResource(id = R.string.singIn),
+                        style = MaterialTheme.typography.h4,
+                        fontWeight = FontWeight.Bold,
+                        color = White)
+                }
             }
         }
     }

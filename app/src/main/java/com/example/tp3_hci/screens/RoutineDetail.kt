@@ -1,5 +1,6 @@
 package com.example.tp3_hci.screens
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,15 +15,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.example.tp3_hci.ExerciseCard
 import com.example.tp3_hci.ExerciseCardStatus
 import com.example.tp3_hci.R
@@ -36,6 +40,7 @@ import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tp3_hci.data.CategoryItem.FullBody.getString
 import com.example.tp3_hci.data.model.Cycle
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.TopAppBarType
@@ -238,6 +243,10 @@ private fun TopAppBar(
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
         LocalClipboardManager.current
 
+    val context = LocalContext.current
+
+    val shareText = "Mira esta Fiti Rutina! Seguro te interesa: https://fiti.com/Routine/${routineId}"
+
     TopNavigationBar(
         scrollBehavior = scrollBehavior,
         leftIcon = {
@@ -261,7 +270,18 @@ private fun TopAppBar(
         },
         secondRightIcon = {
             IconButton(onClick = {
-                clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routineId}"))
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                    type = "text/plain"
+                }
+                //clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routineId}"))
+
+                startActivity(
+                    context,
+                    Intent.createChooser(sendIntent, "ShareWith"),
+                    null
+                )
             }) {
                 Icon(
                     imageVector = Icons.Filled.Share,

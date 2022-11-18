@@ -63,11 +63,22 @@
     <string name="share_this_routine">Compartir esta rutina</string>
     <string name="leave_your_review">Dejanos tu opinión</string>
     <string name="snackbar_dismiss">Cerrar</string>
+
     <string name="email_type">Email: </string>
     <string name="name_type">Nombre: </string>
     <string name="surname_type">Apellido: </string>
-    <string name="birthday_type">Cumpleaños: </string>
+    <string name="birthday_type">Nacimiento: </string>
     <string name="preferencies">Preferencias</string>
     <string name="simplify">Vista Simplificada: </string>
+
+    <string name="question_log">¿No tienes cuenta aún?</string>
+    <string name="register">Registrate</string>
+    <string name="email">Nombre de usuario</string>
+    <string name="password">contraseña</string>
+    <string name="singIn">Ingresar</string>
+    <string name="LogIn">Inicio de Sesion</string>
+    <string name="error_credentials">Usuario y contraseña invalidos</string>
+    <string name="empty_field">Campo obligatorio</string>
+
 
 </resources>

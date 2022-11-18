@@ -30,6 +30,7 @@ import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.*
 import com.example.tp3_hci.utilities.navigation.profileNavigation
+import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +70,7 @@ fun ProfileScreen(
                     ProfileAvatar(
                         imageUrl = imgSrc,
                         modifier = Modifier
-                            .padding(top = 20.dp, bottom = 20.dp)
+                            .padding(top = 20.dp, bottom = 10.dp)
                             .fillMaxHeight(0.3f),
                         onImageUrlChange = null
                     )
@@ -78,22 +79,24 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Pepe",
-                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
-                        color = FitiBlue,
-                        modifier = Modifier
-                    )
+                    UiState.currentUser?.username?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                            color = FitiBlue,
+                            modifier = Modifier
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Divider(color = FitiBlue, thickness = 1.dp)
                 Spacer(modifier = Modifier.height(10.dp))
                 dataUser(Type= stringResource(id = R.string.email_type) ,data = UiState.currentUser?.email)
-                dataUser(Type= "Nombre: " ,data = UiState.currentUser?.firstName)
-                dataUser(Type= "Apellido: " ,data = UiState.currentUser?.lastName)
-                dataUser(Type= "Cumpleaños: " ,data = UiState.currentUser?.birthdate.toString())
+                dataUser(Type= stringResource(id = R.string.name_type) ,data = UiState.currentUser?.firstName)
+                dataUser(Type= stringResource(id = R.string.surname_type) ,data = UiState.currentUser?.lastName)
+                dataUser(Type= stringResource(id = R.string.birthday_type) ,data = UiState.currentUser?.birthdate?.let {SimpleDateFormat("dd/MM/yyy").format(it)})
                 Text(
-                    text = "Preferencias",
+                    text = stringResource(id = R.string.preferencies),
                     style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
                     color = FitiBlueText,
                     modifier = Modifier
@@ -102,7 +105,7 @@ fun ProfileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
-                        text = "Vista Simplificada: ",
+                        text = stringResource(id = R.string.simplify),
                         style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
                         color = FitiBlueText,
                         modifier = Modifier
@@ -125,85 +128,6 @@ fun ProfileScreen(
 
 
 
-@Composable
-fun LabelledSwitch( // (1)
-    modifier: Modifier = Modifier,
-    checked: Boolean,
-    label: String,
-    onCheckedChange: ((Boolean) -> Unit),
-    enabled: Boolean = true,
-    colors: SwitchColors = SwitchDefaults.colors()
-) {
-
-    Box( // (2)
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .toggleable( // (4)
-                value = checked,
-                onValueChange = onCheckedChange,
-                role = Role.Switch,
-                enabled = enabled
-            )
-            .padding(horizontal = 16.dp)
-
-    ) {
-        CompositionLocalProvider(
-            LocalContentAlpha provides
-                    if (enabled) ContentAlpha.high else ContentAlpha.disabled
-        ) {
-            Text( // (3)
-                text = label,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(end = 16.dp)
-            )
-        }
-
-        Switch( // (3)
-            checked = checked,
-            onCheckedChange = null, // (4)
-            enabled = enabled,
-            colors = colors,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
-    }
-}
-
-/*
-@Preview
-@Composable
-fun profileView(){
-    Column(
-        modifier = Modifier.padding(start = 20.dp)
-    ) {
-        Column(){
-            ProfileAvatar(
-                imageUrl = "https://www.elcolombiano.com/binrepository/829x565/49c0/780d565/none/11101/ASLQ/20221114-58cc9d3b63734727087f0540e61c0648179f8cd4_41058203_20221115111342.jpg",
-                modifier = Modifier
-                    .padding(top = 30.dp, bottom = 30.dp)
-                    .fillMaxHeight(0.3f),
-                onImageUrlChange = null
-            )
-        }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = "USER NAME",
-                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
-                color = FitiBlue,
-                modifier = Modifier
-            )
-        }
-        Spacer(modifier = Modifier.height(30.dp))
-        dataUser(Type= "username: " ,data = "Pepe")
-        dataUser(Type= "username2: " ,data = "Pepe2")
-    }
-}
-*/
 
 @Composable
 fun dataUser(
@@ -215,7 +139,7 @@ fun dataUser(
             text = Type,
             style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
             color = FitiBlueText,
-            modifier = Modifier
+            modifier = Modifier.padding(start = 10.dp)
         )
         if (data != null) {
             Text(
