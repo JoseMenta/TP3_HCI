@@ -20,6 +20,10 @@ class ProfileViewModel(
     var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
         private set
 
+    init {
+        getCurrentUser()
+    }
+
     fun logout() = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,
@@ -40,6 +44,7 @@ class ProfileViewModel(
                 isFetching = false)
         }
     }
+
 
     fun getCurrentUser() = viewModelScope.launch {
         uiState = uiState.copy(

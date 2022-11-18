@@ -43,8 +43,9 @@ fun ProfileScreen(
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
-    if(!UiState.isFetching && UiState.currentUser==null && UiState.message==null){
-        viewModel.getCurrentUser()
+
+    //if(!UiState.isFetching && UiState.currentUser==null && UiState.message==null){
+        //viewModel.getCurrentUser()
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
         setTopAppBar(
             TopAppBarType(
@@ -57,7 +58,7 @@ fun ProfileScreen(
                 }
             )
         )
-    }
+    //}
 
 
 

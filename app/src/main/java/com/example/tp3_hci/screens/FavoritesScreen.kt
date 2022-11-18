@@ -183,7 +183,7 @@ private fun FavoritesScreenContent(
 
     val favoritesScreenUiState = favoritesScreenViewModel.favoritesScreenUiState
 
-    if(!favoritesScreenUiState.isLoading && favoritesScreenUiState.favoriteRoutines==null && favoritesScreenUiState.message==null){
+    //if(!favoritesScreenUiState.isLoading && favoritesScreenUiState.favoriteRoutines==null && favoritesScreenUiState.message==null){
         setTopAppBar(
             TopAppBarType {
                 RegularTopAppBar(
@@ -196,7 +196,7 @@ private fun FavoritesScreenContent(
                 )
             }
         )
-    }
+    //}
     RegularDisplay(
         content = {
             RoutineCardDisplay(

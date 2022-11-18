@@ -146,19 +146,20 @@ fun RoutineDetail(
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutineDetails(routineId)
-        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-        setTopAppBar(
-            TopAppBarType(
-                topAppBar = {
-                    TopAppBar(
-                        routineId = routineId,
-                        scrollBehavior = scrollBehavior,
-                        routineDetailNavigation = routineDetailNavigation
-                    )
-                }
-            )
-        )
     }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = {
+                TopAppBar(
+                    routineId = routineId,
+                    scrollBehavior = scrollBehavior,
+                    routineDetailNavigation = routineDetailNavigation
+                )
+            }
+        )
+    )
 
     Scaffold(
         floatingActionButton = {

@@ -84,7 +84,7 @@ private fun MainScreenContent(
     }
     //TODO: ver como hacer para que se haga solo la primera vez
     //Tambien se me ocurrio un counter, y que lo haga si es 0
-    if(!mainScreenViewModel.mainScreenUiState.isLoading && mainScreenViewModel.mainScreenUiState.message!=null) {
+    //if(!mainScreenViewModel.mainScreenUiState.isLoading && mainScreenViewModel.mainScreenUiState.message!=null) {
         setTopAppBar(
             TopAppBarType {
                 RegularTopAppBar(
@@ -97,7 +97,7 @@ private fun MainScreenContent(
                 )
             }
         )
-    }
+    //}
     val mainScreenUiState = mainScreenViewModel.mainScreenUiState
 
     RegularDisplay(

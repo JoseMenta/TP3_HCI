@@ -48,19 +48,21 @@ fun RatingView(
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutineOverview(routineId)
-        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-        setTopAppBar(
-            TopAppBarType(
-                topAppBar = {
-                    TopAppBar(
-                        scrollBehavior = scrollBehavior,
-                        title = stringResource(id = R.string.routine_review),
-                        viewRatingNavigation = viewRatingNavigation
-                    )
-                }
-            )
-        )
     }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = {
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = stringResource(id = R.string.routine_review),
+                    viewRatingNavigation = viewRatingNavigation
+                )
+            }
+        )
+    )
+
     if(uiState.isFetching){
         Row(
             modifier = Modifier
