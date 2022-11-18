@@ -136,6 +136,7 @@ private fun scaf(
 ){
     val scaffoldState = rememberScaffoldState()
     var prevRoute = navController.previousBackStackEntry
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -150,7 +151,7 @@ private fun scaf(
                 ) + fadeOut()
             ) {
                 BottomNavigationBar(
-                    restarSelectedNavigation = restarSelectedNavigation,
+                    route = navBackStackEntry?.destination?.route,
                     items = getBottomNavItems(),
                     bottomBarNavigation = BottomBarNavigation {
                             route -> navController.navigate(route) {

@@ -55,7 +55,7 @@ sealed class RegularBottomNavItem(
 // -------------------------------------------------------------------------
 @Composable
 fun BottomNavigationBar(
-    restarSelectedNavigation : Boolean,
+    route: String?,
     bottomBarNavigation: BottomBarNavigation,
     items : List<BottomNavItem>,
     modifier: Modifier = Modifier
@@ -65,20 +65,13 @@ fun BottomNavigationBar(
         backgroundColor = FitiBlue,
         elevation = 10.dp
     ) {
-        if(restarSelectedNavigation){
-            for(icon in items){
-                icon.selected=false
-            }
-            items[1].selected=true
+        for(item in items){
+            item.selected = item.route == route
         }
         items.forEach { item ->
             BottomNavigationItem(
                 selected = item.selected,
                 onClick = {
-                    for(icon in items){
-                        icon.selected=false
-                    }
-                    item.selected =true
                     bottomBarNavigation.getItemScreen().invoke(item.route)
                 },
                 selectedContentColor = FitiGreenButton,

@@ -2,7 +2,10 @@ package com.example.tp3_hci.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement.Absolute.Center
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
@@ -64,63 +67,63 @@ fun ProfileScreen(
 
     RegularDisplay(
         content = {
-            Column(
+            LazyColumn(
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             ) {
-                Column() {
-                    var imgSrc = UiState.currentUser?.avatarUrl
-                    ProfileAvatar(
-                        imageUrl = imgSrc,
-                        modifier = Modifier
-                            .padding(top = 20.dp, bottom = 10.dp)
-                            .fillMaxHeight(0.3f),
-                        onImageUrlChange = null
-                    )
-                }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    UiState.currentUser?.username?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
-                            color = FitiBlue,
+                item{
+                    Column() {
+                        var imgSrc = UiState.currentUser?.avatarUrl
+                        ProfileAvatar(
+                            imageUrl = imgSrc,
                             modifier = Modifier
+                                .padding(top = 20.dp, bottom = 10.dp, start = 70.dp, end = 70.dp),
+                            onImageUrlChange = null
                         )
                     }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Divider(color = FitiBlue, thickness = 1.dp)
-                Spacer(modifier = Modifier.height(10.dp))
-                dataUser(Type= stringResource(id = R.string.email_type) ,data = UiState.currentUser?.email)
-                dataUser(Type= stringResource(id = R.string.name_type) ,data = UiState.currentUser?.firstName)
-                dataUser(Type= stringResource(id = R.string.surname_type) ,data = UiState.currentUser?.lastName)
-                dataUser(Type= stringResource(id = R.string.birthday_type) ,data = UiState.currentUser?.birthdate?.let {SimpleDateFormat("dd/MM/yyy").format(it)})
-                Text(
-                    text = stringResource(id = R.string.preferencies),
-                    style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
-                    color = FitiBlueText,
-                    modifier = Modifier
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        UiState.currentUser?.username?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                                color = FitiBlue,
+                                modifier = Modifier
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Divider(color = FitiBlue, thickness = 1.dp)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    dataUser(Type= stringResource(id = R.string.email_type) ,data = UiState.currentUser?.email)
+                    dataUser(Type= stringResource(id = R.string.name_type) ,data = UiState.currentUser?.firstName)
+                    dataUser(Type= stringResource(id = R.string.surname_type) ,data = UiState.currentUser?.lastName)
+                    dataUser(Type= stringResource(id = R.string.birthday_type) ,data = UiState.currentUser?.birthdate?.let {SimpleDateFormat("dd/MM/yyy").format(it)})
                     Text(
-                        text = stringResource(id = R.string.simplify),
-                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                        text = stringResource(id = R.string.preferencies),
+                        style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
                         color = FitiBlueText,
                         modifier = Modifier
                     )
-                    Spacer(
-                        modifier = Modifier.weight(1f)
-                    )
-                    Switch(
-                        checked = viewModel.getSimplify(),
-                        onCheckedChange = { viewModel.changeSimplify() },
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            text = stringResource(id = R.string.simplify),
+                            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                            color = FitiBlueText,
+                            modifier = Modifier
+                        )
+                        Spacer(
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = viewModel.getSimplify(),
+                            onCheckedChange = { viewModel.changeSimplify() },
+                        )
+                    }
                 }
-
             }
         },
         topAppBarState = topAppBarState

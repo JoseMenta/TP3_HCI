@@ -285,17 +285,18 @@ fun ExecuteRoutine(
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutine(routineId)
-        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-        setTopAppBar(
-            TopAppBarType(
-                topAppBar = { TopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = uiState.routine?.name?: stringResource(id = R.string.loading),
-                    executeRoutineNavigation = executeRoutineNavigation
-                ) }
-            )
-        )
     }
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = { TopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = uiState.routine?.name?: stringResource(id = R.string.loading),
+                executeRoutineNavigation = executeRoutineNavigation
+            ) }
+        )
+    )
 
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
@@ -416,7 +417,9 @@ private fun TopAppBar(
                 style = MaterialTheme.typography.h2,
                 color = FitiWhiteText
             )
-        }
+        },
+        rightIcon = null,
+        secondRightIcon = null
     )
 }
 
