@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tp3_hci.R
+import com.example.tp3_hci.data.network.DataSourceException
 import com.example.tp3_hci.data.repository.UserRepository
 import com.example.tp3_hci.data.ui_state.ProfileUiState
 import com.example.tp3_hci.util.PreferencesManager
@@ -17,7 +19,7 @@ class ProfileViewModel(
     private val preferencesManager : PreferencesManager
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
+    var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null, simplify = preferencesManager.getSimplify()))
         private set
 
     init {
@@ -39,9 +41,17 @@ class ProfileViewModel(
             )
         }.onFailure { e ->
             // Handle the error and notify the UI when appropriate.
-            uiState = uiState.copy(
-                message = e.message,
-                isFetching = false)
+            uiState = if(e is  DataSourceException){
+                uiState.copy(
+                    message = e.stringResourceCode,
+                    isFetching = false
+                )
+            }else{
+                uiState.copy(
+                    message = R.string.unexpected_error,
+                    isFetching = false
+                )
+            }
         }
     }
 
@@ -60,18 +70,30 @@ class ProfileViewModel(
             )
         }.onFailure { e ->
             // Handle the error and notify the UI when appropriate.
-            uiState = uiState.copy(
-                message = e.message,
-                isFetching = false)
+            uiState = if(e is  DataSourceException){
+                uiState.copy(
+                    message = e.stringResourceCode,
+                    isFetching = false
+                )
+            }else{
+                uiState.copy(
+                    message = R.string.unexpected_error,
+                    isFetching = false
+                )
+            }
         }
     }
-
-    fun getSimplify() : Boolean {
-        return preferencesManager.getSimplify()
+    fun dismissMessage(){
+        uiState = uiState.copy(
+            message = null
+        )
     }
 
     fun changeSimplify() {
         preferencesManager.changeSimplify()
+        uiState = uiState.copy(
+            simplify = preferencesManager.getSimplify()
+        )
     }
 
 }

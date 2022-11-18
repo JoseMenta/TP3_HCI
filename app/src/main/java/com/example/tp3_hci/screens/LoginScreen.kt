@@ -13,9 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,42 +40,60 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 fun LoginView(
     setTopAppBar : ((TopAppBarType)->Unit),
     loginNavigation: LoginNavigation,
+    loginViewModel: LoginViewModel = viewModel(factory = getViewModelFactory())
 ){
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = null,
+    var returned by remember { mutableStateOf(true) }
+    if(returned){
+        returned = false
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = null,
+            )
         )
-    )
-
-    Column(
-        //modifier = Modifier.verticalScroll().fillMaxHeight(),
-        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        val windowInfo = rememberWindowInfo()
-
-        if(windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
-            windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
-            Image(
-                painter = painterResource(id = R.drawable.fiti_logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, start = 40.dp, end = 40.dp)
-            )
+    }
+    if(loginViewModel.uiState.isAuthenticated){
+        loginNavigation.getOnLoginScreen().invoke()
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            CircularProgressIndicator()
         }
-        else{
-            AsyncImage(
-                model = R.drawable.fiti_logo,
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(top = 10.dp, start = 40.dp, end = 40.dp)
-            )
+    }else {
+        Column(
+            //modifier = Modifier.verticalScroll().fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            val windowInfo = rememberWindowInfo()
+
+            if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact ||
+                windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.fiti_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, start = 40.dp, end = 40.dp)
+                )
+            } else {
+                AsyncImage(
+                    model = R.drawable.fiti_logo,
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .padding(top = 10.dp, start = 40.dp, end = 40.dp)
+                )
+            }
+            BLockLogin(loginNavigation, loginViewModel)
+            BLockRegister()
         }
-        BLockLogin(loginNavigation)
-        BLockRegister()
     }
 
 }
@@ -103,7 +119,8 @@ private fun BLockRegister() {
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp).padding(start = 20.dp, end= 20.dp)
+                .height(50.dp)
+                .padding(start = 20.dp, end = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.register),
                 style = MaterialTheme.typography.h4,
@@ -117,7 +134,7 @@ private fun BLockRegister() {
 @Composable
 private fun BLockLogin(
     loginNavigation: LoginNavigation,
-    viewModel: LoginViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: LoginViewModel
 ) {
     val UiState = viewModel.uiState
     var textError = remember { mutableStateOf("") }
@@ -132,7 +149,6 @@ private fun BLockLogin(
     else if(UiState.isAuthenticated == false && required.value){
         textError.value = stringResource(id = R.string.error_credentials)
     }
-
     Card(
         border = BorderStroke(2.dp, FitiBlack),
         modifier = Modifier.padding(20.dp),

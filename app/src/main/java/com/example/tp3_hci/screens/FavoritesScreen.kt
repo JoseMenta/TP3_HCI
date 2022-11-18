@@ -81,10 +81,12 @@ private fun FavoritesScreenContent(
     }
 
 
-
+    var returned by remember{ mutableStateOf(true) }
     val favoritesScreenUiState = favoritesScreenViewModel.favoritesScreenUiState
 
     //if(!favoritesScreenUiState.isLoading && favoritesScreenUiState.favoriteRoutines==null && favoritesScreenUiState.message==null){
+    if(returned) {
+        returned = false
         setTopAppBar(
             TopAppBarType {
                 RegularTopAppBar(
@@ -99,6 +101,7 @@ private fun FavoritesScreenContent(
                 )
             }
         )
+    }
     //}
     RegularDisplay(
         content = {

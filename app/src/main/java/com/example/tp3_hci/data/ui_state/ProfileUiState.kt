@@ -6,5 +6,6 @@ data class ProfileUiState(
     val isAuthenticated: Boolean = false,
     val isFetching: Boolean = false,
     val currentUser: User? = null,
-    val message: String? = null,
+    val message: Int? = null,
+    val simplify: Boolean = false
 ) {}

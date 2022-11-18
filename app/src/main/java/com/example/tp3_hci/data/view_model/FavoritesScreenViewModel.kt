@@ -24,7 +24,6 @@ class FavoritesScreenViewModel(
     private val routineRepository: RoutineRepository,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
-
     var favoritesScreenUiState by mutableStateOf(
         FavoritesScreenUiState(
             favoriteRoutines = null,

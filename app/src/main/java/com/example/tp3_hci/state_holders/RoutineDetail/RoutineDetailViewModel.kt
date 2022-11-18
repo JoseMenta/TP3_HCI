@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tp3_hci.R
+import com.example.tp3_hci.data.network.DataSourceException
+import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.launch
 
@@ -13,7 +16,6 @@ class RoutineDetailViewModel(
 ):ViewModel() {
     var uiState by mutableStateOf(RoutineDetailUiState())
         private set
-
     fun getRoutineDetails(routineId: Int) = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,
@@ -24,13 +26,52 @@ class RoutineDetailViewModel(
         }.onSuccess {
             uiState = uiState.copy(
                 isFetching = false,
-                routine = it
+                routine = it,
+                isFavourite = mutableStateOf(it.isFavourite)
             )
         }.onFailure { e->
-            uiState = uiState.copy(
-                message = e.message,
-                isFetching = false
-            )
+            uiState = if (e is DataSourceException){
+                uiState.copy(
+                    message = e.stringResourceCode,
+                    isFetching = false
+                )
+            }else{
+                uiState.copy(
+                    message = R.string.unexpected_error,
+                    isFetching = false
+                )
+            }
         }
+    }
+
+
+    fun toggleRoutineFavorite() = viewModelScope.launch {
+        kotlin.runCatching {
+            if(uiState.isFavourite.value){
+                routineRepository.unmarkRoutineAsFavourite(uiState.routine!!.id)
+            } else {
+                routineRepository.markRoutineAsFavourite(uiState.routine!!.id)
+            }
+        }.onSuccess {
+            uiState.isFavourite.value = !uiState.isFavourite.value
+        }.onFailure { e ->
+            uiState = if (e is DataSourceException){
+                uiState.copy(
+                    message = e.stringResourceCode,
+                    isFetching = false
+                )
+            }else{
+                uiState.copy(
+                    message = R.string.unexpected_error,
+                    isFetching = false
+                )
+            }
+        }
+    }
+
+    fun dismissMessage(){
+        uiState = uiState.copy(
+            message = null
+        )
     }
 }

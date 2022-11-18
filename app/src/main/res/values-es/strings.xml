@@ -79,7 +79,7 @@
     <string name="LogIn">Inicio de sesión</string>
     <string name="error_credentials">Usuario y contraseña invalidos</string>
     <string name="empty_field">Campo obligatorio</string>
-
+    <string name="execute_routine">Ejecutar rutina</string>
 <!--    errores API-->
     <string name="unexpected_error">Ups! Ocurrió un error inesperado. Por favor intente nuevamente</string>
     <string name="no_connection_error">Ups! Parece que no tienes conexión a internet</string>
