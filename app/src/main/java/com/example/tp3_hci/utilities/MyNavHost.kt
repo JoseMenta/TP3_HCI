@@ -231,7 +231,7 @@ private fun scaf(
                     profileNavigation = profileNavigation(
                         LoginNavigation = {
                             navController.navigate("Login") {
-                                launchSingleTop = true
+                                popUpTo("Login"){inclusive = true}
                             }
                         },
                         previousScreen = {
