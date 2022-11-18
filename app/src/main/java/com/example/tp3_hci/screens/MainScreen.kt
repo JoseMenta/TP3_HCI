@@ -82,19 +82,22 @@ private fun MainScreenContent(
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
-    setTopAppBar(
-        TopAppBarType {
-            RegularTopAppBar(
-                scrollBehavior = scrollBehavior,
-                topAppBarState = topAppBarState,
-                onTopAppBarState = {
-                    topAppBarState = it
-                },
-                searchNavigation = mainScreenNavigation.getSearchNavigation()
-            )
-        }
-    )
-
+    //TODO: ver como hacer para que se haga solo la primera vez
+    //Tambien se me ocurrio un counter, y que lo haga si es 0
+    if(!mainScreenViewModel.mainScreenUiState.isLoading && mainScreenViewModel.mainScreenUiState.message!=null) {
+        setTopAppBar(
+            TopAppBarType {
+                RegularTopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    topAppBarState = topAppBarState,
+                    onTopAppBarState = {
+                        topAppBarState = it
+                    },
+                    searchNavigation = mainScreenNavigation.getSearchNavigation()
+                )
+            }
+        )
+    }
     val mainScreenUiState = mainScreenViewModel.mainScreenUiState
 
     RegularDisplay(

@@ -2,13 +2,19 @@ package com.example.tp3_hci.data.network
 
 import com.example.api_fiti.data.network.api.ApiUserService
 import com.example.api_fiti.data.network.model.NetworkCredentials
+import com.example.api_fiti.data.network.model.NetworkPagedContent
 import com.example.api_fiti.data.network.model.NetworkUser
+import com.example.tp3_hci.data.network.model.NetworkPublicUser
 import com.example.tp3_hci.util.SessionManager
 
 class UserRemoteDataSource(
     private val sessionManager: SessionManager,
     private val apiUserService: ApiUserService
 ) : RemoteDataSource() {
+
+    suspend fun getUsers(page: Int, search: String? = null): NetworkPagedContent<NetworkPublicUser>{
+        return handleApiResponse { apiUserService.getUsers(page,search) }
+    }
 
     suspend fun login(username: String, password: String) {
         val response = handleApiResponse {

@@ -90,10 +90,13 @@ class MainViewModel(
         )
         runCatching {
 //            routineRepository.getCurrentUserRoutineOverviews(true)
-            routineRepository.getCurrentUserRoutineOverviews(
-                refresh = true,
-                orderDirection = OrderDirection.Desc,
-            orderCriteria = OrderCriteria.Name)
+//            routineRepository.getCurrentUserRoutineOverviews(
+//                refresh = true,
+//                orderDirection = OrderDirection.Desc,
+//            orderCriteria = OrderCriteria.Name)
+            routineRepository.getFilteredRoutineOverviews(
+                username = "user"
+            )
         }.onSuccess {
             uiState = uiState.copy(
                 isFetching = false,

@@ -178,22 +178,25 @@ private fun FavoritesScreenContent(
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
-    setTopAppBar(
-        TopAppBarType {
-            RegularTopAppBar(
-                scrollBehavior = scrollBehavior,
-                topAppBarState = topAppBarState,
-                onTopAppBarState = {
-                    topAppBarState = it
-                },
-                searchNavigation = favoritesNavigation.getSearchNavigation()
-            )
-        }
-    )
+
 
 
     val favoritesScreenUiState = favoritesScreenViewModel.favoritesScreenUiState
 
+    if(!favoritesScreenUiState.isLoading && favoritesScreenUiState.favoriteRoutines==null && favoritesScreenUiState.message==null){
+        setTopAppBar(
+            TopAppBarType {
+                RegularTopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    topAppBarState = topAppBarState,
+                    onTopAppBarState = {
+                        topAppBarState = it
+                    },
+                    searchNavigation = favoritesNavigation.getSearchNavigation()
+                )
+            }
+        )
+    }
     RegularDisplay(
         content = {
             RoutineCardDisplay(
