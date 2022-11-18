@@ -1,6 +1,5 @@
 package com.example.tp3_hci.components.search
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
@@ -10,13 +9,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.tp3_hci.R
 import com.example.tp3_hci.data.*
 import com.example.tp3_hci.ui.theme.FitiBlackText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
 import com.example.tp3_hci.utilities.WindowInfo
 import com.example.tp3_hci.utilities.rememberWindowInfo
 
@@ -28,13 +25,19 @@ import com.example.tp3_hci.utilities.rememberWindowInfo
 // -----------------------------------------------------------------------
 @Composable
 fun SearchFiltersSurface(
-    onSearchByItemChange: ((SearchByItem)->Unit)? = null,
-    onFilterItemChange: ((DropDownItem, DropDownItem)->Unit)? = null
+    searchByItem: SearchByItem,
+    ratingItem: RatingItem?,
+    difficultyItem: DifficultyItem?,
+    categoryItem: CategoryItem?,
+    onSearchByItemChange: ((SearchByItem)->Unit),
+    onRatingItemChange : ((RatingItem?) -> Unit),
+    onDifficultyItemChange : ((DifficultyItem?) -> Unit),
+    onCategoryItemChange : ((CategoryItem?) -> Unit)
 ) {
     val windowInfo = rememberWindowInfo()
     var heightSize by remember { mutableStateOf(0.25f) }
     if(windowInfo.screenHeightInfo is WindowInfo.WindowType.Compact){
-        heightSize = 0.70f
+        heightSize = 0.75f
     } else {
         heightSize = 0.25f
     }
@@ -69,7 +72,8 @@ fun SearchFiltersSurface(
             ) {
                 SearchByDropDown(
                     onItemChange = onSearchByItemChange,
-                    modifier = Modifier.fillMaxWidth(0.7f)
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    itemSelected = searchByItem
                 )
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -81,7 +85,10 @@ fun SearchFiltersSurface(
                             items = DifficultyItem::class.sealedSubclasses.map {
                                     subclass -> subclass.objectInstance as DropDownItem
                             },
-                            onItemChange = onFilterItemChange
+                            onItemChange = {
+                                dropDownItem -> onDifficultyItemChange(dropDownItem as DifficultyItem?)
+                            },
+                            itemSelected = difficultyItem
                         )
                     }
 
@@ -91,7 +98,10 @@ fun SearchFiltersSurface(
                             items = CategoryItem::class.sealedSubclasses.map {
                                     subclass -> subclass.objectInstance as DropDownItem
                             },
-                            onItemChange = onFilterItemChange
+                            onItemChange = {
+                                dropDownItem -> onCategoryItemChange(dropDownItem as CategoryItem?)
+                            },
+                            itemSelected = categoryItem
                         )
                     }
 
@@ -101,7 +111,10 @@ fun SearchFiltersSurface(
                             items = RatingItem::class.sealedSubclasses.map {
                                     subclass -> subclass.objectInstance as DropDownItem
                             },
-                            onItemChange = onFilterItemChange
+                            onItemChange = {
+                                dropDownItem -> onRatingItemChange(dropDownItem as RatingItem?)
+                            },
+                            itemSelected = ratingItem
                         )
                     }
                 }
@@ -111,7 +124,7 @@ fun SearchFiltersSurface(
 
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun SearchFiltersSurfacePreview(){
@@ -119,3 +132,4 @@ fun SearchFiltersSurfacePreview(){
         SearchFiltersSurface()
     }
 }
+ */

@@ -16,6 +16,7 @@ import com.example.tp3_hci.R
 import com.example.tp3_hci.components.navigation.TopNavigationBar
 import com.example.tp3_hci.components.search.SearchFiltersSurface
 import com.example.tp3_hci.components.search.SearchTopBar
+import com.example.tp3_hci.data.view_model.OnSearchViewModel
 import com.example.tp3_hci.ui.theme.FitiBlue
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.utilities.navigation.SearchNavigation
@@ -41,6 +42,7 @@ sealed class TopAppBarState(){
 
 @Composable
 fun RegularDisplay(
+    onSearchViewModel: OnSearchViewModel?,
     content: @Composable ()->Unit,
     topAppBarState: TopAppBarState,
     hasSearch : Boolean = false,
@@ -74,7 +76,9 @@ fun RegularDisplay(
         }
 
 
-        if(hasSearch){
+        if(hasSearch && onSearchViewModel != null){
+            val onSearchUiState = onSearchViewModel.onSearchUiState
+
             AnimatedVisibility(
                 visible = (topAppBarState is TopAppBarState.Search),
                 enter = expandVertically(
@@ -84,7 +88,24 @@ fun RegularDisplay(
                     shrinkTowards = Alignment.Top
                 ) + fadeOut()
             ) {
-                SearchFiltersSurface()
+                SearchFiltersSurface(
+                    searchByItem = onSearchUiState.searchBy,
+                    ratingItem = onSearchUiState.rating,
+                    difficultyItem = onSearchUiState.difficulty,
+                    categoryItem = onSearchUiState.category,
+                    onSearchByItemChange = {
+                        searchByItem -> onSearchViewModel.setSearchBy(searchByItem)
+                    },
+                    onRatingItemChange = {
+                        ratingItem -> onSearchViewModel.setRating(ratingItem)
+                    },
+                    onDifficultyItemChange = {
+                        difficultyItem -> onSearchViewModel.setDifficulty(difficultyItem)
+                    },
+                    onCategoryItemChange = {
+                        categoryItem -> onSearchViewModel.setCategory(categoryItem)
+                    }
+                )
             }
         }
     }
@@ -94,13 +115,15 @@ fun RegularDisplay(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegularTopAppBar(
+    onSearchViewModel: OnSearchViewModel,
+    onErrorSearch : ()->Unit,
     searchNavigation: SearchNavigation,
     scrollBehavior: TopAppBarScrollBehavior,
     topAppBarState: TopAppBarState,
     onTopAppBarState: (TopAppBarState) -> Unit,
     leftIcon : (@Composable ()->Unit)? = null
 ) {
-    var searchInput by remember { mutableStateOf("") }
+    val onSearchUiState = onSearchViewModel.onSearchUiState
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -108,15 +131,18 @@ fun RegularTopAppBar(
         if(topAppBarState is TopAppBarState.Search){
             SearchTopBar(
                 scrollBehavior = scrollBehavior,
-                input = searchInput,
+                input = onSearchUiState.text,
                 onCloseSearchBarState = {
                     onTopAppBarState(TopAppBarState.Regular)
                 },
                 onInputChange = { newInput ->
-                    searchInput = newInput
+                    onSearchViewModel.setText(newInput)
                 },
                 onSearchClicked = {
-                    searchNavigation.getSearchScreen().invoke(it)
+                    onSearchViewModel.search(
+                        executeSearch = searchNavigation.getSearchScreen(),
+                        onErrorSearch = onErrorSearch
+                    )
                 }
             )
         }

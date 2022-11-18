@@ -134,14 +134,27 @@ sealed class RatingItem(
 
 // Categorias para una rutina
 sealed class CategoryItem(
-    @StringRes val stringId: Int
+    @StringRes val stringId: Int,
+    val name : String
 ): DropDownItem(
     stringId
 ){
-    object FullBody : CategoryItem(stringId = R.string.category_full_body)
-    object UpperBody : CategoryItem(stringId = R.string.category_upper)
-    object MidBody : CategoryItem(stringId = R.string.category_mid)
-    object LowerBody : CategoryItem(stringId = R.string.category_lower)
+    object FullBody : CategoryItem(
+        stringId = R.string.category_full_body,
+        name = "Cuerpo completo"
+    )
+    object UpperBody : CategoryItem(
+        stringId = R.string.category_upper,
+        name = "Tren superior"
+    )
+    object MidBody : CategoryItem(
+        stringId = R.string.category_mid,
+        name = "Tren medio"
+    )
+    object LowerBody : CategoryItem(
+        stringId = R.string.category_lower,
+        name = "Tren inferior"
+    )
 
     override fun equals(other: Any?): Boolean {
         if(other !is CategoryItem){

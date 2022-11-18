@@ -1,7 +1,6 @@
 package com.example.tp3_hci.components.search
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,15 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
-import com.example.tp3_hci.data.CategoryItem
-import com.example.tp3_hci.data.DifficultyItem
 import com.example.tp3_hci.data.DropDownItem
-import com.example.tp3_hci.data.RatingItem
 import com.example.tp3_hci.ui.theme.FitiBlackText
-import com.example.tp3_hci.ui.theme.TP3_HCITheme
 
 
 // -----------------------------------------------------------------------
@@ -38,10 +32,10 @@ fun DropDownChip(
     placeholder: DropDownItem,
     items: List<DropDownItem>,
     modifier: Modifier = Modifier,
-    onItemChange: ((DropDownItem, DropDownItem) -> Unit)? = null
+    itemSelected: DropDownItem?,
+    onItemChange: ((DropDownItem?) -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(placeholder) }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(0.dp),
@@ -61,17 +55,16 @@ fun DropDownChip(
                 },
                 label = {
                     Text(
-                        text = selectedOptionText.getString(),
+                        text = itemSelected?.getString() ?: placeholder.getString(),
                         style = MaterialTheme.typography.h5
                     )
                 },
                 trailingIcon = {
-                    if(selectedOptionText != placeholder){
+                    if(itemSelected != null){
                         IconButton(
                             onClick = {
-                                selectedOptionText = placeholder
                                 if (onItemChange != null) {
-                                    onItemChange(placeholder, selectedOptionText)
+                                    onItemChange(null)
                                 }
                                 expanded = false
                             },
@@ -79,7 +72,7 @@ fun DropDownChip(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(id = R.string.delete_filter, selectedOptionText.getString()),
+                                contentDescription = stringResource(id = R.string.delete_filter, placeholder.getString()),
                                 tint = FitiBlackText
                             )
                         }
@@ -113,9 +106,8 @@ fun DropDownChip(
                 items.forEach { option ->
                     DropdownMenuItem(
                         onClick = {
-                            selectedOptionText = option
                             if (onItemChange != null) {
-                                onItemChange(placeholder, selectedOptionText)
+                                onItemChange(option)
                             }
                             expanded = false
                         }
@@ -133,7 +125,7 @@ fun DropDownChip(
 }
 
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun DropDownChipPreview(){
@@ -171,3 +163,4 @@ fun DropDownChipPreview(){
         }
     }
 }
+*/

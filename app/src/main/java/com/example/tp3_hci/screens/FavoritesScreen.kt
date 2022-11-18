@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tp3_hci.R
 import com.example.tp3_hci.components.routine.*
 import com.example.tp3_hci.data.view_model.FavoritesScreenViewModel
+import com.example.tp3_hci.data.view_model.OnSearchViewModel
 import com.example.tp3_hci.ui.theme.FitiBlueText
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.*
@@ -28,6 +29,7 @@ fun FavoritesScreen(
     favoritesNavigation: FavoritesNavigation,
     setTopAppBar : ((TopAppBarType)->Unit),
     favoritesScreenViewModel: FavoritesScreenViewModel = viewModel(factory = getViewModelFactory()),
+    onSearchViewModel: OnSearchViewModel = viewModel(factory = getViewModelFactory()),
     scaffoldState: ScaffoldState
 ){
     val windowInfo = rememberWindowInfo()
@@ -56,112 +58,11 @@ fun FavoritesScreen(
         setTopAppBar = setTopAppBar,
         favoritesNavigation = favoritesNavigation,
         favoritesScreenViewModel = favoritesScreenViewModel,
+        onSearchViewModel = onSearchViewModel,
         scrollBehavior = scrollBehavior!!,
-        scaffoldState = scaffoldState,
-        simplify = favoritesScreenViewModel.getSimplify(),
+        scaffoldState = scaffoldState
     )
 }
-
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//private fun FavoritesScreenTablet(
-//    favoritesNavigation: FavoritesNavigation,
-//    setTopAppBar : ((TopAppBarType)->Unit),
-//    favoriteRoutines : List<RoutineCardUiState>? = null,
-//){
-//    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-//    var topAppBarState by remember {
-//        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
-//    }
-//    setTopAppBar(
-//        TopAppBarType {
-//            RegularTopAppBar(
-//                scrollBehavior = scrollBehavior,
-//                topAppBarState = topAppBarState,
-//                onTopAppBarState = {
-//                    topAppBarState = it
-//                },
-//                searchNavigation = favoritesNavigation.getSearchNavigation()
-//            )
-//        }
-//    )
-//
-//    RegularTabletDisplay(
-//        content = {
-//            RoutineCardDisplay(
-//                modifier = Modifier
-//                    .padding(horizontal = 20.dp),
-//                routines = favoriteRoutines,
-//                header = {
-//                    Column(
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Text(
-//                            text = stringResource(id = R.string.favorites),
-//                            style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
-//                            color = FitiBlueText,
-//                            modifier = Modifier.padding(vertical = 10.dp)
-//                        )
-//                    }
-//                },
-//                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
-//            )
-//        },
-//        topAppBarState = topAppBarState
-//    )
-//}
-//
-//
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//private fun FavoritesScreenMobile(
-//    favoritesNavigation: FavoritesNavigation,
-//    setTopAppBar : ((TopAppBarType)->Unit),
-//    favoriteRoutines : List<RoutineCardUiState>? = null
-//){
-//    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-//    var topAppBarState by remember {
-//        mutableStateOf(TopAppBarState.Regular as TopAppBarState)
-//    }
-//    setTopAppBar(
-//        TopAppBarType {
-//            RegularTopAppBar(
-//                scrollBehavior = scrollBehavior,
-//                topAppBarState = topAppBarState,
-//                onTopAppBarState = {
-//                    topAppBarState = it
-//                },
-//                searchNavigation = favoritesNavigation.getSearchNavigation()
-//            )
-//        }
-//    )
-//
-//    RegularMobileDisplay(
-//        content = {
-//            RoutineCardDisplay(
-//                modifier = Modifier
-//                    .padding(horizontal = 20.dp),
-//                routines = favoriteRoutines,
-//                header = {
-//                    Column(
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Text(
-//                            text = stringResource(id = R.string.favorites),
-//                            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-//                            color = FitiBlueText,
-//                            modifier = Modifier.padding(vertical = 10.dp)
-//                        )
-//                    }
-//                },
-//                routineCardNavigation = favoritesNavigation.getRoutineCardNavigation()
-//            )
-//        },
-//        topAppBarState = topAppBarState
-//    )
-//}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -171,9 +72,9 @@ private fun FavoritesScreenContent(
     setTopAppBar: (TopAppBarType) -> Unit,
     favoritesNavigation: FavoritesNavigation,
     favoritesScreenViewModel: FavoritesScreenViewModel,
+    onSearchViewModel: OnSearchViewModel,
     scrollBehavior: TopAppBarScrollBehavior,
-    scaffoldState: ScaffoldState,
-    simplify : Boolean
+    scaffoldState: ScaffoldState
 ){
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
@@ -192,7 +93,9 @@ private fun FavoritesScreenContent(
                     onTopAppBarState = {
                         topAppBarState = it
                     },
-                    searchNavigation = favoritesNavigation.getSearchNavigation()
+                    searchNavigation = favoritesNavigation.getSearchNavigation(),
+                    onSearchViewModel = onSearchViewModel,
+                    onErrorSearch = { favoritesScreenViewModel.onErrorSearch() }
                 )
             }
         )
@@ -201,7 +104,8 @@ private fun FavoritesScreenContent(
         content = {
             RoutineCardDisplay(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp).fillMaxHeight(),
+                    .padding(horizontal = 20.dp)
+                    .fillMaxHeight(),
                 routines = favoritesScreenUiState.favoriteRoutines,
                 header = {
                     Column(
@@ -228,7 +132,7 @@ private fun FavoritesScreenContent(
                 onFavoriteChange = {
                     routine -> favoritesScreenViewModel.toggleRoutineFavorite(routine)
                 },
-                simplify = simplify
+                simplify = favoritesScreenViewModel.getSimplify()
             )
         },
         topAppBarState = topAppBarState,
@@ -237,7 +141,8 @@ private fun FavoritesScreenContent(
         onRefreshSwipe = {
             favoritesScreenViewModel.reloadFavoritesScreenContent()
         },
-        isRefreshing = favoritesScreenUiState.isLoading
+        isRefreshing = favoritesScreenUiState.isLoading,
+        onSearchViewModel = onSearchViewModel
     )
 
     if(favoritesScreenUiState.hasError()){

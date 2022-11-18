@@ -1,14 +1,10 @@
 package com.example.tp3_hci.components.search
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.tp3_hci.R
 import com.example.tp3_hci.data.SearchByItem
 import com.example.tp3_hci.ui.theme.FitiBlue
@@ -23,12 +19,10 @@ import com.example.tp3_hci.ui.theme.FitiBlueText
 @Composable
 fun SearchByDropDown(
     modifier: Modifier = Modifier,
+    itemSelected : SearchByItem,
     onItemChange : ((SearchByItem) -> Unit)? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember {
-        mutableStateOf(SearchByItem.RoutineName as SearchByItem)
-    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -38,12 +32,8 @@ fun SearchByDropDown(
         modifier = modifier
     ) {
         OutlinedTextField(
-            value = stringResource(id = selectedOptionText.stringId),
-            onValueChange = {
-                if(onItemChange != null){
-                    onItemChange(selectedOptionText)
-                }
-            },
+            value = stringResource(id = itemSelected.stringId),
+            onValueChange = { },
             singleLine = true,
             readOnly = true,
             label = {
@@ -86,7 +76,9 @@ fun SearchByDropDown(
             SearchByItem::class.sealedSubclasses.forEach { selectedOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectedOption.objectInstance as SearchByItem
+                        if(onItemChange != null){
+                            onItemChange(selectedOption.objectInstance as SearchByItem)
+                        }
                         expanded = false
                     }
                 ) {
@@ -102,6 +94,7 @@ fun SearchByDropDown(
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun SearchByDropDownPreview(){
@@ -111,5 +104,6 @@ fun SearchByDropDownPreview(){
         SearchByDropDown()
     }
 }
+ */
 
 

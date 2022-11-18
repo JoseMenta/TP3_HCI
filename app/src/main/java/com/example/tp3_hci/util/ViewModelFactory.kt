@@ -50,6 +50,13 @@ class ViewModelFactory constructor(
                     routineRepository = routineRepository,
                     preferencesManager = preferencesManager
                 )
+            isAssignableFrom(OnSearchViewModel::class.java) ->
+                OnSearchViewModel()
+            isAssignableFrom(SearchResultsViewModel::class.java) ->
+                SearchResultsViewModel(
+                    routineRepository = routineRepository,
+                    preferencesManager = preferencesManager
+                )
             else ->
                 throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

@@ -46,10 +46,11 @@ class FavoritesScreenViewModel(
         return preferencesManager.getSimplify()
     }
 
-    fun changeSimplify() {
-         preferencesManager.changeSimplify()
+    fun onErrorSearch(){
+        favoritesScreenUiState = favoritesScreenUiState.copy(
+            message = R.string.string_search_too_short
+        )
     }
-
 
     // Actualiza el contenido de la pantalla de favoritos
     fun reloadFavoritesScreenContent(){
@@ -101,7 +102,7 @@ class FavoritesScreenViewModel(
             }
         }.onSuccess {
             if(favoritesScreenUiState.favoriteRoutines != null){
-                val routines = favoritesScreenUiState.favoriteRoutines!!.filter { reoutineOverView -> reoutineOverView.value.id == routine.value.id }
+                val routines = favoritesScreenUiState.favoriteRoutines!!.filter { routineOverview -> routineOverview.value.id == routine.value.id }
                 routines.forEach { routine ->
                     routine.value.isFavourite = !routine.value.isFavourite
                 }

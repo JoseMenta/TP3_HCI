@@ -126,7 +126,12 @@ fun ProfileScreen(
                 }
             }
         },
-        topAppBarState = topAppBarState
+        topAppBarState = topAppBarState,
+        hasSearch = false,
+        hasSwipeRefresh = false,
+        isRefreshing = false,
+        onRefreshSwipe = {},
+        onSearchViewModel = null
     )
 }
 

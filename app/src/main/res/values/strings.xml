@@ -99,5 +99,6 @@
     <string name="unauthorized">Ups! You are not authorized to be here. Please log in</string>
     <string name="email_verification_error">Ups! Your email is not verified. Please verify it</string>
     <string name="forbidden_error">Ups!There seems to be an internal error</string>
+    <string name="string_search_too_short">The search is too search, it must have at least 3 letters</string>
 
 </resources>
