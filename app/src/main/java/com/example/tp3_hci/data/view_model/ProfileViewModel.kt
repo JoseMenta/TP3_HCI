@@ -19,7 +19,7 @@ class ProfileViewModel(
     private val preferencesManager : PreferencesManager
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
+    var uiState by mutableStateOf(ProfileUiState(isAuthenticated = sessionManager.loadAuthToken() != null, simplify = preferencesManager.getSimplify()))
         private set
 
     init {
@@ -88,12 +88,12 @@ class ProfileViewModel(
             message = null
         )
     }
-    fun getSimplify() : Boolean {
-        return preferencesManager.getSimplify()
-    }
 
     fun changeSimplify() {
         preferencesManager.changeSimplify()
+        uiState = uiState.copy(
+            simplify = preferencesManager.getSimplify()
+        )
     }
 
 }

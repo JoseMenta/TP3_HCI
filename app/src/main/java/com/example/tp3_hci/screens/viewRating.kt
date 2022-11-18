@@ -14,7 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,19 +49,22 @@ fun RatingView(
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutineOverview(routineId)
     }
-
+    var returned by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = {
-                TopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = stringResource(id = R.string.routine_review),
-                    viewRatingNavigation = viewRatingNavigation
-                )
-            }
+    if(returned) {
+        returned = false
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = {
+                    TopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        title = stringResource(id = R.string.routine_review),
+                        viewRatingNavigation = viewRatingNavigation
+                    )
+                }
+            )
         )
-    )
+    }
 
     if(uiState.isFetching){
         Row(

@@ -284,19 +284,21 @@ fun ExecuteRoutine(
     routineId: Int,
     viewModel: ExecuteRoutineViewModel = viewModel(factory = getViewModelFactory())
 ){
+    var returned by remember{ mutableStateOf(true)}
     val uiState = viewModel.uiState
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutine(routineId)
     }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    if(viewModel.getIsFirst()) {
+    if(returned) {
+        returned = false
         setTopAppBar(
             TopAppBarType(
                 topAppBar = {
                     TopAppBar(
                         scrollBehavior = scrollBehavior,
-                        title = uiState.routine?.name ?: stringResource(id = R.string.loading),
+                        title = stringResource(id = R.string.execute_routine),
                         executeRoutineNavigation = executeRoutineNavigation
                     )
                 }
@@ -357,6 +359,7 @@ fun ExecuteRoutine(
                                 onNextTouched = {
                                     if (!viewModel.hasNextExercise()) {
                                         viewModel.addRoutineExecution(routineId)
+                                        returned = true
                                         executeRoutineNavigation.getRateRoutineScreen()
                                             .invoke("$routineId")
                                     } else {

@@ -86,7 +86,7 @@
     <string name="LogIn">Log in</string>
     <string name="error_credentials">Invalid username and password</string>
     <string name="empty_field">Obligatory field</string>
-
+    <string name="execute_routine">Execute routine</string>
 <!--    errores API-->
     <string name="unexpected_error">Ups! An unexpected error occurred. Please try again</string>
     <string name="no_connection_error">Ups! It appears you have no internet connection</string>

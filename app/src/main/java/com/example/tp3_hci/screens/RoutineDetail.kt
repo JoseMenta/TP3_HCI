@@ -149,18 +149,22 @@ fun RoutineDetail(
     if(!uiState.isFetching && uiState.routine==null && uiState.message==null){
         viewModel.getRoutineDetails(routineId)
     }
+    var returned by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = {
-                TopAppBar(
-                    routineId = routineId,
-                    scrollBehavior = scrollBehavior,
-                    routineDetailNavigation = routineDetailNavigation
-                )
-            }
+    if(returned) {
+        returned = false
+        setTopAppBar(
+            TopAppBarType(
+                topAppBar = {
+                    TopAppBar(
+                        routineId = routineId,
+                        scrollBehavior = scrollBehavior,
+                        routineDetailNavigation = routineDetailNavigation
+                    )
+                }
+            )
         )
-    )
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -169,6 +173,7 @@ fun RoutineDetail(
                 text = {Text(stringResource(id = R.string.start), color = Color.White, style = MaterialTheme.typography.h4)},
                 icon = {Icon(Icons.Outlined.PlayArrow,"Play arrow",tint = Color.White)},
                 onClick = {
+                    returned = true
                     routineDetailNavigation.getExecuteRoutineScreen().invoke("$routineId")
                 },
                 shape = MaterialTheme.shapes.medium,

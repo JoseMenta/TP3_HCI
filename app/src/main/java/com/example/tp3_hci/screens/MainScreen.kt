@@ -82,9 +82,12 @@ private fun MainScreenContent(
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
+    var returned by remember{ mutableStateOf(true) }
     //TODO: ver como hacer para que se haga solo la primera vez
     //Tambien se me ocurrio un counter, y que lo haga si es 0
     //if(!mainScreenViewModel.mainScreenUiState.isLoading && mainScreenViewModel.mainScreenUiState.message!=null) {
+    if(returned) {
+        returned = false
         setTopAppBar(
             TopAppBarType {
                 RegularTopAppBar(
@@ -97,6 +100,7 @@ private fun MainScreenContent(
                 )
             }
         )
+    }
     //}
     val mainScreenUiState = mainScreenViewModel.mainScreenUiState
 
