@@ -76,7 +76,7 @@
     <string name="email">Nombre de usuario</string>
     <string name="password">contraseña</string>
     <string name="singIn">Ingresar</string>
-    <string name="LogIn">Inicio de Sesion</string>
+    <string name="LogIn">Inicio de sesión</string>
     <string name="error_credentials">Usuario y contraseña invalidos</string>
     <string name="empty_field">Campo obligatorio</string>
 
