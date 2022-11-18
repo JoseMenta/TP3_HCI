@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,9 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.example.tp3_hci.ExerciseCard
 import com.example.tp3_hci.ExerciseCardStatus
@@ -40,7 +37,6 @@ import com.example.tp3_hci.state_holders.RoutineDetail.RoutineDetailViewModel
 import com.example.tp3_hci.ui.theme.FitiWhiteText
 import com.example.tp3_hci.ui.theme.Shapes
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tp3_hci.data.CategoryItem.FullBody.getString
 import com.example.tp3_hci.data.model.Cycle
 import com.example.tp3_hci.util.getViewModelFactory
 import com.example.tp3_hci.utilities.ErrorSnackBar
@@ -151,6 +147,18 @@ fun RoutineDetail(
     }
     var returned by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    setTopAppBar(
+        TopAppBarType(
+            topAppBar = {
+                TopAppBar(
+                    routineId = routineId,
+                    scrollBehavior = scrollBehavior,
+                    routineDetailNavigation = routineDetailNavigation,
+                    routineDetailViewModel = viewModel
+                )
+            }
+        )
+    )
     if(returned) {
         returned = false
         setTopAppBar(
@@ -159,7 +167,8 @@ fun RoutineDetail(
                     TopAppBar(
                         routineId = routineId,
                         scrollBehavior = scrollBehavior,
-                        routineDetailNavigation = routineDetailNavigation
+                        routineDetailNavigation = routineDetailNavigation,
+                        routineDetailViewModel = viewModel
                     )
                 }
             )
@@ -250,6 +259,7 @@ private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     routineDetailNavigation: RoutineDetailNavigation,
     routineId: Int,
+    routineDetailViewModel : RoutineDetailViewModel
 ){
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
         LocalClipboardManager.current
@@ -257,6 +267,8 @@ private fun TopAppBar(
     val context = LocalContext.current
 
     val shareText = "Mira esta Fiti Rutina! Seguro te interesa: https://fiti.com/Routine/${routineId}"
+
+    val routineDetailUiState = routineDetailViewModel.uiState
 
     TopNavigationBar(
         scrollBehavior = scrollBehavior,
@@ -280,40 +292,51 @@ private fun TopAppBar(
             )
         },
         secondRightIcon = {
-            IconButton(onClick = {
-                val sendIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                    type = "text/plain"
-                }
-                //clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routineId}"))
+            if(routineDetailUiState.routine != null){
+                IconButton(onClick = {
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                        type = "text/plain"
+                    }
+                    //clipboardManager.setText(AnnotatedString( "https://fiti.com/Routine/${routineId}"))
 
-                startActivity(
-                    context,
-                    Intent.createChooser(sendIntent, "ShareWith"),
-                    null
-                )
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Share,
-                    contentDescription = stringResource(id = R.string.search),
-                    tint = FitiWhiteText,
-                    modifier = Modifier.size(30.dp)
-                )
+                    startActivity(
+                        context,
+                        Intent.createChooser(sendIntent, "ShareWith"),
+                        null
+                    )
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(id = R.string.search),
+                        tint = FitiWhiteText,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
             }
         },
         rightIcon = {
-            IconButton(onClick = {
-                /* TODO */
-            }) {
-                Icon(
-                    //Ver como le pasamos el estado aca
-                    //va a ser raro me parece
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = stringResource(id = R.string.search),
-                    tint = FitiWhiteText,
-                    modifier = Modifier.size(30.dp)
-                )
+            if(routineDetailUiState.routine != null){
+                IconButton(onClick = {
+                    routineDetailViewModel.toggleRoutineFavorite()
+                }) {
+                    if(routineDetailUiState.routine.isFavourite.value){
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
+                            contentDescription = stringResource(id = R.string.routine_is_favorite),
+                            tint = FitiWhiteText,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            contentDescription = stringResource(id = R.string.routine_is_not_favorite),
+                            tint = FitiWhiteText,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
             }
         }
     )

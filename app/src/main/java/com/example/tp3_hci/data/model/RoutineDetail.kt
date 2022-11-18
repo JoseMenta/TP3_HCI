@@ -1,5 +1,6 @@
 package com.example.tp3_hci.data.model
 
+import androidx.compose.runtime.MutableState
 
 
 data class RoutineDetail (
@@ -9,7 +10,7 @@ data class RoutineDetail (
     val creator:String,
     val rating:Int,
     val votes:Int,
-    val isFavourite: Boolean,
+    var isFavourite: MutableState<Boolean>,
     val tags: List<String>,
     val cycles: List<Cycle>,
     val imageUrl: String

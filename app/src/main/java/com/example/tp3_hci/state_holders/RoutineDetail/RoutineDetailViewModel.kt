@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tp3_hci.R
 import com.example.tp3_hci.data.network.DataSourceException
+import com.example.tp3_hci.data.model.RoutineDetail
 import com.example.tp3_hci.data.repository.RoutineRepository
 import kotlinx.coroutines.launch
 
@@ -49,6 +50,32 @@ class RoutineDetailViewModel(
             }
         }
     }
+
+
+    fun toggleRoutineFavorite() = viewModelScope.launch {
+        kotlin.runCatching {
+            if(uiState.routine!!.isFavourite.value){
+                routineRepository.unmarkRoutineAsFavourite(uiState.routine!!.id)
+            } else {
+                routineRepository.markRoutineAsFavourite(uiState.routine!!.id)
+            }
+        }.onSuccess {
+            uiState.routine!!.isFavourite.value = !uiState.routine!!.isFavourite.value
+        }.onFailure { e ->
+            uiState = if (e is DataSourceException){
+                uiState.copy(
+                    message = e.stringResourceCode,
+                    isFetching = false
+                )
+            }else{
+                uiState.copy(
+                    message = R.string.unexpected_error,
+                    isFetching = false
+                )
+            }
+        }
+    }
+
     fun dismissMessage(){
         uiState = uiState.copy(
             message = null
