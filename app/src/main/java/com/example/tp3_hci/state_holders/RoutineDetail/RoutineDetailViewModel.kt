@@ -16,14 +16,6 @@ class RoutineDetailViewModel(
 ):ViewModel() {
     var uiState by mutableStateOf(RoutineDetailUiState())
         private set
-    private var isFirst = true
-    fun getIsFirst():Boolean{
-        if(isFirst){
-            isFirst = false
-            return true
-        }
-        return isFirst
-    }
     fun getRoutineDetails(routineId: Int) = viewModelScope.launch {
         uiState = uiState.copy(
             isFetching = true,
@@ -34,7 +26,8 @@ class RoutineDetailViewModel(
         }.onSuccess {
             uiState = uiState.copy(
                 isFetching = false,
-                routine = it
+                routine = it,
+                isFavourite = mutableStateOf(it.isFavourite)
             )
         }.onFailure { e->
             uiState = if (e is DataSourceException){
@@ -54,13 +47,13 @@ class RoutineDetailViewModel(
 
     fun toggleRoutineFavorite() = viewModelScope.launch {
         kotlin.runCatching {
-            if(uiState.routine!!.isFavourite.value){
+            if(uiState.isFavourite.value){
                 routineRepository.unmarkRoutineAsFavourite(uiState.routine!!.id)
             } else {
                 routineRepository.markRoutineAsFavourite(uiState.routine!!.id)
             }
         }.onSuccess {
-            uiState.routine!!.isFavourite.value = !uiState.routine!!.isFavourite.value
+            uiState.isFavourite.value = !uiState.isFavourite.value
         }.onFailure { e ->
             uiState = if (e is DataSourceException){
                 uiState.copy(

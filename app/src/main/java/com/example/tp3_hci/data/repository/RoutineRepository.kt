@@ -155,6 +155,7 @@ class RoutineRepository(
     }
     //crea una rutina, con los ciclos y los ejercicios adentro
     suspend fun getRoutineDetails(routineId: Int): RoutineDetail{
+        getFavouritesOverviews()
         val routine = remoteDataSource.getRoutineById(routineId)
         val cycles = getAll { remoteDataSource.getRoutineCycles(routineId,it) }
         return RoutineDetail(

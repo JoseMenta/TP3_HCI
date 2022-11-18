@@ -178,7 +178,7 @@ fun ExerciseCard(
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .width(90.dp)
-                            .height(93.dp)
+                            .height(90.dp)
                             .alpha(alpha)
                     )
                 }

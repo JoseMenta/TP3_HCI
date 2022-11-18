@@ -147,18 +147,6 @@ fun RoutineDetail(
     }
     var returned by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    setTopAppBar(
-        TopAppBarType(
-            topAppBar = {
-                TopAppBar(
-                    routineId = routineId,
-                    scrollBehavior = scrollBehavior,
-                    routineDetailNavigation = routineDetailNavigation,
-                    routineDetailViewModel = viewModel
-                )
-            }
-        )
-    )
     if(returned) {
         returned = false
         setTopAppBar(
@@ -168,7 +156,8 @@ fun RoutineDetail(
                         routineId = routineId,
                         scrollBehavior = scrollBehavior,
                         routineDetailNavigation = routineDetailNavigation,
-                        routineDetailViewModel = viewModel
+                        routineDetailViewModel = viewModel,
+                        isFavourite = viewModel.uiState.isFavourite
                     )
                 }
             )
@@ -239,7 +228,8 @@ fun RoutineDetail(
                         RoutineCycle(it, status = ExerciseCardStatus.EDITABLE)
                     }
                 }
-            }else if (uiState.message!=null){
+            }
+            if (uiState.message!=null){
                 ErrorSnackBar(
                     scaffoldState = scaffoldState,
                     message = stringResource(id = uiState.message),
@@ -259,7 +249,8 @@ private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     routineDetailNavigation: RoutineDetailNavigation,
     routineId: Int,
-    routineDetailViewModel : RoutineDetailViewModel
+    routineDetailViewModel : RoutineDetailViewModel,
+    isFavourite: MutableState<Boolean>
 ){
     val clipboardManager: androidx.compose.ui.platform.ClipboardManager =
         LocalClipboardManager.current
@@ -321,7 +312,7 @@ private fun TopAppBar(
                 IconButton(onClick = {
                     routineDetailViewModel.toggleRoutineFavorite()
                 }) {
-                    if(routineDetailUiState.routine.isFavourite.value){
+                    if(isFavourite.value){
                         Icon(
                             imageVector = Icons.Outlined.Favorite,
                             contentDescription = stringResource(id = R.string.routine_is_favorite),

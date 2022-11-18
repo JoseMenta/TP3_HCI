@@ -10,7 +10,7 @@ data class RoutineDetail (
     val creator:String,
     val rating:Int,
     val votes:Int,
-    var isFavourite: MutableState<Boolean>,
+    var isFavourite: Boolean,
     val tags: List<String>,
     val cycles: List<Cycle>,
     val imageUrl: String
