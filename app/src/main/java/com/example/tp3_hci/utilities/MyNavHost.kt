@@ -105,6 +105,7 @@ fun MyNavHost(
                 actions = {
                     navBarItem -> navController.navigate(navBarItem.route)
                 },
+                route = navBackStackEntry?.destination?.route,
                 restartSelectedNavigation = restartSelectedNavigation
             )
         }

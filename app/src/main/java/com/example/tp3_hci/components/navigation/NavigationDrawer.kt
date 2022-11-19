@@ -42,7 +42,8 @@ sealed class NavDrawerItem(
 fun NavigationDrawer(
     content: (@Composable ()->Unit)? = null,
     actions: (NavDrawerItem) ->Unit,
-    restartSelectedNavigation: Boolean
+    restartSelectedNavigation: Boolean,
+    route : String?
 ) {
     PermanentNavigationDrawer(
         drawerContent = {
@@ -56,7 +57,8 @@ fun NavigationDrawer(
                 DrawerBody(
                     restartSelectedNavigation = restartSelectedNavigation,
                     onItemClick = { /*TODO*/ },
-                    actions = actions
+                    actions = actions,
+                    route = route
                 )
             }
 
@@ -92,7 +94,8 @@ private fun DrawerBody(
     restartSelectedNavigation : Boolean,
     modifier: Modifier = Modifier,
     onItemClick: (NavDrawerItem) -> Unit,
-    actions : (NavDrawerItem) ->Unit
+    actions : (NavDrawerItem) ->Unit,
+    route : String?
 ) {
     val primaryItems = listOf(NavDrawerItem.Home, NavDrawerItem.Favorites, NavDrawerItem.Profile)
 
@@ -101,12 +104,11 @@ private fun DrawerBody(
     LazyColumn(
         modifier = modifier
     ){
-        if(restartSelectedNavigation){
-            for(icon in primaryItems){
-                icon.selected=false
+
+            for(item in primaryItems){
+                item.selected = item.route == route
             }
-            primaryItems[0].selected=true
-        }
+
         items(primaryItems){ item ->
             // val selected = (item.route == backStackEntry?.destination?.route)
             //val selected = (item.id == NavDrawerItem.Home.id)
@@ -129,10 +131,6 @@ private fun DrawerBody(
                 selected = item.selected,
                 modifier = Modifier.padding(horizontal = 10.dp),
                 onClick = {
-                    for(items in primaryItems){
-                        items.selected=false
-                    }
-                    item.selected =true
                     actions(item)
                 },
                 colors = NavigationDrawerItemDefaults.colors(

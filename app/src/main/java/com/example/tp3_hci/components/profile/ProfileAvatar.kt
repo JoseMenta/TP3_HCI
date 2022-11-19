@@ -45,7 +45,7 @@ fun ProfileAvatar(
         }
 
         val imageModifier = Modifier
-            .fillMaxSize(1f)
+            .fillMaxSize(0.6f)
             .aspectRatio(
                 ratio = 1f,
                 matchHeightConstraintsFirst = true

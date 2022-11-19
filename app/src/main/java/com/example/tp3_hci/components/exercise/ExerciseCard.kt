@@ -75,7 +75,7 @@ fun ExerciseCard(
             elevation = elevation,
             border = border,
             modifier = modifier.combinedClickable (
-                onLongClick = {if(status == ExerciseCardStatus.EDITABLE && checkedState){expandedState=!expandedState}},
+                onLongClick = { },
                 onClick = {/*TODO*/} )
         ) {
             Row(modifier = Modifier.animateContentSize(tween(durationMillis = 350, easing = LinearOutSlowInEasing))) {

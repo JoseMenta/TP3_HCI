@@ -84,7 +84,7 @@
 
     <string name="question_log">Don\'t have an account?</string>
     <string name="register">Join</string>
-    <string name="email">Username</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="singIn">Sing in</string>
     <string name="LogIn">Log in</string>

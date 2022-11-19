@@ -77,7 +77,11 @@ fun ProfileScreen(
                         modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                     ) {
                         item {
-                            Column() {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 var imgSrc = UiState.currentUser?.avatarUrl
                                 ProfileAvatar(
                                     imageUrl = imgSrc,

@@ -40,7 +40,10 @@ fun TopNavigationBar(
         navigationIcon = {
             if (leftIcon != null) {
                 leftIcon()
-            } else if (windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded) {
+            } else if (!(((windowInfo.screenWidthInfo !is WindowInfo.WindowType.Expanded )
+                && (windowInfo.screenHeightInfo is WindowInfo.WindowType.Expanded))
+                || ((windowInfo.screenWidthInfo is WindowInfo.WindowType.Expanded )
+                        && (windowInfo.screenHeightInfo !is WindowInfo.WindowType.Expanded)))) {
                 Image(
                     painter = painterResource(id = R.drawable.fiti),
                     contentDescription = stringResource(id = R.string.fiti_logo),

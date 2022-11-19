@@ -225,32 +225,36 @@ private fun SearchResultsContent(
     var topAppBarState by remember {
         mutableStateOf(TopAppBarState.Regular as TopAppBarState)
     }
-    setTopAppBar(
-        TopAppBarType {
-            RegularTopAppBar(
-                scrollBehavior = scrollBehavior,
-                topAppBarState = topAppBarState,
-                onTopAppBarState = {
-                    topAppBarState = it
-                },
-                leftIcon = {
-                    IconButton(onClick = {
-                        searchResultsNavigation.getPreviousScreen().invoke()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.search),
-                            tint = FitiWhiteText,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                },
-                searchNavigation = searchResultsNavigation.getSearchNavigation(),
-                onSearchViewModel = onSearchViewModel,
-                onErrorSearch = { searchResultsViewModel.onErrorSearch() }
-            )
-        }
-    )
+    var returned by remember { mutableStateOf(true) }
+    if(returned){
+        returned = false
+        setTopAppBar(
+            TopAppBarType {
+                RegularTopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    topAppBarState = topAppBarState,
+                    onTopAppBarState = {
+                        topAppBarState = it
+                    },
+                    leftIcon = {
+                        IconButton(onClick = {
+                            searchResultsNavigation.getPreviousScreen().invoke()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(id = R.string.search),
+                                tint = FitiWhiteText,
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
+                    },
+                    searchNavigation = searchResultsNavigation.getSearchNavigation(),
+                    onSearchViewModel = onSearchViewModel,
+                    onErrorSearch = { searchResultsViewModel.onErrorSearch() }
+                )
+            }
+        )
+    }
 
     val searchResultsScreenUiState = searchResultsViewModel.searchResultsScreenUiState
 

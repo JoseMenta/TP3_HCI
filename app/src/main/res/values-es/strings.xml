@@ -77,7 +77,7 @@
 
     <string name="question_log">¿No tienes cuenta aún?</string>
     <string name="register">Registrate</string>
-    <string name="email">Nombre de usuario</string>
+    <string name="email">Email</string>
     <string name="password">contraseña</string>
     <string name="singIn">Ingresar</string>
     <string name="LogIn">Inicio de sesión</string>
