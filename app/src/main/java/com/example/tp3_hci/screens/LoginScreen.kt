@@ -67,7 +67,7 @@ fun LoginView(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.spacedBy(50.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val windowInfo = rememberWindowInfo()
@@ -92,43 +92,11 @@ fun LoginView(
                 )
             }
             BLockLogin(loginNavigation, loginViewModel)
-            BLockRegister()
         }
     }
 
 }
 
-
-@Composable
-private fun BLockRegister() {
-    Column(
-            modifier = Modifier.padding(bottom = 10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ){
-        Text(
-            text = stringResource(id = R.string.question_log),
-            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = FitiGreenButton,
-            ),
-            onClick = {/* logica del register OPCIONAL */ },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .padding(start = 20.dp, end = 20.dp)
-        ) {
-            Text(text = stringResource(id = R.string.register),
-                style = MaterialTheme.typography.h4,
-                fontWeight = FontWeight.Bold,
-                color = White )
-        }
-    }
-}
 
 /* Intentar "Composearlo" mas con la API */
 @Composable

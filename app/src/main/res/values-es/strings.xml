@@ -74,7 +74,7 @@
     <string name="question_log">¿No tienes cuenta aún?</string>
     <string name="register">Registrate</string>
     <string name="email">Nombre de usuario</string>
-    <string name="password">contraseña</string>
+    <string name="password">Contraseña</string>
     <string name="singIn">Ingresar</string>
     <string name="LogIn">Inicio de sesión</string>
     <string name="error_credentials">Usuario y contraseña invalidos</string>
