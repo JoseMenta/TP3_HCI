@@ -77,8 +77,6 @@ fun ExerciseCard(
             modifier = modifier.combinedClickable (
                 onLongClick = {if(status == ExerciseCardStatus.EDITABLE && checkedState){expandedState=!expandedState}},
                 onClick = {/*TODO*/} )
-
-
         ) {
             Row(modifier = Modifier.animateContentSize(tween(durationMillis = 350, easing = LinearOutSlowInEasing))) {
                 Column(
@@ -118,11 +116,11 @@ fun ExerciseCard(
                     }
                     if(!expandedState){
                         Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                            if (time>0){
-                                IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Alarm), info = display_time, contentColor = contentColor.copy(alpha), background = backgroundColor)
+                            if (exercise.time>0){
+                                IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Alarm), info = String.format("%02d:%02d",exercise.time/60,exercise.time%60), contentColor = contentColor.copy(alpha), background = backgroundColor)
                             }
-                            if (repeat>0){
-                                IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Refresh), info = repeat.toString(),contentColor = contentColor.copy(alpha), background = backgroundColor)
+                            if (exercise.repetitions>0){
+                                IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Refresh), info = exercise.repetitions.toString(),contentColor = contentColor.copy(alpha), background = backgroundColor)
                             }
                         }
                     } else {
@@ -134,13 +132,13 @@ fun ExerciseCard(
                                 var dialogTime by remember { mutableStateOf(false) }
                                 var dialogRepetitions by remember { mutableStateOf(false) }
                                 IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Alarm),
-                                    info = display_time,
+                                    info = String.format("%02d:%02d",exercise.time/60,exercise.time%60),
                                     background = MaterialTheme.colors.primaryVariant,
                                     contentColor = Color.LightGray,
                                     modifier = Modifier.clickable { dialogTime = !dialogTime })
 
                                 IconInfoExercise(icon = rememberVectorPainter(Icons.Rounded.Refresh),
-                                    info = repeat.toString(),
+                                    info = exercise.repetitions.toString(),
                                     background = MaterialTheme.colors.primaryVariant,
                                     contentColor = Color.LightGray,
                                     modifier = Modifier.clickable {
@@ -148,13 +146,13 @@ fun ExerciseCard(
                                     })
                                 if (dialogTime) {
                                     DialogTime(setDialog = { dialogTime = it },
-                                        setTime = { time = it },
-                                        value = time)
+                                        setTime = { exercise.time = it },
+                                        value = exercise.time)
                                 }
                                 if (dialogRepetitions) {
                                     DialogRepetitions(setDialog = { dialogRepetitions = it },
-                                        setRepeat = { repeat = it },
-                                        value = repeat)
+                                        setRepeat = { exercise.repetitions = it },
+                                        value = exercise.repetitions)
                                 }
                             }
                             Spacer(Modifier.width(110.dp))

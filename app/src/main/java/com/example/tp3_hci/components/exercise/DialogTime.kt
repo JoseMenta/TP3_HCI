@@ -7,8 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.tp3_hci.R
 import com.example.tp3_hci.ui.theme.Shapes
 import java.time.LocalTime
 
@@ -19,7 +21,7 @@ fun DialogTime(setDialog: (Boolean) -> Unit, setTime:(Int)->Unit, value:Int){
         Surface(shape= Shapes.medium, color = MaterialTheme.colors.background) {
             Box(contentAlignment = Alignment.Center) {
                 Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Selecionar Tiempo",style = MaterialTheme.typography.h4)
+                    Text(text = stringResource(id = R.string.select_time),style = MaterialTheme.typography.h4)
                     Spacer(modifier = Modifier.height(20.dp))
                     WheelTimePicker(startTime = LocalTime.of(0,value/60,value%60),
                         onScrollFinished = { snappedTime -> newTime=(60*snappedTime.minute).plus(snappedTime.second) })
@@ -33,7 +35,7 @@ fun DialogTime(setDialog: (Boolean) -> Unit, setTime:(Int)->Unit, value:Int){
                         colors = ButtonDefaults.buttonColors(contentColor = Color.White, backgroundColor = MaterialTheme.colors.primary)
 
                     ) {
-                        Text(text = "Hecho", style = MaterialTheme.typography.h4)
+                        Text(text = stringResource(id = R.string.ok), style = MaterialTheme.typography.h4)
                     }
                 }
             }

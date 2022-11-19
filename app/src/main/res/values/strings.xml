@@ -24,6 +24,10 @@
     <string name="time">Time</string>
     <string name="repetitions">Repetitions</string>
 
+    <string name="select_repetitions">Select repetitions</string>
+    <string name="select_time">Select time</string>
+    <string name="ok">Ok</string>
+
     <string name="descending_abrev">DES</string>
     <string name="ascending_abrev">ASC</string>
 

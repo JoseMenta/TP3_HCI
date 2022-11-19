@@ -64,6 +64,10 @@
     <string name="leave_your_review">Dejanos tu opinión</string>
     <string name="snackbar_dismiss">Cerrar</string>
 
+    <string name="select_repetitions">Seleccionar repeticiones</string>
+    <string name="select_time">Seleccionar tiempo</string>
+    <string name="ok">Ok</string>
+
     <string name="email_type">Email: </string>
     <string name="name_type">Nombre: </string>
     <string name="surname_type">Apellido: </string>
