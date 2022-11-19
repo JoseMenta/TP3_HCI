@@ -8,7 +8,7 @@ data class CycleExercise(
     val name:String,
     val image:String,
     val order: Int,
-    val time:Int,
-    val repetitions: Int,
+    var time:Int,
+    var repetitions: Int,
     var isSelected: MutableState<Boolean> = mutableStateOf(false)
 )
